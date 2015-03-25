@@ -1,0 +1,9 @@
+c:\users\spareva\documents\visual studio 2013\Projects\ScheduledPublishing\ScheduledPublishing\bin\ScheduledPublishing.dll
+c:\users\spareva\documents\visual studio 2013\Projects\ScheduledPublishing\ScheduledPublishing\bin\ScheduledPublishing.pdb
+c:\users\spareva\documents\visual studio 2013\Projects\ScheduledPublishing\ScheduledPublishing\bin\Sitecore.Kernel.dll
+c:\users\spareva\documents\visual studio 2013\Projects\ScheduledPublishing\ScheduledPublishing\bin\Lucene.Net.dll
+c:\users\spareva\documents\visual studio 2013\Projects\ScheduledPublishing\ScheduledPublishing\bin\HtmlAgilityPack.dll
+c:\users\spareva\documents\visual studio 2013\Projects\ScheduledPublishing\ScheduledPublishing\bin\Newtonsoft.Json.dll
+c:\users\spareva\documents\visual studio 2013\Projects\ScheduledPublishing\ScheduledPublishing\obj\Debug\ScheduledPublishing.dll
+c:\users\spareva\documents\visual studio 2013\Projects\ScheduledPublishing\ScheduledPublishing\obj\Debug\ScheduledPublishing.pdb
+c:\users\spareva\documents\visual studio 2013\Projects\ScheduledPublishing\ScheduledPublishing\obj\Debug\ScheduledPublishing.csprojResolveAssemblyReference.cache
