@@ -1,12 +1,11 @@
-﻿using System.Net.Mail;
-using Sitecore;
-using Sitecore.Data;
+﻿using Sitecore.Data;
 using Sitecore.Data.Items;
 using Sitecore.Diagnostics;
 using Sitecore.Publishing;
 using Sitecore.Tasks;
 using System;
 using System.Linq;
+using System.Net.Mail;
 
 namespace ScheduledPublishing.CustomScheduledTasks
 {
@@ -24,27 +23,25 @@ namespace ScheduledPublishing.CustomScheduledTasks
 
             foreach (var item in itemArray)
             {
-                // if the item has Publishing targets defined, use them and publish to all of them
-                if (!string.IsNullOrEmpty(item[FieldIDs.PublishingTargets]))
-                {
-                    publishingTargets = item[FieldIDs.PublishingTargets].Split('|');
-                }
-                // if the item has no Publishing targets specified, publish to all
-                else
-                {
+                //// if the item has Publishing targets defined, use them and publish to all of them
+                //if (!string.IsNullOrEmpty(item[FieldIDs.PublishingTargets]))
+                //{
+                //    publishingTargets = item[FieldIDs.PublishingTargets].Split('|');
+                //}
+                //// if the item has no Publishing targets specified, publish to all
+                //else
+                //{
                     publishingTargets = master.GetItem("/sitecore/system/Publishing targets").Children.Select(x => x.ID.ToString()).ToArray();
-                }
+                //}
                 if (publishingTargets.Length == 0)
                 {
                     Log.Info("No publishing targets found", this);
                 }
                 else
                 {
-                    bool published = PublishItemToTargets(item, publishingTargets);
-                    if (published)
-                    {
-                        Notify("admin@png.com", scheduledItem["CreatedByEmail"]);
-                    }
+                    bool isPublished = PublishItemToTargets(item, publishingTargets);
+                    Notify("PNGPublishing@png.com", scheduledItem["CreatedByEmail"], item, isPublished);
+                    
                 }
             }
         }
@@ -80,14 +77,18 @@ namespace ScheduledPublishing.CustomScheduledTasks
             }
             return successful;
         }
-        public void Notify(string emailFrom, string emailTo)
+        public void Notify(string emailFrom, string emailTo, Item item, bool success)
         {
+            string body = success
+                ? "Publishing {0} ({1}) completed successfully at {2}."
+                : "Publishing {0} ({1}) failed at {2}. Please restart publishing process.";
+
             var smtpClient = new SmtpClient();
             var mailMessage = new MailMessage(emailFrom, emailTo)
             {
                 Subject = "PNG Publishing",
                 IsBodyHtml = true,
-                Body = "Publishing successful"
+                Body = string.Format(body, item.Name, item.Paths.FullPath, DateTime.Now),
             };
 
             try

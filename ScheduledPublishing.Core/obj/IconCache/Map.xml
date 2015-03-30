@@ -1,0 +1,7 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ItemIconCache>
+  <Item ItemPath="/sitecore/content" ItemIcon="/temp/IconCache/People/16x16/cubes_blue.png" />
+  <Item ItemPath="/sitecore/content/Applications" ItemIcon="/temp/IconCache/Software/16x16/application.png" />
+  <Item ItemPath="/sitecore/content/Applications/Content Editor" ItemIcon="/sitecore/shell/themes/standard/People/16x16/cubes_blue.png" />
+  <Item ItemPath="/sitecore/content/Applications/Content Editor/Ribbons" ItemIcon="/temp/IconCache/Control/16x16/menu_b.png" />
+</ItemIconCache>

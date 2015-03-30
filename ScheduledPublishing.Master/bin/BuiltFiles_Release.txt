@@ -1,0 +1,8 @@
+C:\Users\spareva\documents\visual studio 2013\Projects\ScheduledPublishing\ScheduledPublishing.Master\Release\sitecore\shell\Applications\Content Manager\Dialogs\Schedule Publishing\Schedule Publishing.xml
+C:\Users\spareva\documents\visual studio 2013\Projects\ScheduledPublishing\ScheduledPublishing.Master\Release\App_Config\Include\ZZ_SchedulePublishingControl.config
+C:\Users\spareva\documents\visual studio 2013\Projects\ScheduledPublishing\ScheduledPublishing.Master\Release\bin\HtmlAgilityPack.dll
+C:\Users\spareva\documents\visual studio 2013\Projects\ScheduledPublishing\ScheduledPublishing.Master\Release\bin\Lucene.Net.dll
+C:\Users\spareva\documents\visual studio 2013\Projects\ScheduledPublishing\ScheduledPublishing.Master\Release\bin\Newtonsoft.Json.dll
+C:\Users\spareva\documents\visual studio 2013\Projects\ScheduledPublishing\ScheduledPublishing.Master\Release\bin\ScheduledPublishing.dll
+C:\Users\spareva\documents\visual studio 2013\Projects\ScheduledPublishing\ScheduledPublishing.Master\Release\bin\ScheduledPublishing.pdb
+C:\Users\spareva\documents\visual studio 2013\Projects\ScheduledPublishing\ScheduledPublishing.Master\Release\bin\Sitecore.Kernel.dll
