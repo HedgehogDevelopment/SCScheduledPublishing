@@ -1,5 +1,7 @@
+C:\Users\spareva\documents\visual studio 2013\Projects\ScheduledPublishing\ScheduledPublishing.Master\Debug\sitecore\shell\Applications\Content Manager\Dialogs\Edit Scheduled Publishing\EditScheduledPublishing.xml
 C:\Users\spareva\documents\visual studio 2013\Projects\ScheduledPublishing\ScheduledPublishing.Master\Debug\sitecore\shell\Applications\Content Manager\Dialogs\Schedule Publishing\Schedule Publishing.xml
 C:\Users\spareva\documents\visual studio 2013\Projects\ScheduledPublishing\ScheduledPublishing.Master\Debug\App_Config\Include\ZZ_SchedulePublishingControl.config
+C:\Users\spareva\documents\visual studio 2013\Projects\ScheduledPublishing\ScheduledPublishing.Master\Debug\bin\App_Config\Include\ZZ_SchedulePublishingControl.config
 C:\Users\spareva\documents\visual studio 2013\Projects\ScheduledPublishing\ScheduledPublishing.Master\Debug\bin\HtmlAgilityPack.dll
 C:\Users\spareva\documents\visual studio 2013\Projects\ScheduledPublishing\ScheduledPublishing.Master\Debug\bin\Lucene.Net.dll
 C:\Users\spareva\documents\visual studio 2013\Projects\ScheduledPublishing\ScheduledPublishing.Master\Debug\bin\Newtonsoft.Json.dll

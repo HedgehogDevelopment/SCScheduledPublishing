@@ -7,39 +7,33 @@
       <CodeBeside Type="ScheduledPublishing.sitecore.shell.Applications.ContentManager.Dialogs.SchedulePublishingDialog,ScheduledPublishing"/>
 
       <GridPanel Width="100%" Height="100%" Fixed="true">
-        <Border Padding="8px 8px 4px 8px">
-          <Literal Text="Set the publication date of the current item. This affects every version in every language."/>
-        </Border>
 
-        <Border ID="PublishPanel">
-
-          <GridPanel Width="100%" Columns="1" CellPadding="0">
-
-            <Border Padding="8px">
-              <Groupbox ID="ExistingSchedulesPanel" Header="Existing Schedules">
-
-                <Border ID="ExistingSchedules" Padding="4px" Width="100%" />
-
-              </Groupbox>
+        <Tabstrip ID="Tabs" Height="100%" Width="100%" GridPanel.Height="100%">
+          
+          <Tab ID="ScheduleItemTab" Header="Schedule Item" Height="100%">
+            <Border Padding="8px 8px 4px 8px">
+              <Literal Text="Set the publication date of the current item. This affects every version in every language."/>
             </Border>
-            
-            <Border GridPanel.NoWrap="true">
-              <Literal Text="Publish Time:"/>
+            <Border ID="PublishPanel">
+              <GridPanel Width="100%" Columns="1" CellPadding="0">
+                <Border Padding="8px">
+                  <Groupbox ID="ExistingSchedulesPanel" Header="Existing Schedules">
+                    <Border ID="ExistingSchedules" Padding="4px" Width="100%" />
+                  </Groupbox>
+                </Border>
+                <Border GridPanel.NoWrap="true">
+                  <Literal Text="Publish Time:"/>
+                </Border>
+                <DateTimePicker ID="PublishDateTime" Width="100%" GridPanel.Width="100%"/>
+              </GridPanel>
             </Border>
-
-            <DateTimePicker ID="PublishDateTime" Width="100%" GridPanel.Width="100%"/>
-
-            <!--<Border Padding="8px">
-              <Groupbox ID="PublishingTargetsPanel" Header="Publishing targets">
-
-                <Border ID="PublishingTargets" Padding="4px" Width="100%" />
-
-              </Groupbox>
-            </Border>-->
-
-          </GridPanel>
-
-        </Border>
+          </Tab>
+          
+          <Tab ID="AllSchedulesTab" Header="View All Schedules">
+            <Scrollbox ID="AllSchedules" Height="100%" Border="none" Padding="" GridPanel.Height="100%"/>
+          </Tab>
+          
+        </Tabstrip>
       </GridPanel>
 
     </FormDialog>

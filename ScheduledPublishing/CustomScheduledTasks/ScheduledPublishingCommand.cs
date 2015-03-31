@@ -1,4 +1,5 @@
-﻿using Sitecore.Data;
+﻿using System.Collections.Generic;
+using Sitecore.Data;
 using Sitecore.Data.Items;
 using Sitecore.Diagnostics;
 using Sitecore.Publishing;
@@ -19,8 +20,7 @@ namespace ScheduledPublishing.CustomScheduledTasks
         public void SchedulePublishingTask(Item[] itemArray, CommandItem commandItem, ScheduleItem scheduledItem)
         {
             master = Sitecore.Configuration.Factory.GetDatabase("master");
-            string[] publishingTargets;
-
+            
             foreach (var item in itemArray)
             {
                 //// if the item has Publishing targets defined, use them and publish to all of them
@@ -31,9 +31,9 @@ namespace ScheduledPublishing.CustomScheduledTasks
                 //// if the item has no Publishing targets specified, publish to all
                 //else
                 //{
-                    publishingTargets = master.GetItem("/sitecore/system/Publishing targets").Children.Select(x => x.ID.ToString()).ToArray();
+                List<string> publishingTargets = master.GetItem("/sitecore/system/Publishing targets").Children.Select(x => x.ID.ToString()).ToList();
                 //}
-                if (publishingTargets.Length == 0)
+                if (publishingTargets.Count == 0)
                 {
                     Log.Info("No publishing targets found", this);
                 }
@@ -46,7 +46,7 @@ namespace ScheduledPublishing.CustomScheduledTasks
             }
         }
 
-        private bool PublishItemToTargets(Item item, string[] publishingTargets)
+        private bool PublishItemToTargets(Item item, IEnumerable<string> publishingTargets)
         {
             bool successful = false;
             foreach (var pbTargetId in publishingTargets)
