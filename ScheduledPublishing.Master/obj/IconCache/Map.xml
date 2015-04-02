@@ -16,4 +16,8 @@
   <Item ItemPath="/sitecore/templates/System/Tasks/Schedule/Data/Items" ItemIcon="/temp/IconCache/Applications/32x32/Document.png" />
   <Item ItemPath="/sitecore/templates/System/Tasks/Schedule/Data/Last run" ItemIcon="/temp/IconCache/Applications/32x32/Document.png" />
   <Item ItemPath="/sitecore/templates/System/Tasks/Schedule/Data/Schedule" ItemIcon="/temp/IconCache/Applications/32x32/Document.png" />
+  <Item ItemPath="/sitecore/templates/System/Tasks/CustomSchedule/Custom Data/CreatedByEmail" ItemIcon="/temp/IconCache/Applications/32x32/Document.png" />
+  <Item ItemPath="/sitecore/templates/System/Tasks/CustomSchedule" ItemIcon="/temp/IconCache/People/16x16/clock_run.png" />
+  <Item ItemPath="/sitecore/templates/System/Tasks/CustomSchedule/Custom Data" ItemIcon="/temp/IconCache/Applications/32x32/Document.png" />
+  <Item ItemPath="/sitecore/templates/System/Tasks/CustomSchedule/Custom Data/Unpublish" ItemIcon="/temp/IconCache/Applications/32x32/Document.png" />
 </ItemIconCache>

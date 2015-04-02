@@ -21,10 +21,11 @@ namespace ScheduledPublishing.CustomScheduledTasks
             Assert.ArgumentNotNull((object)context, "context");
             if (context.Items.Length != 1)
                 return;
-            this.Execute(context.Items[0]);
+            bool isUnpublish = context.Parameters["unpublish"] != null && bool.Parse(context.Parameters["unpublish"]);
+            this.Execute(context.Items[0], isUnpublish);
         }
 
-        public void Execute(Item item)
+        public void Execute(Item item, bool isUnpublish)
         {
             Assert.ArgumentNotNull((object)item, "item");
             NameValueCollection parameters = new NameValueCollection();
@@ -32,6 +33,7 @@ namespace ScheduledPublishing.CustomScheduledTasks
             parameters["language"] = item.Language.ToString();
             parameters["version"] = item.Version.ToString();
             parameters["databasename"] = item.Database.Name;
+            parameters["unpublish"] = isUnpublish.ToString();
             Context.ClientPage.Start((object)this, "Run", parameters);
         }
 
@@ -59,6 +61,7 @@ namespace ScheduledPublishing.CustomScheduledTasks
                 }
                 UrlString urlString = new UrlString(UIUtil.GetUri("control:SchedulePublishing"));
                 urlString.Append("id", obj.ID.ToString());
+                urlString.Append("unpublish", args.Parameters["unpublish"]);
                 SheerResponse.ShowModalDialog(urlString.ToString(), "500", "300", string.Empty, true);
                 args.WaitForPostBack();
             }

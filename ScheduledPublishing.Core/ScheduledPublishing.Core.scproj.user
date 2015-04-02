@@ -18,8 +18,9 @@
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <SitecoreDeployFolder>D:\Websites\ScheduledPublishing\Website</SitecoreDeployFolder>
     <SitecoreWebUrl>http://scheduledpublishing.localhost</SitecoreWebUrl>
-    <SitecoreAccessGuid>9210782d-619d-4552-a222-0d784a012921</SitecoreAccessGuid>
+    <SitecoreAccessGuid>19a0af2e-3a5a-48ec-b89e-d858bf1a6453</SitecoreAccessGuid>
     <InstallSitecoreConnector>True</InstallSitecoreConnector>
+    <DisableFileDeployment>False</DisableFileDeployment>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' "></PropertyGroup>
   <!--

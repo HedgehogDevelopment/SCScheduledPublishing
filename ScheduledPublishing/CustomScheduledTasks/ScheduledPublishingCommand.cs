@@ -23,6 +23,7 @@ namespace ScheduledPublishing.CustomScheduledTasks
             
             foreach (var item in itemArray)
             {
+                bool isUnpublish = scheduledItem["Unpublish"] == 1.ToString();
                 //// if the item has Publishing targets defined, use them and publish to all of them
                 //if (!string.IsNullOrEmpty(item[FieldIDs.PublishingTargets]))
                 //{
@@ -39,20 +40,28 @@ namespace ScheduledPublishing.CustomScheduledTasks
                 }
                 else
                 {
-                    bool isPublished = PublishItemToTargets(item, publishingTargets);
-                    Notify("PNGPublishing@png.com", scheduledItem["CreatedByEmail"], item, isPublished);
+                    bool isSuccessful = PublishItemToTargets(item, publishingTargets, isUnpublish);
+                    Notify("PNGPublishing@png.com", scheduledItem["CreatedByEmail"], isUnpublish, item, isSuccessful);
                     
                 }
             }
         }
 
-        private bool PublishItemToTargets(Item item, IEnumerable<string> publishingTargets)
+        private bool PublishItemToTargets(Item item, IEnumerable<string> publishingTargets, bool isUnpublish)
         {
             bool successful = false;
             foreach (var pbTargetId in publishingTargets)
             {
                 try
                 {
+                    if (isUnpublish)
+                    {
+                        item.Editing.BeginEdit();
+                        item["__Never publish"] = 1.ToString();
+                        item.Editing.AcceptChanges();
+                        item.Editing.EndEdit();
+                    }
+
                     Item pbTarget = master.GetItem(new ID(pbTargetId));
                     PublishOptions publishOptions = new PublishOptions(
                         master,
@@ -66,6 +75,15 @@ namespace ScheduledPublishing.CustomScheduledTasks
                         "Custom publishing task complete for " + item.Name + " - " + item.ID
                         + " Database source: " + master.Name + " Database target: " +
                         Database.GetDatabase(pbTarget["Target database"]).Name, this);
+
+                    if (isUnpublish)
+                    {
+                        item.Editing.BeginEdit();
+                        item["__Never publish"] = string.Empty;
+                        item.Editing.AcceptChanges();
+                        item.Editing.EndEdit();
+                    }
+
                     successful = true;
                 }
                 catch (Exception e)
@@ -77,11 +95,13 @@ namespace ScheduledPublishing.CustomScheduledTasks
             }
             return successful;
         }
-        public void Notify(string emailFrom, string emailTo, Item item, bool success)
+
+        public void Notify(string emailFrom, string emailTo, bool isUnpublish, Item item, bool success)
         {
+            string action = isUnpublish ? "Unpublishing" : "Publishing";
             string body = success
-                ? "Publishing {0} ({1}) completed successfully at {2}."
-                : "Publishing {0} ({1}) failed at {2}. Please restart publishing process.";
+                ? action + " {0} ({1}) completed successfully at {2}."
+                : action + " {0} ({1}) failed at {2}. Please restart publishing process.";
 
             var smtpClient = new SmtpClient();
             var mailMessage = new MailMessage(emailFrom, emailTo)

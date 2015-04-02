@@ -6,3 +6,6 @@ C:\Users\spareva\documents\visual studio 2013\Projects\ScheduledPublishing\Sched
 C:\Users\spareva\documents\visual studio 2013\Projects\ScheduledPublishing\ScheduledPublishing\bin\Newtonsoft.Json.dll
 C:\Users\spareva\documents\visual studio 2013\Projects\ScheduledPublishing\ScheduledPublishing\obj\Release\ScheduledPublishing.dll
 C:\Users\spareva\documents\visual studio 2013\Projects\ScheduledPublishing\ScheduledPublishing\obj\Release\ScheduledPublishing.pdb
+C:\Users\spareva\documents\visual studio 2013\Projects\ScheduledPublishing\ScheduledPublishing\bin\sitecore\shell\Applications\Content Manager\Dialogs\Edit Scheduled Publishing\Edit Scheduled Publishing.xml
+C:\Users\spareva\documents\visual studio 2013\Projects\ScheduledPublishing\ScheduledPublishing\bin\App_Config\Include\ZZ_SchedulePublishingControl.config
+C:\Users\spareva\documents\visual studio 2013\Projects\ScheduledPublishing\ScheduledPublishing\obj\Release\ScheduledPublishing.csprojResolveAssemblyReference.cache

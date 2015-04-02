@@ -1,0 +1,100 @@
+----item----
+version: 1
+id: {5D9525F4-FF99-4935-B35A-F7ED8AE242CB}
+database: core
+path: /sitecore/content/Applications/Content Editor/Ribbons/Chunks/Edit Publishing Schedule/Edit Publishing Schedule
+parent: {EA536BA2-CFBF-4349-AD9D-A375C5F24CDD}
+name: Edit Publishing Schedule
+master: {00000000-0000-0000-0000-000000000000}
+template: {1DB34C92-03B0-4475-9A39-DA14E4D9D8FC}
+templatekey: Large Button
+
+----field----
+field: {D47ED548-84D5-4622-9886-5CC164727507}
+name: Icon
+key: icon
+content-length: 30
+
+people/32x32/clock_refresh.png
+----field----
+field: {DBBF9EE3-C30E-4456-A81F-ED8C2E8DF91B}
+name: Click
+key: click
+content-length: 29
+
+custom:editPublishingSchedule
+----field----
+field: {1193B1A3-0148-413F-A979-49B39AA4A2AF}
+name: ID
+key: id
+content-length: 22
+
+EditPublishingSchedule
+----field----
+field: {06D5295C-ED2F-4A54-9BF2-26228D113318}
+name: __Icon
+key: __icon
+content-length: 0
+
+
+----version----
+language: en
+version: 1
+revision: e7d7d0d9-6fd2-4a37-b96a-7ed116b4fe84
+
+----field----
+field: {4DF6DA21-E745-444C-956E-1D4A96AB8821}
+name: Header
+key: header
+content-length: 24
+
+Edit Publishing Schedule
+----field----
+field: {A1A31A93-C4A0-4396-B629-67C33001A3CF}
+name: Tooltip
+key: tooltip
+content-length: 23
+
+Edit existing schedules
+----field----
+field: {52807595-0F8F-4B20-8D2A-CB71D28C6103}
+name: __Owner
+key: __owner
+content-length: 14
+
+sitecore\admin
+----field----
+field: {25BED78C-4957-4165-998A-CA1B52F67497}
+name: __Created
+key: __created
+content-length: 15
+
+20150401T110200
+----field----
+field: {5DD74568-4D4B-44C1-B513-0AF5F4CDA34F}
+name: __Created by
+key: __created by
+content-length: 14
+
+sitecore\admin
+----field----
+field: {8CDC337E-A112-42FB-BBB4-4143751E123F}
+name: __Revision
+key: __revision
+content-length: 36
+
+e7d7d0d9-6fd2-4a37-b96a-7ed116b4fe84
+----field----
+field: {D9CF14B1-FA16-4BA6-9288-E8A174D4D522}
+name: __Updated
+key: __updated
+content-length: 34
+
+20150401T115142:635634859020431632
+----field----
+field: {BADD9CF9-53E0-4D0C-BCC0-2D784C282F6A}
+name: __Updated by
+key: __updated by
+content-length: 14
+
+sitecore\admin
