@@ -1,4 +1,5 @@
-﻿using Sitecore;
+﻿using System.Web.UI.WebControls;
+using Sitecore;
 using Sitecore.Collections;
 using Sitecore.Configuration;
 using Sitecore.Data;
@@ -19,7 +20,9 @@ using System.Linq;
 using System.Text;
 using System.Web.UI;
 using System.Web.UI.HtmlControls;
+using BaseValidator = Sitecore.Data.Validators.BaseValidator;
 using Control = Sitecore.Web.UI.HtmlControls.Control;
+using Literal = Sitecore.Web.UI.HtmlControls.Literal;
 using ValidatorCollection = Sitecore.Data.Validators.ValidatorCollection;
 
 namespace ScheduledPublishing.sitecore.shell.Applications.ContentManager.Dialogs
@@ -36,6 +39,8 @@ namespace ScheduledPublishing.sitecore.shell.Applications.ContentManager.Dialogs
         protected Border PublishingTargets;
         protected Border Languages;
         protected Checkbox PublishChildren;
+        protected Radiobutton SmartPublish;
+        protected Radiobutton Republish;
         private readonly string ScheduleTemplateID = "{9F110258-0139-4FC9-AED8-5610C13DADF3}";// "{70244923-FA84-477C-8CBD-62F39642C42B}";
         private readonly string SchedulesFolderPath = "/sitecore/System/Tasks/Custom Schedules/";
 
@@ -51,6 +56,7 @@ namespace ScheduledPublishing.sitecore.shell.Applications.ContentManager.Dialogs
                 RenderExistingSchedules(itemFromQueryString);
                 bool isUnpublishing= bool.Parse(Context.Request.QueryString["unpublish"]);
                 PublishTimeLit.Text = isUnpublishing ? "Unpiblish Time: " : "Publish Time: ";
+                this.SmartPublish.Checked = true;
                 BuildPublishingTargets();
                 BuildLanguages();
             }
@@ -99,19 +105,16 @@ namespace ScheduledPublishing.sitecore.shell.Applications.ContentManager.Dialogs
             Database[] publishingTargetDatabases = GetPublishingTargetDatabases();
             bool @checked = this.PublishChildren.Checked;
             string id = UIUtil.GetItemFromQueryString(Context.ContentDatabase).ID.ToString();
-            bool flag1 = Context.ClientPage.ClientRequest.Form["PublishMode"] == "IncrementalPublish";
-            bool flag2 = Context.ClientPage.ClientRequest.Form["PublishMode"] == "SmartPublish";
-            bool flag3 = Context.ClientPage.ClientRequest.Form["PublishMode"] == "Republish";
-            bool rebuild = false;
-            this.JobHandle = (string.IsNullOrEmpty(id) ? 
-                (!flag1 ? 
-                (!flag2 ? 
-                (!rebuild ? 
-                    PublishManager.Republish(Client.ContentDatabase, publishingTargetDatabases, languages, Context.Language) : 
-                    PublishManager.RebuildDatabase(Client.ContentDatabase, publishingTargetDatabases)) : 
-                    PublishManager.PublishSmart(Client.ContentDatabase, publishingTargetDatabases, languages, Context.Language)) : 
-                    PublishManager.PublishIncremental(Client.ContentDatabase, publishingTargetDatabases, languages, Context.Language)) : 
-                    PublishManager.PublishItem(Client.GetItemNotNull(id), publishingTargetDatabases, languages, @checked, flag2)).ToString();
+            bool isIncremental = Context.ClientPage.ClientRequest.Form["PublishMode"] == "IncrementalPublish";
+            bool isSmart = Context.ClientPage.ClientRequest.Form["PublishMode"] == "SmartPublish";
+
+            this.JobHandle = (string.IsNullOrEmpty(id)
+                ? (!isIncremental
+                    ? (!isSmart
+                        ? PublishManager.Republish(Client.ContentDatabase, publishingTargetDatabases, languages, Context.Language)
+                        : PublishManager.PublishSmart(Client.ContentDatabase, publishingTargetDatabases, languages, Context.Language))
+                    : PublishManager.PublishIncremental(Client.ContentDatabase, publishingTargetDatabases, languages, Context.Language))
+                : PublishManager.PublishItem(Client.GetItemNotNull(id), publishingTargetDatabases, languages, @checked, isSmart)).ToString();
         }
 
         /// <summary>
@@ -283,6 +286,10 @@ namespace ScheduledPublishing.sitecore.shell.Applications.ContentManager.Dialogs
                     newTask["Items"] = itemFromQueryString.Paths.FullPath;
                     newTask["CreatedByEmail"] = Context.User.Profile.Email;
                     newTask["Unpublish"] = isUnpublishing ? 1.ToString() : string.Empty;
+                    newTask["PublishMethod"] = this.SmartPublish.Checked ? "smart" : "republish";
+                    newTask["PublishChildren"] = this.PublishChildren.Checked ? "1" : string.Empty;
+                    newTask["PublishLanguages"] = string.Join("|", GetLanguages().Select(x => x.Name));
+                    newTask["TargetDatabase"] = string.Join("|", GetPublishingTargetDatabases().Select(x => x.Name));
 
                     string format = "yyyyMMddTHHmmss";
                     newTask["Schedule"] =
@@ -341,7 +348,7 @@ namespace ScheduledPublishing.sitecore.shell.Applications.ContentManager.Dialogs
             foreach (string index in Context.ClientPage.ClientRequest.Form.Keys)
             {
                 if (index != null && index.StartsWith("la_", StringComparison.InvariantCulture))
-                    arrayList.Add((object)Language.Parse(Context.ClientPage.ClientRequest.Form[index]));
+                    arrayList.Add(Language.Parse(Context.ClientPage.ClientRequest.Form[index]));
             }
             return arrayList.ToArray(typeof(Language)) as Language[];
         }

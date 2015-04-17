@@ -20,7 +20,7 @@ namespace ScheduledPublishing.sitecore.shell.Applications.ContentManager.Dialogs
         protected Sitecore.Web.UI.HtmlControls.Literal ServerTime;
         private readonly string ScheduleTemplateID = "{70244923-FA84-477C-8CBD-62F39642C42B}";
         private readonly string SchedulesFolderPath = "/sitecore/System/Tasks/Schedules/";
-        private readonly string CustomSchedulesPath = "/sitecore/system/Tasks/Custom Schedules";
+        private readonly string CustomSchedulesPath = "/sitecore/system/Tasks/Custom Schedules/";
         
         protected override void OnLoad(EventArgs e)
         {
@@ -39,7 +39,7 @@ namespace ScheduledPublishing.sitecore.shell.Applications.ContentManager.Dialogs
         /// </summary>
         private void RenderAllSchedules()
         {
-            Item schedulesFolder = Context.ContentDatabase.GetItem(SchedulesFolderPath);
+            Item schedulesFolder = Context.ContentDatabase.GetItem(CustomSchedulesPath);
             IEnumerable<Item> allSchedules = schedulesFolder.Children;
             allSchedules = allSchedules.OrderBy(x => DateUtil.IsoDateToDateTime(x["Schedule"].Split('|').First()));
 
