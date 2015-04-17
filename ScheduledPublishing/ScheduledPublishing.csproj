@@ -47,6 +47,7 @@
     <Reference Include="System.Configuration" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CustomScheduledTasks\CreatePublishTaskCommand.cs" />
     <Compile Include="CustomScheduledTasks\OpenEditScheduledPublishingDialog.cs" />
     <Compile Include="CustomScheduledTasks\ScheduledPublishingCommand.cs" />
     <Compile Include="CustomScheduledTasks\OpenScheduledPublishingDialog.cs" />

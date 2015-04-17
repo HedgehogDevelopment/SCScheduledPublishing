@@ -21,11 +21,33 @@
                   </Groupbox>
                 </Border>
                 <Border GridPanel.NoWrap="true">
-                  <Literal Text="Publish Time:"/>
+                  <Literal ID="PublishTimeLit"/>
                 </Border>
                 <DateTimePicker ID="PublishDateTime" Width="100%" GridPanel.Width="100%"/>
               </GridPanel>
             </Border>
+
+        <Scrollbox ID="SettingsPane" Border="none" Background="transparent">
+          <Groupbox ID="PublishingPanel" Header="Publishing" Margin="0px 0px 16px 0px">
+            <Border Padding="4">
+              <Radiobutton ID="SmartPublish" Name="PublishMode" Header="Smart publish - Publish Differences Between Source and Target Database." Value="SmartPublish" Checked="true"/>
+              <br/>
+              <Radiobutton ID="Republish" Name="PublishMode" Header="Republish - Publish Everything." Value="Republish"/>
+
+              <Border ID="PublishChildrenPane">
+                <Checkbox ID="PublishChildren" Header="Publish Subitems"/>
+              </Border>
+            </Border>
+          </Groupbox>
+
+          <Groupbox ID="LanguagesPanel" Header="Publish Language" Margin="0px 0px 16px 0px">
+            <Border Padding="4" ID="Languages"/>
+          </Groupbox>
+
+          <Groupbox ID="PublishingTargetsPanel" Header="Publishing Targets">
+            <Border Padding="4" ID="PublishingTargets"/>
+          </Groupbox>
+        </Scrollbox>
           
       </GridPanel>
 

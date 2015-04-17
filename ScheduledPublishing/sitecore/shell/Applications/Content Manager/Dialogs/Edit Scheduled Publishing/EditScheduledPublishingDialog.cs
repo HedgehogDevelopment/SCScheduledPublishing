@@ -20,6 +20,7 @@ namespace ScheduledPublishing.sitecore.shell.Applications.ContentManager.Dialogs
         protected Sitecore.Web.UI.HtmlControls.Literal ServerTime;
         private readonly string ScheduleTemplateID = "{70244923-FA84-477C-8CBD-62F39642C42B}";
         private readonly string SchedulesFolderPath = "/sitecore/System/Tasks/Schedules/";
+        private readonly string CustomSchedulesPath = "/sitecore/system/Tasks/Custom Schedules";
         
         protected override void OnLoad(EventArgs e)
         {

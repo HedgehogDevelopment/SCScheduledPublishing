@@ -10,4 +10,9 @@
   <Item ItemPath="/sitecore/content/Applications/Content Editor/Ribbons/Chunks/Edit Publishing Schedule" ItemIcon="/temp/IconCache/Applications/32x32/Document.png" />
   <Item ItemPath="/sitecore/content/Applications/Content Editor/Ribbons/Chunks/Scheduled Publishing/Schedule Publishing" ItemIcon="/temp/IconCache/Applications/32x32/Document.png" />
   <Item ItemPath="/sitecore/content/Applications/Content Editor/Ribbons/Chunks/Scheduled Publishing/Edit Publishing Schedule" ItemIcon="/temp/IconCache/Applications/32x32/Document.png" />
+  <Item ItemPath="/sitecore/content/Applications/Content Editor/Ribbons/Chunks/Scheduled Publishing" ItemIcon="/temp/IconCache/Applications/32x32/Document.png" />
+  <Item ItemPath="/sitecore/content/Applications/Content Editor/Ribbons/Strips/Publish" ItemIcon="/temp/IconCache/Applications/32x32/Document.png" />
+  <Item ItemPath="/sitecore/content/Applications/Content Editor/Ribbons/Chunks/Scheduled Publishing/Schedule Unpublish" ItemIcon="/temp/IconCache/Applications/32x32/Document.png" />
+  <Item ItemPath="/sitecore/content/Applications/Content Editor/Ribbons/Strips/Publish/Publish" ItemIcon="/temp/IconCache/Applications/32x32/Document.png" />
+  <Item ItemPath="/sitecore/content/Applications/Content Editor/Ribbons/Strips/Publish/Scheduled Publishing" ItemIcon="/temp/IconCache/Applications/32x32/Document.png" />
 </ItemIconCache>

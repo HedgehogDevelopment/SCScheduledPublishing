@@ -1,17 +1,26 @@
 ﻿using Sitecore;
+using Sitecore.Collections;
+using Sitecore.Configuration;
 using Sitecore.Data;
-using Sitecore.Data.Fields;
 using Sitecore.Data.Items;
+using Sitecore.Data.Managers;
 using Sitecore.Data.Validators;
 using Sitecore.Diagnostics;
+using Sitecore.Globalization;
+using Sitecore.Publishing;
 using Sitecore.SecurityModel;
 using Sitecore.Web.UI.HtmlControls;
 using Sitecore.Web.UI.Pages;
 using Sitecore.Web.UI.Sheer;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Web.UI;
+using System.Web.UI.HtmlControls;
+using Control = Sitecore.Web.UI.HtmlControls.Control;
+using ValidatorCollection = Sitecore.Data.Validators.ValidatorCollection;
 
 namespace ScheduledPublishing.sitecore.shell.Applications.ContentManager.Dialogs
 {
@@ -23,8 +32,12 @@ namespace ScheduledPublishing.sitecore.shell.Applications.ContentManager.Dialogs
         protected DateTimePicker PublishDateTime;
         protected Border ExistingSchedules;
         protected Literal ServerTime;
-        private readonly string ScheduleTemplateID = "{70244923-FA84-477C-8CBD-62F39642C42B}";
-        private readonly string SchedulesFolderPath = "/sitecore/System/Tasks/Schedules/";
+        protected Literal PublishTimeLit;
+        protected Border PublishingTargets;
+        protected Border Languages;
+        protected Checkbox PublishChildren;
+        private readonly string ScheduleTemplateID = "{9F110258-0139-4FC9-AED8-5610C13DADF3}";// "{70244923-FA84-477C-8CBD-62F39642C42B}";
+        private readonly string SchedulesFolderPath = "/sitecore/System/Tasks/Custom Schedules/";
 
         protected override void OnLoad(EventArgs e)
         {
@@ -36,39 +49,129 @@ namespace ScheduledPublishing.sitecore.shell.Applications.ContentManager.Dialogs
                 Error.AssertItemFound(itemFromQueryString);
                 ServerTime.Text = "Current time on server: " + DateTime.Now;
                 RenderExistingSchedules(itemFromQueryString);
-                //RenderTargets(itemFromQueryString);
+                bool isUnpublishing= bool.Parse(Context.Request.QueryString["unpublish"]);
+                PublishTimeLit.Text = isUnpublishing ? "Unpiblish Time: " : "Publish Time: ";
+                BuildPublishingTargets();
+                BuildLanguages();
             }
 
             base.OnLoad(e);
         }
 
         /// <summary>
-        /// Render available publishing targets
+        /// Create a task for publishing the selected item
         /// </summary>
-        /// <param name="item">The item that publishing is scheduled for</param>
-        private void RenderTargets(Item item)
+        /// <param name="sender"></param>
+        /// <param name="args"></param>
+        protected override void OnOK(object sender, EventArgs args)
         {
-            Assert.ArgumentNotNull(item, "item");
-            Field itemTargets = item.Fields[FieldIDs.PublishingTargets];
-            if (itemTargets == null) return;
-            Item publishingTargets = Context.ContentDatabase.Items["/sitecore/system/publishing targets"];
-            if (publishingTargets == null) return;
-            StringBuilder sb = new StringBuilder();
-            string itemTargetsStr = itemTargets.Value;
-            foreach (Item target in publishingTargets.Children)
+            //StartPublisher();
+            Assert.ArgumentNotNull(sender, "sender");
+            Assert.ArgumentNotNull(args, "args");
+            Item itemFromQueryString = UIUtil.GetItemFromQueryString(Context.ContentDatabase);
+            bool isUnpublishing = bool.Parse(Context.Request.QueryString["unpublish"]);
+            Error.AssertItemFound(itemFromQueryString);
+
+            if (!string.IsNullOrEmpty(this.PublishDateTime.Value))
             {
-                string validTarget = itemTargetsStr.IndexOf(target.ID.ToString(), StringComparison.InvariantCulture) >= 0 ? 
-                    " checked=\"true\"" : string.Empty;
-                sb.Append("<input id=\"pb_" + ShortID.Encode(target.ID) + "\" name=\"pb_" + ShortID.Encode(target.ID) + "\" class=\"scRibbonCheckbox\" type=\"checkbox\"" + validTarget + " style=\"vertical-align:middle\"/>");
-                sb.Append(target.DisplayName);
-                sb.Append("<br/>");
+                SchedulePublishing(itemFromQueryString, isUnpublishing);
             }
-            //this.PublishingTargets.InnerHtml = sb.ToString();
+
+            base.OnOK(sender, args);
         }
 
+        protected string JobHandle
+        {
+            get
+            {
+                return StringUtil.GetString(this.ServerProperties["JobHandle"]);
+            }
+            set
+            {
+                Assert.ArgumentNotNullOrEmpty(value, "value");
+                this.ServerProperties["JobHandle"] = (object)value;
+            }
+        }
+
+        protected void StartPublisher()
+        {
+            Language[] languages = GetLanguages();
+            Database[] publishingTargetDatabases = GetPublishingTargetDatabases();
+            bool @checked = this.PublishChildren.Checked;
+            string id = UIUtil.GetItemFromQueryString(Context.ContentDatabase).ID.ToString();
+            bool flag1 = Context.ClientPage.ClientRequest.Form["PublishMode"] == "IncrementalPublish";
+            bool flag2 = Context.ClientPage.ClientRequest.Form["PublishMode"] == "SmartPublish";
+            bool flag3 = Context.ClientPage.ClientRequest.Form["PublishMode"] == "Republish";
+            bool rebuild = false;
+            this.JobHandle = (string.IsNullOrEmpty(id) ? 
+                (!flag1 ? 
+                (!flag2 ? 
+                (!rebuild ? 
+                    PublishManager.Republish(Client.ContentDatabase, publishingTargetDatabases, languages, Context.Language) : 
+                    PublishManager.RebuildDatabase(Client.ContentDatabase, publishingTargetDatabases)) : 
+                    PublishManager.PublishSmart(Client.ContentDatabase, publishingTargetDatabases, languages, Context.Language)) : 
+                    PublishManager.PublishIncremental(Client.ContentDatabase, publishingTargetDatabases, languages, Context.Language)) : 
+                    PublishManager.PublishItem(Client.GetItemNotNull(id), publishingTargetDatabases, languages, @checked, flag2)).ToString();
+        }
+
+        /// <summary>
+        /// Renders available publishing targets.
+        /// </summary>
+        private void BuildPublishingTargets()
+        {
+            Item publishingTargets = Context.ContentDatabase.Items["/sitecore/system/publishing targets"];
+            if (publishingTargets == null || !publishingTargets.HasChildren)
+            {
+                Log.Info("No publishing targets found", this);
+            }
+            
+            foreach (Item target in publishingTargets.Children)
+            {
+                string id = "pb_" + ShortID.Encode(target.ID);
+                HtmlGenericControl targetInput = new HtmlGenericControl("input");
+                this.PublishingTargets.Controls.Add(targetInput);
+                targetInput.Attributes["type"] = "checkbox";
+                targetInput.ID = id;
+                targetInput.Disabled = !target.Access.CanWrite();
+                HtmlGenericControl targetLabel = new HtmlGenericControl("label");
+                this.PublishingTargets.Controls.Add(targetLabel);
+                targetLabel.Attributes["for"] = id;
+                targetLabel.InnerText = target.DisplayName;
+                this.PublishingTargets.Controls.Add(new LiteralControl("<br>"));
+            }
+        }
+
+        /// <summary>
+        /// Renders available publishing languages.
+        /// </summary>
+        private void BuildLanguages()
+        {
+            LanguageCollection languages = LanguageManager.GetLanguages(Context.ContentDatabase);
+            foreach (var language in languages)
+            {
+                if (Settings.CheckSecurityOnLanguages)
+                {
+                    ID languageItemId = LanguageManager.GetLanguageItemId(language, Context.ContentDatabase);
+                    Assert.IsNotNull(languageItemId, "languageItemId");
+                    Item lang = Context.ContentDatabase.GetItem(languageItemId);
+                    Assert.IsNotNull(lang, "lang");
+                }
+
+                string uniqueId = Control.GetUniqueID("la_");
+                uniqueId += language.Name;
+                HtmlGenericControl langInput = new HtmlGenericControl("input");
+                this.Languages.Controls.Add(langInput);
+                langInput.Attributes["type"] = "checkbox";
+                langInput.ID = uniqueId;
+                langInput.Attributes["value"] = language.Name;
+                HtmlGenericControl langLabel = new HtmlGenericControl("label");
+                this.Languages.Controls.Add(langLabel);
+                langLabel.Attributes["for"] = uniqueId;
+                langLabel.InnerText = language.CultureInfo.DisplayName;
+                this.Languages.Controls.Add(new LiteralControl("<br>"));
+            }
+        }
         
-
-
         /// <summary>
         /// Displays a list of all already scheduled publishings' date and time for this item, ordered from most recent to furthest in time
         /// </summary>
@@ -98,28 +201,7 @@ namespace ScheduledPublishing.sitecore.shell.Applications.ContentManager.Dialogs
             }
             this.ExistingSchedules.InnerHtml = sb.ToString();
         }
-        
-        /// <summary>
-        /// Create a task for publishing the selected item
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="args"></param>
-        protected override void OnOK(object sender, EventArgs args)
-        {
-            Assert.ArgumentNotNull(sender, "sender");
-            Assert.ArgumentNotNull(args, "args");
-            Item itemFromQueryString = UIUtil.GetItemFromQueryString(Context.ContentDatabase);
-            bool isUnpublishing= bool.Parse(Context.Request.QueryString["unpublish"]);
-            Error.AssertItemFound(itemFromQueryString);
-
-            if (!string.IsNullOrEmpty(this.PublishDateTime.Value))
-            {
-                SchedulePublishing(itemFromQueryString, isUnpublishing);
-            }
-
-            base.OnOK(sender, args);
-        }
-
+      
         /// <summary>
         /// Create a task to invoke publishing command at specific time
         /// </summary>
@@ -127,23 +209,27 @@ namespace ScheduledPublishing.sitecore.shell.Applications.ContentManager.Dialogs
         /// <param name="isUnpublishing">If the item is to be unpublished instead of published</param>
         private void SchedulePublishing(Item itemFromQueryString, bool isUnpublishing)
         {
-            bool doPublish = true;
             // Validate date chosen
-            doPublish = ValidateDateChosen();
+            bool isDateValid = ValidateDateChosen();
 
             // Validate item to be published
-            doPublish = ValidateItemValidators(itemFromQueryString);
+            bool isItemValid = ValidateItemValidators(itemFromQueryString);
 
             //Validate if item is publishable
-            doPublish = ValidatePublishable(itemFromQueryString);
+            bool isPublishable = ValidatePublishable(itemFromQueryString);
 
             // Create publishing task
-            if (doPublish)
+            if (isDateValid && isItemValid && isPublishable)
             {
                 CreatePublishingTask(itemFromQueryString, isUnpublishing);
             }
         }
 
+        /// <summary>
+        /// Checks whether the item is publishable in the selected time.
+        /// </summary>
+        /// <param name="itemFromQueryString">Item to publish</param>
+        /// <returns></returns>
         private bool ValidatePublishable(Item itemFromQueryString)
         {
             if (!itemFromQueryString.Publishing.IsPublishable(
@@ -155,6 +241,11 @@ namespace ScheduledPublishing.sitecore.shell.Applications.ContentManager.Dialogs
             return true;
         }
 
+        /// <summary>
+        /// Checks if item has validator errors
+        /// </summary>
+        /// <param name="itemFromQueryString"></param>
+        /// <returns>Always true if we want to be able to publish with validator errors. isValid if we want validator errors to prevent publishing.</returns>
         private bool ValidateItemValidators(Item itemFromQueryString)
         {
             bool isValid = CheckValidation(itemFromQueryString);
@@ -231,8 +322,8 @@ namespace ScheduledPublishing.sitecore.shell.Applications.ContentManager.Dialogs
             ValidatorCollection validatorsButton = ValidatorManager.GetGlobalValidatorsForItem(ValidatorsMode.ValidateButton, item);
             ValidatorCollection validatorsGutter = ValidatorManager.GetGlobalValidatorsForItem(ValidatorsMode.Gutter, item);
             var options = new ValidatorOptions(true);
-            ValidatorManager.Validate(validators, options);
-            foreach (BaseValidator validator in validators)
+            ValidatorManager.Validate(validatorsBar, options);
+            foreach (BaseValidator validator in validatorsBar)
             {
                 if (validator.Result != ValidatorResult.Valid)
                 {
@@ -241,6 +332,46 @@ namespace ScheduledPublishing.sitecore.shell.Applications.ContentManager.Dialogs
             }
             //return !validators.Any(x => x.Result != ValidatorResult.Valid);
             return true;
+        }
+
+
+        private static Language[] GetLanguages()
+        {
+            ArrayList arrayList = new ArrayList();
+            foreach (string index in Context.ClientPage.ClientRequest.Form.Keys)
+            {
+                if (index != null && index.StartsWith("la_", StringComparison.InvariantCulture))
+                    arrayList.Add((object)Language.Parse(Context.ClientPage.ClientRequest.Form[index]));
+            }
+            return arrayList.ToArray(typeof(Language)) as Language[];
+        }
+
+        private List<Item> GetPublishingTargets()
+        {
+            List<Item> list = new List<Item>();
+            foreach (string str in Context.ClientPage.ClientRequest.Form.Keys)
+            {
+                if (str != null && str.StartsWith("pb_", StringComparison.InvariantCulture))
+                {
+                    Item obj = Context.ContentDatabase.Items[ShortID.Decode(str.Substring(3))];
+                    Assert.IsNotNull((object)obj, typeof(Item), "Publishing target not found.", new object[0]);
+                    list.Add(obj);
+                }
+            }
+            return list;
+        }
+
+        private Database[] GetPublishingTargetDatabases()
+        {
+            ArrayList arrayList = new ArrayList();
+            foreach (BaseItem baseItem in GetPublishingTargets())
+            {
+                string name = baseItem["Target database"];
+                Database database = Factory.GetDatabase(name);
+                Assert.IsNotNull((object)database, typeof(Database), Translate.Text("Database \"{0}\" not found."), (object)name);
+                arrayList.Add((object)database);
+            }
+            return arrayList.ToArray(typeof(Database)) as Database[];
         }
     }
 }

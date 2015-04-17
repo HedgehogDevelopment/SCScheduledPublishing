@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Sitecore;
 using Sitecore.Data;
 using Sitecore.Data.Items;
 using Sitecore.Diagnostics;
@@ -16,35 +17,72 @@ namespace ScheduledPublishing.CustomScheduledTasks
     public class ScheduledPublishingCommand
     {
         protected Database master;
+        private readonly string CustomSchedulesPath = "/sitecore/system/Tasks/Custom Schedules";
 
         public void SchedulePublishingTask(Item[] itemArray, CommandItem commandItem, ScheduleItem scheduledItem)
         {
             master = Sitecore.Configuration.Factory.GetDatabase("master");
-            
-            foreach (var item in itemArray)
+            List<Item> itemsToPublish = GetItemsToPublish();
+
+            foreach (var item in itemsToPublish)
             {
-                bool isUnpublish = scheduledItem["Unpublish"] == 1.ToString();
-                //// if the item has Publishing targets defined, use them and publish to all of them
-                //if (!string.IsNullOrEmpty(item[FieldIDs.PublishingTargets]))
-                //{
-                //    publishingTargets = item[FieldIDs.PublishingTargets].Split('|');
-                //}
-                //// if the item has no Publishing targets specified, publish to all
-                //else
-                //{
-                List<string> publishingTargets = master.GetItem("/sitecore/system/Publishing targets").Children.Select(x => x.ID.ToString()).ToList();
-                //}
-                if (publishingTargets.Count == 0)
+                Log.Info("Custom scheduled for publish (2): " + item.Name, this);
+                if (scheduledItem != null)
                 {
-                    Log.Info("No publishing targets found", this);
+                    bool isUnpublish = item["Unpublish"] == 1.ToString();
+                    //// if the item has Publishing targets defined, use them and publish to all of them
+                    //if (!string.IsNullOrEmpty(item[FieldIDs.PublishingTargets]))
+                    //{
+                    //    publishingTargets = item[FieldIDs.PublishingTargets].Split('|');
+                    //}
+                    //// if the item has no Publishing targets specified, publish to all
+                    //else
+                    //{
+                    List<string> publishingTargets =
+                        master.GetItem("/sitecore/system/Publishing targets")
+                            .Children.Select(x => x.ID.ToString())
+                            .ToList();
+                    //}
+                    if (publishingTargets.Count == 0)
+                    {
+                        Log.Info("No publishing targets found", this);
+                    }
+                    else
+                    {
+                        bool isSuccessful = PublishItemToTargets(item, publishingTargets, isUnpublish);
+                        Notify("PNGPublishing@png.com", item["CreatedByEmail"], isUnpublish, item, isSuccessful);
+                    }
                 }
-                else
-                {
-                    bool isSuccessful = PublishItemToTargets(item, publishingTargets, isUnpublish);
-                    Notify("PNGPublishing@png.com", scheduledItem["CreatedByEmail"], isUnpublish, item, isSuccessful);
-                    
-                }
+                else Log.Info("scheduled item null", this);
             }
+        }
+
+        private List<Item> GetItemsToPublish()
+        {
+            try
+            {
+
+                Item schedulesFolder = Context.ContentDatabase.GetItem(CustomSchedulesPath);
+                List<Item> itemsToPublish = new List<Item>();
+                foreach (Item schedule in schedulesFolder.Children)
+                {
+                    if (!string.IsNullOrEmpty(schedule["Schedule"]) && !string.IsNullOrEmpty(schedule["Items"]))
+                    {
+                        DateTime targetDate = DateUtil.IsoDateToDateTime(schedule["Schedule"].Split('|').First());
+                        if (DateTime.Compare(targetDate.AddHours(1), DateTime.Now) <= 0)
+                        {
+                            Item targetItem = Context.ContentDatabase.GetItem(schedule["Items"]);
+                            itemsToPublish.Add(targetItem);
+                        }
+                    }
+                }
+                return itemsToPublish;
+            }
+            catch (Exception e)
+            {
+                Log.Info(e.ToString(), this);
+            }
+            return new List<Item>();
         }
 
         private bool PublishItemToTargets(Item item, IEnumerable<string> publishingTargets, bool isUnpublish)

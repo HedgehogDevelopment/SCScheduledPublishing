@@ -62,7 +62,7 @@ namespace ScheduledPublishing.CustomScheduledTasks
                 UrlString urlString = new UrlString(UIUtil.GetUri("control:SchedulePublishing"));
                 urlString.Append("id", obj.ID.ToString());
                 urlString.Append("unpublish", args.Parameters["unpublish"]);
-                SheerResponse.ShowModalDialog(urlString.ToString(), "500", "300", string.Empty, true);
+                SheerResponse.ShowModalDialog(urlString.ToString(), "600", "500", string.Empty, true);
                 args.WaitForPostBack();
             }
         }
