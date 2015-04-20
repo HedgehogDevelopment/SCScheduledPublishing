@@ -1,8 +1,0 @@
-.\Debug\sitecore\shell\Applications\ContentManager\Dialogs\Schedule Publishing\Schedule Publishing.xml
-.\Debug\App_Config\Include\ZZ_SchedulePublishingControl.config
-.\Debug\bin\HtmlAgilityPack.dll
-.\Debug\bin\Lucene.Net.dll
-.\Debug\bin\Newtonsoft.Json.dll
-.\Debug\bin\ScheduledPublishing.dll
-.\Debug\bin\ScheduledPublishing.pdb
-.\Debug\bin\Sitecore.Kernel.dll
