@@ -18,11 +18,15 @@ namespace ScheduledPublishing.CustomScheduledTasks
         protected void Run(ClientPipelineArgs args)
         {
             if (!SheerResponse.CheckModified())
+            {
                 return;
+            }
+                
             if (args.IsPostBack)
             {
                 return;
             }
+
             UrlString urlString = new UrlString(UIUtil.GetUri("control:EditScheduledPublishing"));
             SheerResponse.ShowModalDialog(urlString.ToString(), "700", "400", string.Empty, true);
             args.WaitForPostBack();

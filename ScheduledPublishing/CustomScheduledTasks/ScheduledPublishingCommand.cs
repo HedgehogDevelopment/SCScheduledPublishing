@@ -16,12 +16,12 @@ namespace ScheduledPublishing.CustomScheduledTasks
     /// </summary>
     public class ScheduledPublishingCommand
     {
-        protected Database master;
-        private readonly string CustomSchedulesPath = "/sitecore/system/Tasks/Custom Schedules";
+        protected Database Master;
+        private const string PUBLISHING_SCHEDULES_PATH = "/sitecore/system/Tasks/PublishingSchedules";
 
         public void SchedulePublishingTask(Item[] itemArray, CommandItem commandItem, ScheduleItem scheduledItem)
         {
-            master = Sitecore.Configuration.Factory.GetDatabase("master");
+            Master = Sitecore.Configuration.Factory.GetDatabase("master");
             List<Item> itemsToPublish = GetItemsToPublish();
 
             foreach (var item in itemsToPublish)
@@ -39,7 +39,7 @@ namespace ScheduledPublishing.CustomScheduledTasks
                     //else
                     //{
                     List<string> publishingTargets =
-                        master.GetItem("/sitecore/system/Publishing targets")
+                        Master.GetItem("/sitecore/system/Publishing targets")
                             .Children.Select(x => x.ID.ToString())
                             .ToList();
                     //}
@@ -61,8 +61,7 @@ namespace ScheduledPublishing.CustomScheduledTasks
         {
             try
             {
-
-                Item schedulesFolder = Context.ContentDatabase.GetItem(CustomSchedulesPath);
+                Item schedulesFolder = Context.ContentDatabase.GetItem(PUBLISHING_SCHEDULES_PATH);
                 List<Item> itemsToPublish = new List<Item>();
                 foreach (Item schedule in schedulesFolder.Children)
                 {
@@ -76,12 +75,14 @@ namespace ScheduledPublishing.CustomScheduledTasks
                         }
                     }
                 }
+
                 return itemsToPublish;
             }
             catch (Exception e)
             {
                 Log.Info(e.ToString(), this);
             }
+
             return new List<Item>();
         }
 
@@ -100,9 +101,9 @@ namespace ScheduledPublishing.CustomScheduledTasks
                         item.Editing.EndEdit();
                     }
 
-                    Item pbTarget = master.GetItem(new ID(pbTargetId));
+                    Item pbTarget = Master.GetItem(new ID(pbTargetId));
                     PublishOptions publishOptions = new PublishOptions(
-                        master,
+                        Master,
                         Database.GetDatabase(pbTarget["Target database"]),
                         PublishMode.SingleItem,
                         item.Language,
@@ -110,8 +111,8 @@ namespace ScheduledPublishing.CustomScheduledTasks
                     Sitecore.Publishing.Pipelines.PublishItem.PublishItemPipeline.Run(item.ID, publishOptions);
 
                     Log.Info(
-                        "Custom publishing task complete for " + item.Name + " - " + item.ID
-                        + " Database source: " + master.Name + " Database target: " +
+                        "Scheduled publishing task complete for " + item.Name + " - " + item.ID
+                        + " Database source: " + Master.Name + " Database target: " +
                         Database.GetDatabase(pbTarget["Target database"]).Name, this);
 
                     if (isUnpublish)
@@ -126,11 +127,12 @@ namespace ScheduledPublishing.CustomScheduledTasks
                 }
                 catch (Exception e)
                 {
-                    Log.Info("Custom publishing task failed for " + item.Name + " - " + item.ID, this);
+                    Log.Info("Scheduled publishing task failed for " + item.Name + " - " + item.ID, this);
                     Log.Info(e.ToString(), this);
                     successful = false;
                 }
             }
+
             return successful;
         }
 

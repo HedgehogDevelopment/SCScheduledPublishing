@@ -18,9 +18,7 @@ namespace ScheduledPublishing.sitecore.shell.Applications.ContentManager.Dialogs
     {
         protected Scrollbox AllSchedules;
         protected Sitecore.Web.UI.HtmlControls.Literal ServerTime;
-        private readonly string ScheduleTemplateID = "{70244923-FA84-477C-8CBD-62F39642C42B}";
-        private readonly string SchedulesFolderPath = "/sitecore/System/Tasks/Schedules/";
-        private readonly string CustomSchedulesPath = "/sitecore/system/Tasks/Custom Schedules/";
+        private readonly string PUBLISHING_SCHEDULES_PATH = "/sitecore/system/Tasks/PublishingSchedules";
         
         protected override void OnLoad(EventArgs e)
         {
@@ -28,9 +26,12 @@ namespace ScheduledPublishing.sitecore.shell.Applications.ContentManager.Dialogs
             {
                 Item itemFromQueryString = UIUtil.GetItemFromQueryString(Context.ContentDatabase);
                 Error.AssertItemFound(itemFromQueryString);
+
                 ServerTime.Text = "Current time on server: " + DateTime.Now;
+
                 RenderAllSchedules();
             }
+
             base.OnLoad(e);
         }
 
@@ -39,7 +40,7 @@ namespace ScheduledPublishing.sitecore.shell.Applications.ContentManager.Dialogs
         /// </summary>
         private void RenderAllSchedules()
         {
-            Item schedulesFolder = Context.ContentDatabase.GetItem(CustomSchedulesPath);
+            Item schedulesFolder = Context.ContentDatabase.GetItem(PUBLISHING_SCHEDULES_PATH);
             IEnumerable<Item> allSchedules = schedulesFolder.Children;
             allSchedules = allSchedules.OrderBy(x => DateUtil.IsoDateToDateTime(x["Schedule"].Split('|').First()));
 
@@ -96,6 +97,7 @@ namespace ScheduledPublishing.sitecore.shell.Applications.ContentManager.Dialogs
                     this.AllSchedules.Controls.Add(new LiteralControl("</td></tr>"));
                 }
             }
+
             this.AllSchedules.Controls.Add(new LiteralControl("</table"));
         }
 

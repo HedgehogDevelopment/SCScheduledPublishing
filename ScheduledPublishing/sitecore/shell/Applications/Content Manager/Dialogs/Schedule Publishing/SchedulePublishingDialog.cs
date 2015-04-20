@@ -40,21 +40,25 @@ namespace ScheduledPublishing.sitecore.shell.Applications.ContentManager.Dialogs
         protected Checkbox PublishChildren;
         protected Radiobutton SmartPublish;
         protected Radiobutton Republish;
-        private readonly string ScheduleTemplateID = "{9F110258-0139-4FC9-AED8-5610C13DADF3}";// "{70244923-FA84-477C-8CBD-62F39642C42B}";
-        private readonly string SchedulesFolderPath = "/sitecore/System/Tasks/Custom Schedules/";
+        private const string PUBLISHING_SCHEDULE_TEMPLATE_ID = "{9F110258-0139-4FC9-AED8-5610C13DADF3}";
+        private const string PUBLISHING_SCHEDULES_PATH = "/sitecore/system/Tasks/PublishingSchedules";
 
         protected override void OnLoad(EventArgs e)
         {
             Assert.ArgumentNotNull(e, "e");
-            
+
             if (!Context.ClientPage.IsEvent)
             {
                 Item itemFromQueryString = UIUtil.GetItemFromQueryString(Context.ContentDatabase);
                 Error.AssertItemFound(itemFromQueryString);
+
                 ServerTime.Text = "Current time on server: " + DateTime.Now;
+
                 RenderExistingSchedules(itemFromQueryString);
-                bool isUnpublishing= bool.Parse(Context.Request.QueryString["unpublish"]);
+
+                bool isUnpublishing = bool.Parse(Context.Request.QueryString["unpublish"]);
                 PublishTimeLit.Text = isUnpublishing ? "Unpiblish Time: " : "Publish Time: ";
+
                 this.SmartPublish.Checked = true;
                 BuildPublishingTargets();
                 BuildLanguages();
@@ -73,10 +77,11 @@ namespace ScheduledPublishing.sitecore.shell.Applications.ContentManager.Dialogs
             //StartPublisher();
             Assert.ArgumentNotNull(sender, "sender");
             Assert.ArgumentNotNull(args, "args");
+
             Item itemFromQueryString = UIUtil.GetItemFromQueryString(Context.ContentDatabase);
-            bool isUnpublishing = bool.Parse(Context.Request.QueryString["unpublish"]);
             Error.AssertItemFound(itemFromQueryString);
 
+            bool isUnpublishing = bool.Parse(Context.Request.QueryString["unpublish"]);
             if (!string.IsNullOrEmpty(this.PublishDateTime.Value))
             {
                 SchedulePublishing(itemFromQueryString, isUnpublishing);
@@ -126,7 +131,7 @@ namespace ScheduledPublishing.sitecore.shell.Applications.ContentManager.Dialogs
             {
                 Log.Info("No publishing targets found", this);
             }
-            
+
             foreach (Item target in publishingTargets.Children)
             {
                 string id = "pb_" + ShortID.Encode(target.ID);
@@ -173,7 +178,7 @@ namespace ScheduledPublishing.sitecore.shell.Applications.ContentManager.Dialogs
                 this.Languages.Controls.Add(new LiteralControl("<br>"));
             }
         }
-        
+
         /// <summary>
         /// Displays a list of all already scheduled publishings' date and time for this item, ordered from most recent to furthest in time
         /// </summary>
@@ -182,11 +187,11 @@ namespace ScheduledPublishing.sitecore.shell.Applications.ContentManager.Dialogs
         {
             Assert.ArgumentNotNull(item, "item");
             string correspondingTaskName = item.ID.ToString().Replace("{", string.Empty).Replace("}", string.Empty) + "Task";
-            Item schedulesFolder = Context.ContentDatabase.GetItem(SchedulesFolderPath);
+            Item schedulesFolder = Context.ContentDatabase.GetItem(PUBLISHING_SCHEDULES_PATH);
             IEnumerable<string> existingSchedules = schedulesFolder.Children.Where(x => x.Name == correspondingTaskName)
                     .Select(x => DateUtil.IsoDateToDateTime(x["Schedule"].Substring(0, x["Schedule"].IndexOf('|'))).ToString());
             existingSchedules = existingSchedules.OrderBy(DateTime.Parse);
-            
+
             StringBuilder sb = new StringBuilder();
             if (existingSchedules.Any())
             {
@@ -201,9 +206,10 @@ namespace ScheduledPublishing.sitecore.shell.Applications.ContentManager.Dialogs
                 sb.Append("<div style=\"padding:0px 0px 2px 0px; width=100%;\">" + "This item has not been scheduled for publishing yet." + "</div>");
                 sb.Append("<br />");
             }
+
             this.ExistingSchedules.InnerHtml = sb.ToString();
         }
-      
+
         /// <summary>
         /// Create a task to invoke publishing command at specific time
         /// </summary>
@@ -240,6 +246,7 @@ namespace ScheduledPublishing.sitecore.shell.Applications.ContentManager.Dialogs
                 SheerResponse.Alert("Item is not publishable at that time.");
                 return false;
             }
+
             return true;
         }
 
@@ -255,6 +262,7 @@ namespace ScheduledPublishing.sitecore.shell.Applications.ContentManager.Dialogs
             {
                 SheerResponse.Alert("This item has validation errors. You may want to review them and schedule another publish.");
             }
+
             return true;
         }
 
@@ -265,6 +273,7 @@ namespace ScheduledPublishing.sitecore.shell.Applications.ContentManager.Dialogs
                 SheerResponse.Alert("The date selected for publish has passed. Please select a future date.");
                 return false;
             }
+
             return true;
         }
 
@@ -274,11 +283,11 @@ namespace ScheduledPublishing.sitecore.shell.Applications.ContentManager.Dialogs
             {
                 using (new SecurityDisabler())
                 {
-                    TemplateItem scheduleTaskTemplate = Context.ContentDatabase.GetTemplate(new ID(ScheduleTemplateID));
+                    TemplateItem scheduleTaskTemplate = Context.ContentDatabase.GetTemplate(new ID(PUBLISHING_SCHEDULE_TEMPLATE_ID));
                     string validItemName = itemFromQueryString.ID.ToString()
                         .Replace("{", string.Empty)
                         .Replace("}", string.Empty);
-                    Item schedulesFolder = Context.ContentDatabase.GetItem(SchedulesFolderPath);
+                    Item schedulesFolder = Context.ContentDatabase.GetItem(PUBLISHING_SCHEDULES_PATH);
                     Item newTask = schedulesFolder.Add(validItemName + "Task", scheduleTaskTemplate);
                     newTask.Editing.BeginEdit();
                     newTask["Command"] = "{EF235C25-AE83-4678-9E2C-C22175925893}";
@@ -349,6 +358,7 @@ namespace ScheduledPublishing.sitecore.shell.Applications.ContentManager.Dialogs
                 if (index != null && index.StartsWith("la_", StringComparison.InvariantCulture))
                     arrayList.Add(Language.Parse(Context.ClientPage.ClientRequest.Form[index]));
             }
+
             return arrayList.ToArray(typeof(Language)) as Language[];
         }
 
@@ -364,6 +374,7 @@ namespace ScheduledPublishing.sitecore.shell.Applications.ContentManager.Dialogs
                     list.Add(obj);
                 }
             }
+
             return list;
         }
 
@@ -377,6 +388,7 @@ namespace ScheduledPublishing.sitecore.shell.Applications.ContentManager.Dialogs
                 Assert.IsNotNull((object)database, typeof(Database), Translate.Text("Database \"{0}\" not found."), (object)name);
                 arrayList.Add((object)database);
             }
+
             return arrayList.ToArray(typeof(Database)) as Database[];
         }
     }

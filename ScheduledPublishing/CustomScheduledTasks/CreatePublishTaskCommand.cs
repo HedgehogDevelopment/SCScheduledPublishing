@@ -7,7 +7,6 @@ namespace ScheduledPublishing.CustomScheduledTasks
     {
         public void CreatePublishTask(Item[] itemArray, CommandItem commandItem, ScheduleItem scheduledItem)
         {
-            
         }
     }
 }

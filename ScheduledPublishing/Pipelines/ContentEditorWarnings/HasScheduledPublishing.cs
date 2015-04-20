@@ -8,7 +8,7 @@ namespace ScheduledPublishing.Pipelines.ContentEditorWarnings
 {
     public class HasScheduledPublishing
     {
-        private readonly string SchedulesFolderPath = "/sitecore/System/Tasks/Schedules/";
+        private const string SCHEDULES_FOLDER_PATH = "/sitecore/System/Tasks/Schedules/";
 
         public void Process(GetContentEditorWarningsArgs args)
         {
@@ -16,7 +16,8 @@ namespace ScheduledPublishing.Pipelines.ContentEditorWarnings
             Assert.IsNotNull(item, "item");
 
             string id = item.ID.ToString().Replace("{", string.Empty).Replace("}", string.Empty);
-            if (Context.ContentDatabase.GetItem(SchedulesFolderPath).Children.Any(x => x.Name.StartsWith(id)))
+
+            if (Context.ContentDatabase.GetItem(SCHEDULES_FOLDER_PATH).Children.Any(x => x.Name.StartsWith(id)))
             {
                 GetContentEditorWarningsArgs.ContentEditorWarning warning = args.Add();
                 warning.Icon = "Applications/32x32/information2.png";
