@@ -17,3 +17,4 @@ build/
 IconCache/
 T4RenderCache/
 BuiltFiles_*.txt
+Lib/Sitecore/Sitecore.Kernel.xml
