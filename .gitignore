@@ -1,9 +1,9 @@
+# Visual studio
 *.suo
 *.user
 *.sln.docstates
 
 # Build results
-
 [Dd]ebug/
 [Rr]elease/
 x64/
@@ -11,10 +11,11 @@ build/
 [Bb]in/
 [Oo]bj/
 
-
 # Hedgehog Team Development for Sitecore
 *.scproj.user
 IconCache/
 T4RenderCache/
 BuiltFiles_*.txt
+
+# Sitecore
 Lib/Sitecore/Sitecore.Kernel.xml
