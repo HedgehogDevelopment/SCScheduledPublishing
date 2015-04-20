@@ -1,5 +1,4 @@
-﻿using System.Web.UI.WebControls;
-using Sitecore;
+﻿using Sitecore;
 using Sitecore.Collections;
 using Sitecore.Configuration;
 using Sitecore.Data;
