@@ -26,14 +26,19 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>true</DebugSymbols>
-    <OutputPath>.\Debug\</OutputPath>
+    <OutputPath>.\bin\Debug\</OutputPath>
     <RecursiveDeployAction>Ignore</RecursiveDeployAction>
     <EnableValidations>False</EnableValidations>
     <ValidationSettingsFilePath>.\ScheduledPublishing.Master_Debug.xml</ValidationSettingsFilePath>
+    <InstallSitecoreConnector>True</InstallSitecoreConnector>
+    <DisableFileDeployment>False</DisableFileDeployment>
+    <SitecoreWebUrl>http://scscheduledpublishing.localhost/</SitecoreWebUrl>
+    <SitecoreDeployFolder>C:\inetpub\wwwroot\scscheduledpublishing.localhost\Website</SitecoreDeployFolder>
+    <SitecoreAccessGuid>54c0a6b3-aa8a-4bcd-8307-197eaec00f19</SitecoreAccessGuid>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <DebugSymbols>false</DebugSymbols>
-    <OutputPath>.\Release\</OutputPath>
+    <OutputPath>.\bin\Release\</OutputPath>
     <RecursiveDeployAction>Ignore</RecursiveDeployAction>
     <PackageName>ScheduledPublishing.Master</PackageName>
     <GeneratePackage>True</GeneratePackage>
@@ -41,12 +46,19 @@
     <PackageExcludeCode>False</PackageExcludeCode>
     <AddDateTimeToPackageName>True</AddDateTimeToPackageName>
     <PackageAuthor>Svetlana P</PackageAuthor>
-    <PackagePublisher>Svetlana P</PackagePublisher>
+    <PackagePublisher>Svetlana P </PackagePublisher>
     <PackageReadme>
     </PackageReadme>
     <PackageVersion>
     </PackageVersion>
     <SitecoreAssemblyPath>C:\tfs\Hedgehog\SitecoreComponents\6.6.0.130404</SitecoreAssemblyPath>
+    <InstallSitecoreConnector>True</InstallSitecoreConnector>
+    <DisableFileDeployment>False</DisableFileDeployment>
+    <SitecoreWebUrl>http://scscheduledpublishing.localhost/</SitecoreWebUrl>
+    <SitecoreDeployFolder>C:\inetpub\wwwroot\scscheduledpublishing.localhost\Website</SitecoreDeployFolder>
+    <SitecoreAccessGuid>54c0a6b3-aa8a-4bcd-8307-197eaec00f19</SitecoreAccessGuid>
+    <EnableValidations>False</EnableValidations>
+    <ValidationSettingsFilePath>.\ScheduledPublishing.Master_Release.xml</ValidationSettingsFilePath>
   </PropertyGroup>
   <ItemGroup>
     <AssemblyAttributes Include="AssemblyFileVersion">
