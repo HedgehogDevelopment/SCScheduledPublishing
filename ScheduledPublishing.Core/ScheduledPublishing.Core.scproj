@@ -44,8 +44,8 @@
     <InstallSitecoreConnector>True</InstallSitecoreConnector>
     <DisableFileDeployment>False</DisableFileDeployment>
     <SitecoreAccessGuid>54c0a6b3-aa8a-4bcd-8307-197eaec00f19</SitecoreAccessGuid>
-    <SitecoreWebUrl>http://scscheduledpublishing.localhost/</SitecoreWebUrl>
-    <SitecoreDeployFolder>C:\inetpub\wwwroot\scscheduledpublishing.localhost\Website</SitecoreDeployFolder>
+    <SitecoreWebUrl>http://sc66schedulepublishing.local/</SitecoreWebUrl>
+    <SitecoreDeployFolder>C:\inetpub\wwwroot\sc66schedulepublishing.local\Website</SitecoreDeployFolder>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <DebugSymbols>false</DebugSymbols>
@@ -54,8 +54,10 @@
     <InstallSitecoreConnector>True</InstallSitecoreConnector>
     <DisableFileDeployment>False</DisableFileDeployment>
     <SitecoreAccessGuid>54c0a6b3-aa8a-4bcd-8307-197eaec00f19</SitecoreAccessGuid>
-    <SitecoreWebUrl>http://scscheduledpublishing.localhost/</SitecoreWebUrl>
-    <SitecoreDeployFolder>C:\inetpub\wwwroot\scscheduledpublishing.localhost\Website</SitecoreDeployFolder>
+    <SitecoreWebUrl>
+    </SitecoreWebUrl>
+    <SitecoreDeployFolder>
+    </SitecoreDeployFolder>
     <EnableValidations>False</EnableValidations>
     <ValidationSettingsFilePath>.\ScheduledPublishing.Core_Release.xml</ValidationSettingsFilePath>
   </PropertyGroup>
@@ -121,18 +123,10 @@
       <ItemDeployment>AlwaysUpdate</ItemDeployment>
       <ChildItemSynchronization>NoChildSynchronization</ChildItemSynchronization>
     </SitecoreItem>
-    <SitecoreItem Include="sitecore\content\Applications\Content Editor\Ribbons\Strips\Publish\Lifetime.item">
-      <ItemDeployment>AlwaysUpdate</ItemDeployment>
-      <ChildItemSynchronization>KeepAllChildrenSynchronized</ChildItemSynchronization>
-    </SitecoreItem>
-    <SitecoreItem Include="sitecore\content\Applications\Content Editor\Ribbons\Strips\Publish\Publish.item">
-      <ItemDeployment>AlwaysUpdate</ItemDeployment>
-      <ChildItemSynchronization>KeepAllChildrenSynchronized</ChildItemSynchronization>
-    </SitecoreItem>
     <SitecoreItem Include="sitecore\content\Applications\Content Editor\Ribbons\Strips\Publish\Scheduled Publishing.item">
       <Icon>/temp/IconCache/Applications/32x32/Document.png</Icon>
       <ItemDeployment>AlwaysUpdate</ItemDeployment>
-      <ChildItemSynchronization>NoChildSynchronization</ChildItemSynchronization>
+      <ChildItemSynchronization>KeepAllChildrenSynchronized</ChildItemSynchronization>
     </SitecoreItem>
   </ItemGroup>
   <ItemGroup>
