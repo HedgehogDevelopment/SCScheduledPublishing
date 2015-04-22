@@ -16,13 +16,13 @@ namespace ScheduledPublishing.CustomScheduledTasks
     /// </summary>
     public class ScheduledPublishingCommand
     {
-        protected Database Master;
-        private const string PUBLISHING_SCHEDULES_PATH = "/sitecore/system/Tasks/PublishingSchedules";
+        protected Database _database;
+        private const string PUBLISHING_SCHEDULES_PATH = "/sitecore/system/Tasks/PublishingSchedules/";
 
         public void SchedulePublishingTask(Item[] itemArray, CommandItem commandItem, ScheduleItem scheduledItem)
         {
-            Master = Sitecore.Configuration.Factory.GetDatabase("master");
-            List<Item> itemsToPublish = GetItemsToPublish();
+            _database = Sitecore.Configuration.Factory.GetDatabase("master");
+            IEnumerable<Item> itemsToPublish = GetItemsToPublish();
 
             foreach (var item in itemsToPublish)
             {
@@ -38,16 +38,9 @@ namespace ScheduledPublishing.CustomScheduledTasks
                     //// if the item has no Publishing targets specified, publish to all
                     //else
                     //{
-                    List<string> publishingTargets =
-                        Master.GetItem("/sitecore/system/Publishing targets")
-                            .Children.Select(x => x.ID.ToString())
-                            .ToList();
+                    IEnumerable<Item> publishingTargets = GetPublishingTargets();
                     //}
-                    if (publishingTargets.Count == 0)
-                    {
-                        Log.Info("No publishing targets found", this);
-                    }
-                    else
+                    if (publishingTargets.Any())
                     {
                         bool isSuccessful = PublishItemToTargets(item, publishingTargets, isUnpublish);
                         Notify("PNGPublishing@png.com", item["CreatedByEmail"], isUnpublish, item, isSuccessful);
@@ -57,20 +50,33 @@ namespace ScheduledPublishing.CustomScheduledTasks
             }
         }
 
-        private List<Item> GetItemsToPublish()
+        private IEnumerable<Item> GetPublishingTargets()
+        {
+            var publishingTargets = PublishManager.GetPublishingTargets(_database);
+            if (publishingTargets != null)
+            {
+                return publishingTargets;
+            }
+
+            Log.Info("No publishing targets found", this);
+            return Enumerable.Empty<Item>();
+        }
+
+        private IEnumerable<Item> GetItemsToPublish()
         {
             try
             {
-                Item schedulesFolder = Context.ContentDatabase.GetItem(PUBLISHING_SCHEDULES_PATH);
+                Item schedulesFolder = _database.GetItem(PUBLISHING_SCHEDULES_PATH);
                 List<Item> itemsToPublish = new List<Item>();
                 foreach (Item schedule in schedulesFolder.Children)
                 {
                     if (!string.IsNullOrEmpty(schedule["Schedule"]) && !string.IsNullOrEmpty(schedule["Items"]))
                     {
                         DateTime targetDate = DateUtil.IsoDateToDateTime(schedule["Schedule"].Split('|').First());
-                        if (DateTime.Compare(targetDate.AddHours(1), DateTime.Now) <= 0)
+                        if (DateTime.Compare(targetDate.AddHours(1), DateTime.Now) <= 0
+                            || DateTime.Compare(targetDate.AddHours(-1), DateTime.Now) <= 0) //TODO: values here are for testing purposes only
                         {
-                            Item targetItem = Context.ContentDatabase.GetItem(schedule["Items"]);
+                            Item targetItem = _database.GetItem(schedule["Items"]);
                             itemsToPublish.Add(targetItem);
                         }
                     }
@@ -83,13 +89,13 @@ namespace ScheduledPublishing.CustomScheduledTasks
                 Log.Info(e.ToString(), this);
             }
 
-            return new List<Item>();
+            return Enumerable.Empty<Item>();
         }
 
-        private bool PublishItemToTargets(Item item, IEnumerable<string> publishingTargets, bool isUnpublish)
+        private bool PublishItemToTargets(Item item, IEnumerable<Item> publishingTargets, bool isUnpublish)
         {
             bool successful = false;
-            foreach (var pbTargetId in publishingTargets)
+            foreach (var pbTarget in publishingTargets)
             {
                 try
                 {
@@ -101,9 +107,8 @@ namespace ScheduledPublishing.CustomScheduledTasks
                         item.Editing.EndEdit();
                     }
 
-                    Item pbTarget = Master.GetItem(new ID(pbTargetId));
                     PublishOptions publishOptions = new PublishOptions(
-                        Master,
+                        _database,
                         Database.GetDatabase(pbTarget["Target database"]),
                         PublishMode.SingleItem,
                         item.Language,
@@ -112,7 +117,7 @@ namespace ScheduledPublishing.CustomScheduledTasks
 
                     Log.Info(
                         "Scheduled publishing task complete for " + item.Name + " - " + item.ID
-                        + " Database source: " + Master.Name + " Database target: " +
+                        + " Database source: " + _database.Name + " Database target: " +
                         Database.GetDatabase(pbTarget["Target database"]).Name, this);
 
                     if (isUnpublish)
