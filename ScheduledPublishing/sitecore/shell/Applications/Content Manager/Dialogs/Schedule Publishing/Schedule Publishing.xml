@@ -20,7 +20,7 @@
             <Border GridPanel.NoWrap="true">
               <Literal ID="PublishTimeLit"/>
             </Border>
-            <DateTimePicker ID="PublishDateTime" Width="100%" GridPanel.Width="100%"/>
+            <DateTimePicker ID="PublishDateTimePicker" Width="100%" GridPanel.Width="100%"/>
           </GridPanel>
         </Border>
         <Scrollbox ID="SettingsPane" Border="none" Background="transparent">
