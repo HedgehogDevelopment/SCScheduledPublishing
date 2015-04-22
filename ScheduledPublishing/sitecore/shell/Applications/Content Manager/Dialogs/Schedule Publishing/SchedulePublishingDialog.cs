@@ -31,7 +31,7 @@ namespace ScheduledPublishing.sitecore.shell.Applications.ContentManager.Dialogs
     public class SchedulePublishingDialog : DialogForm
     {
         private const string PUBLISHING_SCHEDULE_TEMPLATE_ID = "{9F110258-0139-4FC9-AED8-5610C13DADF3}";
-        private const string PUBLISHING_SCHEDULES_PATH = "/sitecore/system/Tasks/PublishingSchedules";
+        private const string PUBLISHING_SCHEDULES_PATH = "/sitecore/system/Tasks/PublishingSchedules/";
         private readonly Database _database = Context.ContentDatabase;
 
         protected DateTimePicker PublishDateTime;
@@ -212,7 +212,6 @@ namespace ScheduledPublishing.sitecore.shell.Applications.ContentManager.Dialogs
         /// <summary>
         /// Displays a list of all already scheduled publishings' date and time for this item, ordered from most recent to furthest in time
         /// </summary>
-        /// <param name="item">The item that publishing is scheduled for</param>
         private void RenderExistingSchedules()
         {
             var pubhishingSchedulesFolder = _database.GetItem(PUBLISHING_SCHEDULES_PATH);
@@ -251,7 +250,6 @@ namespace ScheduledPublishing.sitecore.shell.Applications.ContentManager.Dialogs
         /// <summary>
         /// Create a task to invoke publishing command at specific time
         /// </summary>
-        /// <param name="itemFromQueryString">Item to be published</param>
         /// <param name="isUnpublishing">If the item is to be unpublished instead of published</param>
         private void SchedulePublishing(bool isUnpublishing)
         {
@@ -274,8 +272,7 @@ namespace ScheduledPublishing.sitecore.shell.Applications.ContentManager.Dialogs
         /// <summary>
         /// Checks whether the item is publishable in the selected time.
         /// </summary>
-        /// <param name="itemFromQueryString">Item to publish</param>
-        /// <returns></returns>
+        /// <returns>True if the item meets all date and time requirements for publishing</returns>
         private bool ValidatePublishable()
         {
             if (!this.ItemFromQueryString.Publishing.IsPublishable(
@@ -291,7 +288,6 @@ namespace ScheduledPublishing.sitecore.shell.Applications.ContentManager.Dialogs
         /// <summary>
         /// Checks if item has validator errors
         /// </summary>
-        /// <param name="itemFromQueryString"></param>
         /// <returns>Always true if we want to be able to publish with validator errors. isValid if we want validator errors to prevent publishing.</returns>
         private bool ValidateItemValidators()
         {

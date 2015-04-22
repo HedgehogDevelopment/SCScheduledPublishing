@@ -18,7 +18,7 @@ namespace ScheduledPublishing.sitecore.shell.Applications.ContentManager.Dialogs
     {
         protected Scrollbox AllSchedules;
         protected Sitecore.Web.UI.HtmlControls.Literal ServerTime;
-        private readonly string PUBLISHING_SCHEDULES_PATH = "/sitecore/system/Tasks/PublishingSchedules";
+        private readonly string PUBLISHING_SCHEDULES_PATH = "/sitecore/system/Tasks/PublishingSchedules/";
         
         protected override void OnLoad(EventArgs e)
         {
