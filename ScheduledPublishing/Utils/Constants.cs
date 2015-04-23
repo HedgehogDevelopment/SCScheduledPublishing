@@ -11,5 +11,9 @@ namespace ScheduledPublishing.Utils
         //Templates
         public static readonly ID PUBLISH_OPTIONS_TEMPLATE_ID = ID.Parse("{9F110258-0139-4FC9-AED8-5610C13DADF3}");
         public static readonly ID FOLDER_TEMPLATE_ID = ID.Parse("{A87A00B1-E6DB-45AB-8B54-636FEC3B5523}");
+
+        //FieldIDs
+        public static readonly ID PUBLISH_OPTIONS_UNPUBLISH = ID.Parse("{0A1E6524-43BA-4F3D-B7BF-1DD696FB2953}");
+        public static readonly ID PUBLISH_OPTIONS_PUBLISH_CHILDREN = ID.Parse("{7E70DC6C-21E1-48C2-8AEC-ACA6A4B8BCB2}");
     }
 }
