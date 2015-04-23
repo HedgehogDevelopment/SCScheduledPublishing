@@ -1,21 +1,14 @@
 ----item----
 version: 1
-id: {9F110258-0139-4FC9-AED8-5610C13DADF3}
+id: {089776BB-E159-4F2E-AEFD-F1CDE718536B}
 database: master
-path: /sitecore/templates/System/Tasks/PublishingSchedule
-parent: {02913E3C-F594-4D97-A422-FED7176DC979}
-name: PublishingSchedule
+path: /sitecore/templates/System/Scheduled Publish/PublishingSchedule/Data
+parent: {9F110258-0139-4FC9-AED8-5610C13DADF3}
+name: Data
 master: {00000000-0000-0000-0000-000000000000}
-template: {AB86861A-6030-46C5-B394-E8F99E8B87DB}
-templatekey: Template
+template: {E269FBB5-3750-427A-9149-7AA950B49301}
+templatekey: Template section
 
-----field----
-field: {12C33F3F-86C5-43A5-AEB4-5598CEC45116}
-name: __Base template
-key: __base template
-content-length: 38
-
-{70244923-FA84-477C-8CBD-62F39642C42B}
 ----field----
 field: {06D5295C-ED2F-4A54-9BF2-26228D113318}
 name: __Icon
@@ -26,7 +19,7 @@ People/16x16/clock_run.png
 ----version----
 language: en
 version: 1
-revision: 6f324bd2-90ff-43e5-9e99-1c7e34db1663
+revision: 9d2160ba-1547-401c-8d80-ec1a92da5917
 
 ----field----
 field: {B5E02AD9-D56F-4C41-A065-A133DB87BDEB}
@@ -36,19 +29,12 @@ content-length: 19
 
 Publishing Schedule
 ----field----
-field: {52807595-0F8F-4B20-8D2A-CB71D28C6103}
-name: __Owner
-key: __owner
-content-length: 14
-
-sitecore\admin
-----field----
 field: {25BED78C-4957-4165-998A-CA1B52F67497}
 name: __Created
 key: __created
 content-length: 15
 
-20150402T123400
+20150402T123745
 ----field----
 field: {5DD74568-4D4B-44C1-B513-0AF5F4CDA34F}
 name: __Created by
@@ -62,14 +48,14 @@ name: __Revision
 key: __revision
 content-length: 36
 
-6f324bd2-90ff-43e5-9e99-1c7e34db1663
+9d2160ba-1547-401c-8d80-ec1a92da5917
 ----field----
 field: {D9CF14B1-FA16-4BA6-9288-E8A174D4D522}
 name: __Updated
 key: __updated
 content-length: 34
 
-20150420T181406:635651504461320261
+20150423T121312:635653879928465458
 ----field----
 field: {BADD9CF9-53E0-4D0C-BCC0-2D784C282F6A}
 name: __Updated by
