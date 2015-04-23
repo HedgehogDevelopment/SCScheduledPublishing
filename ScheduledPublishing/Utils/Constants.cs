@@ -1,5 +1,4 @@
-﻿
-using Sitecore.Data;
+﻿using Sitecore.Data;
 
 namespace ScheduledPublishing.Utils
 {

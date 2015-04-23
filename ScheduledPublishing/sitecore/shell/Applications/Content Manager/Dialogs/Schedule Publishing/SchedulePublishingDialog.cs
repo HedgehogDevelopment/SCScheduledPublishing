@@ -353,8 +353,7 @@ namespace ScheduledPublishing.sitecore.shell.Applications.ContentManager.Dialogs
             {
                 using (new SecurityDisabler())
                 {
-                    TemplateItem publishOptionsTemplate =
-                        _database.GetTemplate(Utils.Constants.PUBLISH_OPTIONS_TEMPLATE_ID);
+                    TemplateItem publishOptionsTemplate = _database.GetTemplate(Utils.Constants.PUBLISH_OPTIONS_TEMPLATE_ID);
                     var publishOptionsName = BuildPublishOptionsName(InnerItem.ID);
                     Item optionsFolder = GetOrCreateFolder(this.PublishDateTime);
                     Item newPublishOptions = optionsFolder.Add(publishOptionsName, publishOptionsTemplate);
@@ -368,7 +367,6 @@ namespace ScheduledPublishing.sitecore.shell.Applications.ContentManager.Dialogs
                     newPublishOptions["PublishChildren"] = this.PublishChildren.Checked ? "1" : string.Empty;
                     newPublishOptions["PublishLanguages"] = string.Join("|", GetLanguages().Select(x => x.Name));
                     newPublishOptions["TargetDatabase"] = string.Join("|", GetPublishingTargetDatabases().Select(x => x.Name));
-                    newPublishOptions["Schedule"] = FormatTaskScheduledTime();
 
                     newPublishOptions.Editing.AcceptChanges();
                     newPublishOptions.Editing.EndEdit();
@@ -412,19 +410,10 @@ namespace ScheduledPublishing.sitecore.shell.Applications.ContentManager.Dialogs
             Item dayFolder = monthFolder.Children.FirstOrDefault(x => x.Name == dayName) ??
                              monthFolder.Add(dayName, folderTemplate);
 
-            Item hourFolder = dayFolder.Children.First(x => x.Name == hourName) ??
+            Item hourFolder = dayFolder.Children.FirstOrDefault(x => x.Name == hourName) ??
                               dayFolder.Add(hourName, folderTemplate);
 
             return hourFolder;
-        }
-
-        private string FormatTaskScheduledTime()
-        {
-            const string format = "yyyyMMddTHHmmss";
-
-            return string.Format("{0}|{1}|127|00:60:00",
-                                  this.PublishDateTime.ToString(format),
-                                  this.PublishDateTime.AddHours(1).AddMinutes(1).ToString(format));
         }
 
         private IEnumerable<Language> GetLanguages()
