@@ -10,11 +10,11 @@ using System.Linq;
 
 namespace ScheduledPublishing.CustomScheduledTasks
 {
-    public class CreatePublishTaskCommand
+    public class CreatePublishTasksCommand
     {
         protected Database _database;
 
-        public void CreatePublishTask(Item[] itemArray, CommandItem commandItem, ScheduleItem scheduledItem)
+        public void CreatePublishTasks(Item[] itemArray, CommandItem commandItem, ScheduleItem scheduledItem)
         {
             _database = Sitecore.Configuration.Factory.GetDatabase("master");
             IEnumerable<Item> duePublishings = GetDuePublishings();
@@ -35,20 +35,15 @@ namespace ScheduledPublishing.CustomScheduledTasks
                     var publishingTaskName = BuildPublishingTaskName(item.ID);
                     Item schedulesFolder = _database.GetItem(Utils.Constants.PUBLISH_OPTIONS_FOLDER_ID);
                     Item newTask = schedulesFolder.Add(publishingTaskName, scheduleTaskTemplate);
+
                     newTask.Editing.BeginEdit();
+
                     newTask["Command"] = Utils.Constants.SCHEDULE_PUBLISHING_COMMAND_ID.ToString();
                     newTask["Items"] = creatingFor.Paths.FullPath;
-
-                    string format = "yyyyMMddTHHmmss";
-                    newTask["Schedule"] =
-                        (DateTime.Now.AddHours(1).AddMinutes(-1)).ToString(format) +
-                        "|" +
-                        (DateTime.Now.AddHours(2)).AddMinutes(-1).ToString(format) +
-                        "|127|00:60:00";
-
-                    newTask["Last run"] =
-                        DateUtil.IsoDateToDateTime(DateTime.Now.ToString(), DateTime.MinValue).ToString(format);
+                    newTask["Schedule"] = FormatTaskScheduledTime();
+                    newTask["Last run"] = DateUtil.IsoDateToDateTime(DateTime.Now.ToString(), DateTime.MinValue).ToString();
                     newTask["Auto remove"] = 1.ToString();
+
                     newTask.Editing.AcceptChanges();
                     newTask.Editing.EndEdit();
 
@@ -81,6 +76,15 @@ namespace ScheduledPublishing.CustomScheduledTasks
             }
 
             return Enumerable.Empty<Item>();
+        }
+
+        private string FormatTaskScheduledTime()
+        {
+            const string format = "yyyyMMddTHHmmss";
+
+            return string.Format("{0}|{1}|127|00:60:00",
+                                  DateTime.Now.AddHours(1).ToString(format),
+                                  DateTime.Now.AddHours(2).AddMinutes(1).ToString(format));
         }
 
         private string BuildTimeFolderPath(DateTime dateTime)
