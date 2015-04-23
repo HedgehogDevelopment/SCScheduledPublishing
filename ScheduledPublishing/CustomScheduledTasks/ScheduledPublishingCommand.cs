@@ -17,7 +17,6 @@ namespace ScheduledPublishing.CustomScheduledTasks
     public class ScheduledPublishingCommand
     {
         protected Database _database;
-        private const string PUBLISHING_SCHEDULES_PATH = "/sitecore/system/Tasks/PublishingSchedules/";
 
         public void SchedulePublishingTask(Item[] itemArray, CommandItem commandItem, ScheduleItem scheduledItem)
         {
@@ -66,7 +65,7 @@ namespace ScheduledPublishing.CustomScheduledTasks
         {
             try
             {
-                Item schedulesFolder = _database.GetItem(PUBLISHING_SCHEDULES_PATH);
+                Item schedulesFolder = _database.GetItem(Utils.Constants.PUBLISHING_SCHEDULES_PATH);
                 List<Item> itemsToPublish = new List<Item>();
                 foreach (Item schedule in schedulesFolder.Children)
                 {

@@ -147,6 +147,7 @@ namespace ScheduledPublishing.sitecore.shell.Applications.ContentManager.Dialogs
             {
                 this.CreatePublishingTask();
             }
+            }
 
             base.OnOK(sender, args);
         }
@@ -469,7 +470,7 @@ namespace ScheduledPublishing.sitecore.shell.Applications.ContentManager.Dialogs
 
         private string GetPublishingTaskName(ID id)
         {
-            return ItemUtil.ProposeValidItemName(string.Format("{0}_Task", id));
+            return ItemUtil.ProposeValidItemName(string.Format("{0}_Options", id));
         }
     }
 }

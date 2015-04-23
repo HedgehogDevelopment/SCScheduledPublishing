@@ -18,7 +18,6 @@ namespace ScheduledPublishing.sitecore.shell.Applications.ContentManager.Dialogs
     {
         protected Scrollbox AllSchedules;
         protected Sitecore.Web.UI.HtmlControls.Literal ServerTime;
-        private readonly string PUBLISHING_SCHEDULES_PATH = "/sitecore/system/Tasks/PublishingSchedules/";
         
         protected override void OnLoad(EventArgs e)
         {
@@ -40,7 +39,7 @@ namespace ScheduledPublishing.sitecore.shell.Applications.ContentManager.Dialogs
         /// </summary>
         private void RenderAllSchedules()
         {
-            Item schedulesFolder = Context.ContentDatabase.GetItem(PUBLISHING_SCHEDULES_PATH);
+            Item schedulesFolder = Context.ContentDatabase.GetItem(Utils.Constants.PUBLISHING_SCHEDULES_PATH);
             IEnumerable<Item> allSchedules = schedulesFolder.Children;
             allSchedules = allSchedules.OrderBy(x => DateUtil.IsoDateToDateTime(x["Schedule"].Split('|').First()));
 
