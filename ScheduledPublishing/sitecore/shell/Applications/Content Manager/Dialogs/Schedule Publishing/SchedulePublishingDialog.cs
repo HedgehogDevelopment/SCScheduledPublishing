@@ -30,8 +30,6 @@ namespace ScheduledPublishing.sitecore.shell.Applications.ContentManager.Dialogs
     /// </summary>
     public class SchedulePublishingDialog : DialogForm
     {
-        private const string PUBLISHING_SCHEDULE_TEMPLATE_ID = "{9F110258-0139-4FC9-AED8-5610C13DADF3}";
-        private const string PUBLISHING_SCHEDULES_PATH = "/sitecore/system/Tasks/PublishingSchedules/";
         private readonly Database _database = Context.ContentDatabase;
 
         protected DateTimePicker PublishDateTime;
@@ -99,7 +97,20 @@ namespace ScheduledPublishing.sitecore.shell.Applications.ContentManager.Dialogs
             var isUnpublishing = bool.Parse(Context.Request.QueryString["unpublish"]);
             if (!string.IsNullOrEmpty(this.PublishDateTime.Value))
             {
-                this.SchedulePublishing(isUnpublishing);
+                // Validate date chosen
+                bool isDateValid = ValidateDateChosen();
+
+                // Validate item to be published
+                bool isItemValid = ValidateItemValidators();
+
+                //Validate if item is publishable
+                bool isPublishable = ValidatePublishable();
+
+                // Create publishing task
+                if (isDateValid && isItemValid && isPublishable)
+                {
+                    CreatePublishOptionsItem(this.ItemFromQueryString, isUnpublishing);
+                }
             }
 
             base.OnOK(sender, args);
@@ -214,7 +225,7 @@ namespace ScheduledPublishing.sitecore.shell.Applications.ContentManager.Dialogs
         /// </summary>
         private void RenderExistingSchedules()
         {
-            var pubhishingSchedulesFolder = _database.GetItem(PUBLISHING_SCHEDULES_PATH);
+            var pubhishingSchedulesFolder = _database.GetItem(Utils.Constants.PUBLISHING_SCHEDULES_PATH);
             Assert.ArgumentNotNull(pubhishingSchedulesFolder, "pubhishingSchedulesFolder");
 
             if (pubhishingSchedulesFolder.Children == null)
@@ -222,7 +233,7 @@ namespace ScheduledPublishing.sitecore.shell.Applications.ContentManager.Dialogs
                 return;
             }
 
-            var publishingTaskName = BuildPublishingTaskName(this.ItemFromQueryString.ID);
+            var publishingTaskName = BuildPublishOptionsName(this.ItemFromQueryString.ID);
             var existingSchedules = 
                 pubhishingSchedulesFolder.Children
                                          .Where(x => x.Name == publishingTaskName)
@@ -246,27 +257,79 @@ namespace ScheduledPublishing.sitecore.shell.Applications.ContentManager.Dialogs
 
             this.ExistingSchedules.InnerHtml = sbExistingSchedules.ToString();
         }
+        
+        private void CreatePublishOptionsItem(Item itemFromQueryString, bool isUnpublishing)
+        {
+            try
+            {
+                using (new SecurityDisabler())
+                {
+                    DateTime dateChosen = DateUtil.IsoDateToDateTime(this.PublishDateTime.Value, DateTime.MinValue);
+                    TemplateItem publishOptionsTemplate = _database.GetTemplate(new ID(Utils.Constants.PUBLISH_OPTIONS_TEMPLATE_ID));
+                    var publishOptionsName = BuildPublishOptionsName(itemFromQueryString.ID);
+                    Item optionsFolder = GetOrCreateFolder(dateChosen);
+                    Item newPublishOptions = optionsFolder.Add(publishOptionsName, publishOptionsTemplate);
+                    newPublishOptions.Editing.BeginEdit();
+                    newPublishOptions["Items"] = itemFromQueryString.Paths.FullPath;
+                    newPublishOptions["CreatedByEmail"] = Context.User.Profile.Email;
+                    newPublishOptions["Unpublish"] = isUnpublishing ? 1.ToString() : string.Empty;
+                    newPublishOptions["PublishMethod"] = this.SmartPublish.Checked ? "smart" : "republish";
+                    newPublishOptions["PublishChildren"] = this.PublishChildren.Checked ? "1" : string.Empty;
+                    newPublishOptions["PublishLanguages"] = string.Join("|", GetLanguages().Select(x => x.Name));
+                    newPublishOptions["TargetDatabase"] = string.Join("|", GetPublishingTargetDatabases().Select(x => x.Name));
+
+                    string format = "yyyyMMddTHHmmss";
+                    newPublishOptions["Schedule"] = dateChosen.ToString(format) +
+                        "|" +
+                        dateChosen.AddHours(1).AddMinutes(1).ToString(format) +
+                        "|127|00:60:00";
+
+                    newPublishOptions.Editing.AcceptChanges();
+                    newPublishOptions.Editing.EndEdit();
+
+                    string action = isUnpublishing ? "unpublishing" : "publishing";
+                    Log.Info(
+                        "Created publish options: " + action + ": " + itemFromQueryString.Name + " " + itemFromQueryString.ID +
+                        DateTime.Now, this);
+                }
+            }
+            catch (Exception e)
+            {
+                string action = isUnpublishing ? "unpublishing" : "publishing";
+                Log.Info(
+                    "Failed creating publish options " + action + ": " + itemFromQueryString.Name + " " + itemFromQueryString.ID +
+                    DateTime.Now + " " + e.ToString(), this);
+            }
+        }
 
         /// <summary>
-        /// Create a task to invoke publishing command at specific time
+        /// Get appropriate hour folder or create one if not present using the year/month/day/hour structure
         /// </summary>
-        /// <param name="isUnpublishing">If the item is to be unpublished instead of published</param>
-        private void SchedulePublishing(bool isUnpublishing)
+        /// <param name="date">Date chosen for publishing</param>
+        /// <returns>The hour folder as an item</returns>
+        private Item GetOrCreateFolder(DateTime date)
         {
-            // Validate date chosen
-            bool isDateValid = ValidateDateChosen();
+            Item publishOptionsFolder = _database.GetItem(Utils.Constants.PUBLISH_OPTIONS_FOLDER_PATH);
+            string yearName = date.Year.ToString();
+            string monthName = date.Month.ToString();
+            string dayName = date.Day.ToString();
+            string hourName = date.AddHours(1).Hour.ToString();
 
-            // Validate item to be published
-            bool isItemValid = ValidateItemValidators();
+            TemplateItem folderTemplate = _database.GetTemplate(Utils.Constants.FOLDER_TEMPLATE_ID);
 
-            //Validate if item is publishable
-            bool isPublishable = ValidatePublishable();
+            Item yearFolder = publishOptionsFolder.Children.First(x => x.Name == yearName) ??
+                              publishOptionsFolder.Add(yearName, folderTemplate);
 
-            // Create publishing task
-            if (isDateValid && isItemValid && isPublishable)
-            {
-                CreatePublishingTask(this.ItemFromQueryString, isUnpublishing);
-            }
+            Item monthFolder = yearFolder.Children.First(x => x.Name == monthName) ??
+                               yearFolder.Add(monthName, folderTemplate);
+
+            Item dayFolder = monthFolder.Children.First(x => x.Name == dayName) ??
+                             monthFolder.Add(dayName, folderTemplate);
+
+            Item hourFolder = dayFolder.Children.First(x => x.Name == hourName) ??
+                              dayFolder.Add(hourName, folderTemplate);
+
+            return hourFolder;
         }
 
         /// <summary>
@@ -309,56 +372,6 @@ namespace ScheduledPublishing.sitecore.shell.Applications.ContentManager.Dialogs
             }
 
             return true;
-        }
-
-        private void CreatePublishingTask(Item itemFromQueryString, bool isUnpublishing)
-        {
-            try
-            {
-                using (new SecurityDisabler())
-                {
-                    TemplateItem scheduleTaskTemplate = _database.GetTemplate(new ID(PUBLISHING_SCHEDULE_TEMPLATE_ID));
-                    var publishingTaskName = BuildPublishingTaskName(itemFromQueryString.ID);
-                    Item schedulesFolder = _database.GetItem(PUBLISHING_SCHEDULES_PATH);
-                    Item newTask = schedulesFolder.Add(publishingTaskName, scheduleTaskTemplate);
-                    newTask.Editing.BeginEdit();
-                    newTask["Command"] = "{EF235C25-AE83-4678-9E2C-C22175925893}";
-                    newTask["Items"] = itemFromQueryString.Paths.FullPath;
-                    newTask["CreatedByEmail"] = Context.User.Profile.Email;
-                    newTask["Unpublish"] = isUnpublishing ? 1.ToString() : string.Empty;
-                    newTask["PublishMethod"] = this.SmartPublish.Checked ? "smart" : "republish";
-                    newTask["PublishChildren"] = this.PublishChildren.Checked ? "1" : string.Empty;
-                    newTask["PublishLanguages"] = string.Join("|", GetLanguages().Select(x => x.Name));
-                    newTask["TargetDatabase"] = string.Join("|", GetPublishingTargetDatabases().Select(x => x.Name));
-
-                    string format = "yyyyMMddTHHmmss";
-                    newTask["Schedule"] =
-                        (DateUtil.IsoDateToDateTime(this.PublishDateTime.Value, DateTime.MinValue)).ToString(format) +
-                        "|" +
-                        (DateUtil.IsoDateToDateTime(this.PublishDateTime.Value, DateTime.MinValue)
-                            .AddHours(1)
-                            .AddMinutes(1)).ToString(format) +
-                        "|127|00:60:00";
-
-                    newTask["Last run"] =
-                        DateUtil.IsoDateToDateTime(DateTime.Now.ToString(), DateTime.MinValue).ToString(format);
-                    newTask["Auto remove"] = 1.ToString();
-                    newTask.Editing.AcceptChanges();
-                    newTask.Editing.EndEdit();
-
-                    string action = isUnpublishing ? "unpublishing" : "publishing";
-                    Log.Info(
-                        "Task scheduling " + action + ": " + itemFromQueryString.Name + " " + itemFromQueryString.ID +
-                        DateTime.Now, this);
-                }
-            }
-            catch (Exception e)
-            {
-                string action = isUnpublishing ? "unpublishing" : "publishing";
-                Log.Info(
-                    "Failed scheduling " + action + ": " + itemFromQueryString.Name + " " + itemFromQueryString.ID +
-                    DateTime.Now + " " + e.ToString(), this);
-            }
         }
 
         private bool CheckValidation()
@@ -417,9 +430,9 @@ namespace ScheduledPublishing.sitecore.shell.Applications.ContentManager.Dialogs
             return targets.Select(t => Database.GetDatabase(t[FieldIDs.PublishingTargetDatabase]));
         }
 
-        private static string BuildPublishingTaskName(ID id)
+        private static string BuildPublishOptionsName(ID id)
         {
-            return ItemUtil.ProposeValidItemName(string.Format("{0}_Task", id));
+            return ItemUtil.ProposeValidItemName(string.Format("{0}_Options", id));
         }
     }
 }

@@ -55,6 +55,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="sitecore\shell\Applications\Content Manager\Dialogs\Edit Scheduled Publishing\EditScheduledPublishingDialog.cs" />
     <Compile Include="sitecore\shell\Applications\Content Manager\Dialogs\Schedule Publishing\SchedulePublishingDialog.cs" />
+    <Compile Include="Utils\Constants.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="sitecore\shell\Applications\Content Manager\Dialogs\Edit Scheduled Publishing\Edit Scheduled Publishing.xml">
