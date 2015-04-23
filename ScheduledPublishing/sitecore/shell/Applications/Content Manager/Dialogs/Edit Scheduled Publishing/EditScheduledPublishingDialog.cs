@@ -39,7 +39,7 @@ namespace ScheduledPublishing.sitecore.shell.Applications.ContentManager.Dialogs
         /// </summary>
         private void RenderAllSchedules()
         {
-            Item schedulesFolder = Context.ContentDatabase.GetItem(Utils.Constants.PUBLISHING_SCHEDULES_PATH);
+            Item schedulesFolder = Context.ContentDatabase.GetItem(Utils.Constants.PUBLISH_OPTIONS_FOLDER_ID);
             IEnumerable<Item> allSchedules = schedulesFolder.Children;
             allSchedules = allSchedules.OrderBy(x => DateUtil.IsoDateToDateTime(x["Schedule"].Split('|').First()));
 

@@ -31,12 +31,12 @@ namespace ScheduledPublishing.CustomScheduledTasks
                 using (new SecurityDisabler())
                 {
                     Item creatingFor = _database.GetItem(item["Item"]);
-                    TemplateItem scheduleTaskTemplate = _database.GetTemplate(new ID(Utils.Constants.SCHEDULE_TEMPLATE_ID));
+                    TemplateItem scheduleTaskTemplate = _database.GetTemplate(Utils.Constants.SCHEDULE_TEMPLATE_ID);
                     var publishingTaskName = BuildPublishingTaskName(item.ID);
-                    Item schedulesFolder = _database.GetItem(Utils.Constants.PUBLISHING_SCHEDULES_PATH);
+                    Item schedulesFolder = _database.GetItem(Utils.Constants.PUBLISH_OPTIONS_FOLDER_ID);
                     Item newTask = schedulesFolder.Add(publishingTaskName, scheduleTaskTemplate);
                     newTask.Editing.BeginEdit();
-                    newTask["Command"] = Utils.Constants.SCHEDULE_PUBLISHING_COMMAND_ID;
+                    newTask["Command"] = Utils.Constants.SCHEDULE_PUBLISHING_COMMAND_ID.ToString();
                     newTask["Items"] = creatingFor.Paths.FullPath;
 
                     string format = "yyyyMMddTHHmmss";
@@ -85,7 +85,8 @@ namespace ScheduledPublishing.CustomScheduledTasks
 
         private string BuildTimeFolderPath(DateTime dateTime)
         {
-            return string.Format("{0}{1}/{2}/{3}/{4}/", Utils.Constants.PUBLISH_OPTIONS_FOLDER_PATH, dateTime.Year,
+            Item publishOptionsFolder = _database.GetItem(Utils.Constants.PUBLISH_OPTIONS_FOLDER_ID);
+            return string.Format("{0}/{1}/{2}/{3}/{4}/", publishOptionsFolder.Paths.FullPath, dateTime.Year,
                 dateTime.Month, dateTime.Day, dateTime.Hour);
         }
 

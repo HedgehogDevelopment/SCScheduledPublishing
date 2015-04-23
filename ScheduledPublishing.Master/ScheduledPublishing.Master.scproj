@@ -113,6 +113,7 @@
     </SitecoreItem>
     <SitecoreItem Include="sitecore\system\Tasks\Schedules\CollectPublishableItems.item">
       <ItemDeployment>DeployOnce</ItemDeployment>
+      <ChildItemSynchronization>NoChildSynchronization</ChildItemSynchronization>
     </SitecoreItem>
     <SitecoreItem Include="sitecore\templates.item">
       <Icon>/temp/IconCache/Applications/16x16/form_blue.png</Icon>

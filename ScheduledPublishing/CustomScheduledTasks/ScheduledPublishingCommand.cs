@@ -65,7 +65,7 @@ namespace ScheduledPublishing.CustomScheduledTasks
         {
             try
             {
-                Item schedulesFolder = _database.GetItem(Utils.Constants.PUBLISHING_SCHEDULES_PATH);
+                Item schedulesFolder = _database.GetItem(Utils.Constants.PUBLISH_OPTIONS_FOLDER_ID);
                 List<Item> itemsToPublish = new List<Item>();
                 foreach (Item schedule in schedulesFolder.Children)
                 {
