@@ -62,8 +62,9 @@ namespace ScheduledPublishing.sitecore.shell.Applications.ContentManager.Dialogs
         }
 
         private Item _innerItem;
+
         private Item InnerItem
-                {
+        {
             get
             {
                 if (_innerItem != null)
@@ -75,10 +76,10 @@ namespace ScheduledPublishing.sitecore.shell.Applications.ContentManager.Dialogs
                 if (this._innerItem == null)
                 {
                     Error.AssertItemFound(this._innerItem);
-            }
+                }
 
                 return this._innerItem;
-        }
+            }
         }
 
         private Item _publishingSchedulesFolder;
@@ -146,7 +147,6 @@ namespace ScheduledPublishing.sitecore.shell.Applications.ContentManager.Dialogs
             if (isValidSchedule)
             {
                 this.CreatePublishingTask();
-            }
             }
 
             base.OnOK(sender, args);
@@ -240,7 +240,7 @@ namespace ScheduledPublishing.sitecore.shell.Applications.ContentManager.Dialogs
                         if (languageItem == null || !CanWriteLanguage(languageItem))
                         {
                             continue;
-                }
+                        }
                     }
                     else
                     {
@@ -255,7 +255,7 @@ namespace ScheduledPublishing.sitecore.shell.Applications.ContentManager.Dialogs
                 langInput.Attributes["type"] = "checkbox";
                 langInput.Attributes["value"] = language.Name;
                 this.Languages.Controls.Add(langInput);
-               
+
                 var langLabel = new HtmlGenericControl("label");
                 langLabel.Attributes["for"] = id;
                 langLabel.InnerText = language.CultureInfo.DisplayName;
@@ -282,7 +282,7 @@ namespace ScheduledPublishing.sitecore.shell.Applications.ContentManager.Dialogs
             }
 
             var publishingTaskName = GetPublishingTaskName(this.InnerItem.ID);
-            var existingSchedules = 
+            var existingSchedules =
                 this.PublishingSchedulesFolder.Children
                                          .Where(x => x.Name == publishingTaskName)
                                          .Select(x => DateUtil.IsoDateToDateTime(x["Schedule"].Substring(0, x["Schedule"].IndexOf('|'))).ToString(Context.Culture))
@@ -316,7 +316,7 @@ namespace ScheduledPublishing.sitecore.shell.Applications.ContentManager.Dialogs
         }
 
         private bool ValidateChosenDate()
-            {
+        {
             if (DateTime.Compare(this.PublishDateTime, DateTime.Now) <= 0)
             {
                 SheerResponse.Alert("The date selected for publish has passed. Please select a future date.");
@@ -369,24 +369,24 @@ namespace ScheduledPublishing.sitecore.shell.Applications.ContentManager.Dialogs
         #endregion
 
         private void CreatePublishingTask()
-            {
+        {
             var isPublishing = this.IsPublishing;
             var action = isPublishing ? "unpublishing" : "publishing";
 
             using (new SecurityDisabler())
-        {
+            {
                 var scheduleTaskTemplate = _database.GetTemplate(_publishingScheduleTemplateId);
                 if (scheduleTaskTemplate == null)
-            {
+                {
                     return;
-            }
+                }
 
                 var publishingTaskName = this.GetPublishingTaskName(this.InnerItem.ID);
 
                 var newTask = this.PublishingSchedulesFolder.Add(publishingTaskName, scheduleTaskTemplate);
 
-            try
-            {
+                try
+                {
                     newTask.Editing.BeginEdit();
 
                     newTask["Command"] = SCHEDULE_PUBLISH_COMMAND_ID;
@@ -408,23 +408,23 @@ namespace ScheduledPublishing.sitecore.shell.Applications.ContentManager.Dialogs
                                        this.InnerItem.Name,
                                        this.InnerItem.ID,
                                        DateTime.Now), this);
-            }
+                }
                 catch (Exception ex)
-            {
+                {
                     newTask.Editing.CancelEdit();
-                Log.Info(
-                        string.Format("Failed scheduling {0}: {1} {2} {3} {4}",
-                                       action,
-                                       this.InnerItem.Name,
-                                       this.InnerItem.ID,
-                                       DateTime.Now,
-                                       ex), this);
+                    Log.Info(
+                            string.Format("Failed scheduling {0}: {1} {2} {3} {4}",
+                                           action,
+                                           this.InnerItem.Name,
+                                           this.InnerItem.ID,
+                                           DateTime.Now,
+                                           ex), this);
                 }
             }
         }
 
         private string FormatTaskScheduledTime()
-                {
+        {
             const string format = "yyyyMMddTHHmmss";
 
             return string.Format("{0}|{1}|127|00:60:00",
