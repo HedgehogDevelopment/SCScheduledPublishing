@@ -17,10 +17,10 @@ namespace ScheduledPublishing.CustomScheduledTasks
         public void CreatePublishTask(Item[] itemArray, CommandItem commandItem, ScheduleItem scheduledItem)
         {
             _database = Sitecore.Configuration.Factory.GetDatabase("master");
-            IEnumerable<Item> itemsToPublish = GetItemsToPublish();
-            foreach (var item in itemsToPublish)
+            IEnumerable<Item> duePublishings = GetDuePublishings();
+            foreach (var publishOption in duePublishings)
             {
-                CreateTask(item);
+                CreateTask(publishOption);
             }
         }
 
@@ -66,33 +66,14 @@ namespace ScheduledPublishing.CustomScheduledTasks
                     DateTime.Now + " " + e.ToString(), this);
             }
         }
-
-        private static string BuildPublishingTaskName(ID id)
-        {
-            return ItemUtil.ProposeValidItemName(string.Format("{0}_Task", id));
-        }
-
-        private IEnumerable<Item> GetItemsToPublish()
+        
+        private IEnumerable<Item> GetDuePublishings()
         {
             try
             {
-                Item schedulesFolder = _database.GetItem(Utils.Constants.PUBLISHING_SCHEDULES_PATH);
-                List<Item> itemsToPublish = new List<Item>();
-                foreach (Item schedule in schedulesFolder.Children)
-                {
-                    if (!string.IsNullOrEmpty(schedule["Schedule"]) && !string.IsNullOrEmpty(schedule["Items"]))
-                    {
-                        DateTime targetDate = DateUtil.IsoDateToDateTime(schedule["Schedule"].Split('|').First());
-                        if (DateTime.Compare(targetDate.AddHours(1), DateTime.Now) <= 0
-                            || DateTime.Compare(targetDate.AddHours(-1), DateTime.Now) <= 0) //TODO: values here are for testing purposes only
-                        {
-                            Item targetItem = _database.GetItem(schedule["Items"]);
-                            itemsToPublish.Add(targetItem);
-                        }
-                    }
-                }
-
-                return itemsToPublish;
+                string currentTimeFolderPath = BuildTimeFolderPath(DateTime.Now);
+                IEnumerable<Item> currentForScheduling = _database.GetItem(currentTimeFolderPath).Children;
+                return currentForScheduling;
             }
             catch (Exception e)
             {
@@ -100,6 +81,17 @@ namespace ScheduledPublishing.CustomScheduledTasks
             }
 
             return Enumerable.Empty<Item>();
+        }
+
+        private string BuildTimeFolderPath(DateTime dateTime)
+        {
+            return string.Format("{0}{1}/{2}/{3}/{4}/", Utils.Constants.PUBLISH_OPTIONS_FOLDER_PATH, dateTime.Year,
+                dateTime.Month, dateTime.Day, dateTime.Hour);
+        }
+
+        private static string BuildPublishingTaskName(ID id)
+        {
+            return ItemUtil.ProposeValidItemName(string.Format("{0}_Task", id));
         }
     }
 }
