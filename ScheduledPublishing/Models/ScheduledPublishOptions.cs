@@ -1,9 +1,10 @@
 ﻿using Sitecore.Data.Items;
 using System.Linq;
 using Sitecore.Data;
-using Sitecore.Globalization;
 using Sitecore.Publishing;
 using ScheduledPublishing.Utils;
+using Sitecore.Data.Managers;
+using Sitecore.Globalization;
 
 namespace ScheduledPublishing.Models
 {
@@ -26,7 +27,17 @@ namespace ScheduledPublishing.Models
                     return this._publishItems;
                 }
 
-                //TODO
+                var itemsIds = this.InnerItem[Constants.PUBLISH_OPTIONS_PUBLISH_ITEMS];
+                if (string.IsNullOrWhiteSpace(itemsIds))
+                {
+                    return this._publishItems;
+                }
+
+                this._publishItems = 
+                    itemsIds.Split('|')
+                            .Select(Database.GetDatabase("master").GetItem)
+                            .ToArray();
+
                 return this._publishItems;
             }
         }
@@ -49,7 +60,7 @@ namespace ScheduledPublishing.Models
         }
 
         private Database[] _targetDatabases;
-        public Database[] TargetDatabases 
+        public Database[] TargetDatabases
         {
             get
             {
@@ -58,8 +69,17 @@ namespace ScheduledPublishing.Models
                     return this._targetDatabases;
                 }
 
-                //TODO
-                return null;
+                var databases = this.InnerItem[Constants.PUBLISH_OPTIONS_TARGET_DATABASES];
+                if (string.IsNullOrWhiteSpace(databases))
+                {
+                    return this._targetDatabases;
+                }
+
+                this._targetDatabases =
+                    databases.Split('|').Select(Database.GetDatabase)
+                                        .ToArray();
+
+                return this._targetDatabases;
             }
         }
 
@@ -73,8 +93,19 @@ namespace ScheduledPublishing.Models
                     return this._languages;
                 }
 
-                //TODO
-                return null;
+                var languages = this.InnerItem[Constants.PUBLISH_OPTIONS_TARGET_LANGUAGES];
+                if (string.IsNullOrWhiteSpace(languages))
+                {
+                    return this._languages;
+                }
+
+                this._languages = 
+                    languages.Split('|')
+                    .Select(LanguageManager.GetLanguage)
+                    .Where(l => l != null)
+                    .ToArray();
+
+                return this._languages;
             }
         }
 
@@ -88,8 +119,8 @@ namespace ScheduledPublishing.Models
                     return this._publishMode;
                 }
 
-                //TODO
-                this._publishMode = ParseMode("smart");
+                var mode = this.InnerItem[Constants.PUBLISH_OPTIONS_PUBLISH_MODE];
+                this._publishMode = ParseMode(mode);
                 return this._publishMode;
             }
         }
@@ -98,14 +129,14 @@ namespace ScheduledPublishing.Models
         {
             switch (mode.ToLowerInvariant())
             {
+                case "smart":
+                    return PublishMode.Smart;
                 case "full":
                     return PublishMode.Full;
                 case "incremental":
-                    return PublishMode.Full;
-                case "smart":
-                    return PublishMode.Smart;
+                    return PublishMode.Incremental;
                 default:
-                    return PublishMode.Unknown;
+                    return PublishMode.Smart;
             }
         }
     }

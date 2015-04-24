@@ -15,5 +15,9 @@ namespace ScheduledPublishing.Utils
         //FieldIDs
         public static readonly ID PUBLISH_OPTIONS_UNPUBLISH = ID.Parse("{0A1E6524-43BA-4F3D-B7BF-1DD696FB2953}");
         public static readonly ID PUBLISH_OPTIONS_PUBLISH_CHILDREN = ID.Parse("{7E70DC6C-21E1-48C2-8AEC-ACA6A4B8BCB2}");
+        public static readonly ID PUBLISH_OPTIONS_TARGET_DATABASES = ID.Parse("{193B7E69-8C83-422F-80B2-F7B48C42775E}");
+        public static readonly ID PUBLISH_OPTIONS_TARGET_LANGUAGES = ID.Parse("{65C16118-BD34-4E45-9AAD-45C7AD0AE69A}");
+        public static readonly ID PUBLISH_OPTIONS_PUBLISH_MODE = ID.Parse("{F313EF5C-AC40-46DB-9AA1-52C70D590338}");
+        public static readonly ID PUBLISH_OPTIONS_PUBLISH_ITEMS = ID.Parse("{8B07571D-D616-4373-8DB0-D77672911D16}");
     }
 }

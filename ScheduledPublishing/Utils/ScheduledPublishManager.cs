@@ -1,39 +1,93 @@
-﻿using ScheduledPublishing.Models;
+﻿using System.Linq;
+using ScheduledPublishing.Models;
+using Sitecore;
+using Sitecore.Data;
+using Sitecore.Publishing;
 
 namespace ScheduledPublishing.Utils
 {
     public class ScheduledPublishManager
     {
-        //TODO Source, Target databases if needed
         private ScheduledPublishOptions ScheduledPublishOptions { get; set; }
+        private Database SourceDatabase { get; set; }
 
-        public ScheduledPublishManager(ScheduledPublishOptions options)
+        public ScheduledPublishManager(ScheduledPublishOptions scheduledPublishOptions)
         {
-            this.ScheduledPublishOptions = options;
+            this.ScheduledPublishOptions = scheduledPublishOptions;
+            this.SourceDatabase = Database.GetDatabase("master");
         }
 
-        public bool Publish()
+        public ScheduledPublishManager(ScheduledPublishOptions scheduledPublishOptions, Database sourceDatabase)
         {
-            //TODO Pubhish implementation
-            return false;
+            this.ScheduledPublishOptions = scheduledPublishOptions;
+            this.SourceDatabase = sourceDatabase;
         }
 
-        //protected void StartPublisher()
-        //{
-        //    Language[] languages = GetLanguages().ToArray();
-        //    Database[] publishingTargetDatabases = GetPublishingTargetDatabases().ToArray();
-        //    bool @checked = this.PublishChildren.Checked;
-        //    string id = this.InnerItem.ID.ToString();
-        //    bool isIncremental = Context.ClientPage.ClientRequest.Form["PublishMode"] == "IncrementalPublish";
-        //    bool isSmart = Context.ClientPage.ClientRequest.Form["PublishMode"] == "SmartPublish";
+        public void Publish()
+        {
+            if (this.ScheduledPublishOptions.PublishItems != null
+                && this.ScheduledPublishOptions.PublishItems.Any())
+            {
+                this.PublishSelectedItems();
+            }
+            else
+            {
+                this.PublishWebsite();
+            }
+        }
 
-        //    this.JobHandle = (string.IsNullOrEmpty(id)
-        //        ? (!isIncremental
-        //            ? (!isSmart
-        //                ? PublishManager.Republish(Client.ContentDatabase, publishingTargetDatabases, languages, Context.Language)
-        //                : PublishManager.PublishSmart(Client.ContentDatabase, publishingTargetDatabases, languages, Context.Language))
-        //            : PublishManager.PublishIncremental(Client.ContentDatabase, publishingTargetDatabases, languages, Context.Language))
-        //        : PublishManager.PublishItem(Client.GetItemNotNull(id), publishingTargetDatabases, languages, @checked, isSmart)).ToString();
-        //}
+        private void PublishSelectedItems()
+        {
+            foreach (var item in this.ScheduledPublishOptions.PublishItems)
+            {
+                Handle result = PublishManager.PublishItem(
+                    item,
+                    this.ScheduledPublishOptions.TargetDatabases,
+                    this.ScheduledPublishOptions.Languages,
+                    this.ScheduledPublishOptions.PublishChildren,
+                    this.ScheduledPublishOptions.PublishMode == PublishMode.Smart);
+
+                var test = result.ToString();
+            }
+        }
+
+        private void PublishWebsite()
+        {
+            switch (this.ScheduledPublishOptions.PublishMode)
+            {
+                case PublishMode.Smart:
+                    {
+                        PublishManager.PublishSmart(
+                            this.SourceDatabase, 
+                            this.ScheduledPublishOptions.TargetDatabases,
+                            this.ScheduledPublishOptions.Languages,
+                            Context.Language);
+                        break;
+                    }
+
+                case PublishMode.Full:
+                    {
+                        PublishManager.Republish(
+                            this.SourceDatabase,
+                            this.ScheduledPublishOptions.TargetDatabases,
+                            this.ScheduledPublishOptions.Languages,
+                            Context.Language);
+                        break;
+                    }
+                case PublishMode.Incremental:
+                    {
+                        PublishManager.PublishIncremental(
+                            this.SourceDatabase,
+                            this.ScheduledPublishOptions.TargetDatabases,
+                            this.ScheduledPublishOptions.Languages,
+                            Context.Language);
+                        break;
+                    }
+                default:
+                    {
+                        break;
+                    }
+            }
+        }
     }
 }
