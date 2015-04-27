@@ -18,6 +18,7 @@ using System.Linq;
 using System.Text;
 using System.Web.UI;
 using System.Web.UI.HtmlControls;
+using Constants = ScheduledPublishing.Utils.Constants;
 using Control = Sitecore.Web.UI.HtmlControls.Control;
 using Literal = Sitecore.Web.UI.HtmlControls.Literal;
 
@@ -40,23 +41,7 @@ namespace ScheduledPublishing.sitecore.shell.Applications.ContentManager.Dialogs
         protected Radiobutton SmartPublish;
         protected Radiobutton Republish;
 
-        private DateTime _publishDataTite;
-        private DateTime PublishDateTime
-        {
-            get
-            {
-                if (this._publishDataTite != DateTime.MinValue)
-                {
-                    return this._publishDataTite;
-                }
-
-                this._publishDataTite = DateUtil.IsoDateToDateTime(this.PublishDateTimePicker.Value, DateTime.MinValue);
-                return this._publishDataTite;
-            }
-        }
-
         private Item _innerItem;
-
         private Item InnerItem
         {
             get
@@ -67,12 +52,77 @@ namespace ScheduledPublishing.sitecore.shell.Applications.ContentManager.Dialogs
                 }
 
                 this._innerItem = UIUtil.GetItemFromQueryString(_database);
-                if (this._innerItem == null)
+                return this._innerItem;
+            }
+        }
+
+        private DateTime _selectedPublishDataTite;
+        private DateTime SelectedPublishDateTime
+        {
+            get
+            {
+                if (this._selectedPublishDataTite != DateTime.MinValue)
                 {
-                    Error.AssertItemFound(this._innerItem);
+                    return this._selectedPublishDataTite;
                 }
 
-                return this._innerItem;
+                this._selectedPublishDataTite = DateUtil.IsoDateToDateTime(this.PublishDateTimePicker.Value,
+                    DateTime.MinValue);
+                return this._selectedPublishDataTite;
+            }
+        }
+
+        private IEnumerable<Database> _selectedTargets;
+        private IEnumerable<Database> SelectedTargets
+        {
+            get
+            {
+                if (this._selectedTargets != null && this._selectedTargets.Any())
+                {
+                    return this._selectedTargets;
+                }
+
+                var targetItems = new List<Item>();
+
+                foreach (string str in Context.ClientPage.ClientRequest.Form.Keys)
+                {
+                    if (str != null && str.StartsWith("pt_", StringComparison.InvariantCulture))
+                    {
+                        var target = _database.Items[ShortID.Decode(str.Substring(3))];
+                        Assert.IsNotNull(target, "Publish target not found.");
+                        targetItems.Add(target);
+                    }
+                }
+
+                this._selectedTargets =
+                    targetItems.Select(t => Database.GetDatabase(t[FieldIDs.PublishingTargetDatabase]));
+                return this._selectedTargets;
+            }
+        }
+
+        private IEnumerable<Language> _selectedLanguages;
+        private IEnumerable<Language> SelectedLanguages
+        {
+            get
+            {
+                if (this._selectedLanguages != null && this._selectedLanguages.Any())
+                {
+                    return this._selectedLanguages;
+                }
+
+                var languages = new List<Language>();
+                foreach (string index in Context.ClientPage.ClientRequest.Form.Keys)
+                {
+                    if (index != null && index.StartsWith("lang_", StringComparison.InvariantCulture))
+                    {
+                        var language = LanguageManager.GetLanguage(Context.ClientPage.ClientRequest.Form[index]);
+                        Assert.IsNotNull(language, "Publish language not found.");
+                        languages.Add(language);
+                    }
+                }
+
+                this._selectedLanguages = languages;
+                return languages;
             }
         }
 
@@ -96,14 +146,14 @@ namespace ScheduledPublishing.sitecore.shell.Applications.ContentManager.Dialogs
             }
         }
 
-        private bool IsPublishing
+        private static bool Unpublish
         {
             get
             {
-                bool isPublishing;
-                bool.TryParse(WebUtil.GetQueryString("unpunlidh"), out isPublishing);
+                bool unpublish;
+                bool.TryParse(WebUtil.GetQueryString("unpublish"), out unpublish);
 
-                return isPublishing;
+                return unpublish;
             }
         }
 
@@ -117,7 +167,7 @@ namespace ScheduledPublishing.sitecore.shell.Applications.ContentManager.Dialogs
 
                 this.ServerTime.Text = "Current time on server: " + DateTime.Now;
 
-                this.PublishTimeLit.Text = this.IsPublishing ? "Unpiblish Time: " : "Publish Time: ";
+                this.PublishTimeLit.Text = Unpublish ? "Unpiblish Time: " : "Publish Time: ";
 
                 this.BuildExistingSchedules();
                 this.BuildPublishingTargets();
@@ -146,33 +196,21 @@ namespace ScheduledPublishing.sitecore.shell.Applications.ContentManager.Dialogs
             base.OnOK(sender, args);
         }
 
-        protected string JobHandle
-        {
-            get
-            {
-                return StringUtil.GetString(this.ServerProperties["JobHandle"]);
-            }
-            set
-            {
-                Assert.ArgumentNotNullOrEmpty(value, "value");
-                this.ServerProperties["JobHandle"] = (object)value;
-            }
-        }
-
         /// <summary>
         /// Renders available publishing targets.
         /// </summary>
         private void BuildPublishingTargets()
         {
-            var publishingTargets = GetPublishingTargets();
+            var publishingTargets = PublishManager.GetPublishingTargets(_database);
             if (publishingTargets == null)
             {
+                Log.Info("No publish targets found", this);
                 return;
             }
 
             foreach (Item target in publishingTargets)
             {
-                var id = Control.GetUniqueID("pt_");
+                var id = string.Format("pt_{0}", ShortID.Encode(target.ID));
                 var database = Database.GetDatabase(target[FieldIDs.PublishingTargetDatabase]);
                 if (database == null)
                 {
@@ -199,9 +237,10 @@ namespace ScheduledPublishing.sitecore.shell.Applications.ContentManager.Dialogs
         /// </summary>
         private void BuildLanguages()
         {
-            var languages = this.GetLanguages();
+            var languages = LanguageManager.GetLanguages(_database);
             if (languages == null)
             {
+                Log.Info("No publish languages found", this);
                 return;
             }
 
@@ -257,25 +296,30 @@ namespace ScheduledPublishing.sitecore.shell.Applications.ContentManager.Dialogs
                 return;
             }
 
-            var publishingTaskName = BuildPublishOptionsName(this.InnerItem.ID);
+            var publishingTaskName = BuildPublishOptionsName(this.InnerItem);
             var existingSchedules =
                 this.PublishingSchedulesFolder.Axes.GetDescendants()
-                                         .Where(x => x.Name == publishingTaskName)
-                                         .Select(x => DateUtil.IsoDateToDateTime(x["Schedule"].Substring(0, x["Schedule"].IndexOf('|'))).ToString(Context.Culture))
-                                         .OrderBy(DateTime.Parse);
+                    .Where(x => x.Name == publishingTaskName)
+                    .Select(
+                        x =>
+                            DateUtil.IsoDateToDateTime(x["Schedule"].Substring(0, x["Schedule"].IndexOf('|')))
+                                .ToString(Context.Culture))
+                    .OrderBy(DateTime.Parse);
 
             var sbExistingSchedules = new StringBuilder();
             if (existingSchedules.Any())
             {
                 foreach (var existingSchedule in existingSchedules)
                 {
-                    sbExistingSchedules.Append("<div style=\"padding:0px 0px 2px 0px; width=100%;\">" + existingSchedule + "</div>");
+                    sbExistingSchedules.Append("<div style=\"padding:0px 0px 2px 0px; width=100%;\">" + existingSchedule +
+                                               "</div>");
                     sbExistingSchedules.Append("<br />");
                 }
             }
             else
             {
-                sbExistingSchedules.Append("<div style=\"padding:0px 0px 2px 0px; width=100%;\">" + "This item has not been scheduled for publishing yet." + "</div>");
+                sbExistingSchedules.Append("<div style=\"padding:0px 0px 2px 0px; width=100%;\">" +
+                                           "This item has not been scheduled for publishing yet." + "</div>");
                 sbExistingSchedules.Append("<br />");
             }
 
@@ -286,20 +330,13 @@ namespace ScheduledPublishing.sitecore.shell.Applications.ContentManager.Dialogs
 
         private bool ValidateSchedule()
         {
-            //TODO: Finish ValidateItemValidators
-            var isValid = (ValidateChosenDate() && ValidatePublishable()  /* && ValidateItemValidators()*/);
+            var isValid =
+                (this.ValidatePublishable()
+                 && this.ValidateSelectedDate()
+                 && this.ValidateSelectedPublishTargets()
+                 && this.ValidateSelectedLanguages());
+
             return isValid;
-        }
-
-        private bool ValidateChosenDate()
-        {
-            if (DateTime.Compare(this.PublishDateTime, DateTime.Now) <= 0)
-            {
-                SheerResponse.Alert("The date selected for publish has passed. Please select a future date.");
-                return false;
-            }
-
-            return true;
         }
 
         /// <summary>
@@ -308,9 +345,43 @@ namespace ScheduledPublishing.sitecore.shell.Applications.ContentManager.Dialogs
         /// <returns>True if the item meets all date and time requirements for publishing</returns>
         private bool ValidatePublishable()
         {
-            if (!this.InnerItem.Publishing.IsPublishable(this.PublishDateTime, false))
+            if (this.InnerItem != null 
+                && !this.InnerItem.Publishing.IsPublishable(this.SelectedPublishDateTime, false))
             {
                 SheerResponse.Alert("Item is not publishable at that time.");
+                return false;
+            }
+
+            return true;
+        }
+
+        private bool ValidateSelectedDate()
+        {
+            if (DateTime.Compare(this.SelectedPublishDateTime, DateTime.Now) <= 0)
+            {
+                SheerResponse.Alert("The date selected for publish has passed. Please select a future date.");
+                return false;
+            }
+
+            return true;
+        }
+
+        private bool ValidateSelectedPublishTargets()
+        {
+            if (this.SelectedTargets == null || !this.SelectedTargets.Any())
+            {
+                SheerResponse.Alert("Please select at least one publish target.");
+                return false;
+            }
+
+            return true;
+        }
+
+        private bool ValidateSelectedLanguages()
+        {
+            if (this.SelectedLanguages == null || !this.SelectedLanguages.Any())
+            {
+                SheerResponse.Alert("Please select at least one publish language.");
                 return false;
             }
 
@@ -346,43 +417,57 @@ namespace ScheduledPublishing.sitecore.shell.Applications.ContentManager.Dialogs
 
         private void CreatePublishOptionsItem()
         {
-            var isPublishing = this.IsPublishing;
-            var action = isPublishing ? "unpublishing" : "publishing";
+            var unpublish = Unpublish;
+            var action = unpublish ? "unpublish" : "publish";
 
             try
             {
                 using (new SecurityDisabler())
                 {
-                    TemplateItem publishOptionsTemplate = _database.GetTemplate(Utils.Constants.PUBLISH_OPTIONS_TEMPLATE_ID);
-                    var publishOptionsName = BuildPublishOptionsName(InnerItem.ID);
-                    Item optionsFolder = GetOrCreateFolder(this.PublishDateTime);
-                    Item newPublishOptions = optionsFolder.Add(publishOptionsName, publishOptionsTemplate);
+                    var publishOptionsTemplate = this._database.GetTemplate(Constants.PUBLISH_OPTIONS_TEMPLATE_ID);
+                    var publishOptionsName = BuildPublishOptionsName(this.InnerItem);
+                    var optionsFolder = this.GetOrCreateFolder(this.SelectedPublishDateTime);
+                    var newPublishOptions = optionsFolder.Add(publishOptionsName, publishOptionsTemplate);
 
                     newPublishOptions.Editing.BeginEdit();
 
-                    newPublishOptions["Items"] = InnerItem.Paths.FullPath;
-                    newPublishOptions["CreatedByEmail"] = Context.User.Profile.Email;
-                    newPublishOptions["Unpublish"] = isPublishing ? 1.ToString() : string.Empty;
-                    newPublishOptions["PublishMethod"] = this.SmartPublish.Checked ? "smart" : "republish";
-                    newPublishOptions["PublishChildren"] = this.PublishChildren.Checked ? "1" : string.Empty;
-                    newPublishOptions["PublishLanguages"] = string.Join("|", GetLanguages().Select(x => x.Name));
-                    newPublishOptions["TargetDatabase"] = string.Join("|", GetPublishingTargetDatabases().Select(x => x.Name));
+                    newPublishOptions[Constants.PUBLISH_OPTIONS_CREATED_BY_EMAIL] = Context.User.Profile.Email;
+                    newPublishOptions[Constants.PUBLISH_OPTIONS_UNPUBLISH] = unpublish ? "1" : string.Empty;
+                    if (this.InnerItem != null)
+                    {
+                        newPublishOptions[Constants.PUBLISH_OPTIONS_PUBLISH_ITEM] = this.InnerItem.Paths.FullPath;
+                    }
+                    newPublishOptions[Constants.PUBLISH_OPTIONS_PUBLISH_MODE] = this.SmartPublish.Checked
+                        ? "smart"
+                        : "republish";
+                    newPublishOptions[Constants.PUBLISH_OPTIONS_PUBLISH_CHILDREN] = this.PublishChildren.Checked
+                        ? "1"
+                        : string.Empty;
+                    newPublishOptions[Constants.PUBLISH_OPTIONS_TARGET_LANGUAGES] = string.Join("|",
+                        this.SelectedLanguages.Select(x => x.Name));
+                    newPublishOptions[Constants.PUBLISH_OPTIONS_SOURCE_DATABASE] = this._database.Name;
+                    newPublishOptions[Constants.PUBLISH_OPTIONS_TARGET_DATABASES] = string.Join("|",
+                        this.SelectedTargets.Select(x => x.Name));
 
                     newPublishOptions.Editing.AcceptChanges();
                     newPublishOptions.Editing.EndEdit();
-                    
+
                     Log.Info(
-                        "Created publish options: " + action + ": " + InnerItem.Name + " " +
-                        InnerItem.ID +
-                        DateTime.Now, this);
+                        string.Format("Created Publish Options: {0}: {1} {2} {3}",
+                            action,
+                            this.InnerItem != null ? this.InnerItem.Name : "Website",
+                            this.InnerItem != null ? this.InnerItem.ID.ToString() : "Website",
+                            DateTime.Now), this);
                 }
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
                 Log.Info(
-                    "Failed creating publish options " + action + ": " + InnerItem.Name + " " +
-                    InnerItem.ID +
-                    DateTime.Now + " " + e.ToString(), this);
+                    string.Format("Failed creating Publish Options: {0}: {1} {2} {3}",
+                        action,
+                        this.InnerItem != null ? this.InnerItem.Name : "Website",
+                        this.InnerItem != null ? this.InnerItem.ID.ToString() : "Website",
+                        ex), this);
             }
         }
 
@@ -416,45 +501,13 @@ namespace ScheduledPublishing.sitecore.shell.Applications.ContentManager.Dialogs
             return hourFolder;
         }
 
-        private IEnumerable<Language> GetLanguages()
+        private static string BuildPublishOptionsName(Item item)
         {
-            var languages = LanguageManager.GetLanguages(_database);
-            if (languages == null)
-            {
-                Log.Info("No publishing languages found", this);
-                return Enumerable.Empty<Language>();
-            }
+            var guid = item != null
+                ? item.ID.Guid
+                : Guid.NewGuid();
 
-            return languages;
-        }
-
-        private IEnumerable<Item> GetPublishingTargets()
-        {
-            var publishingTargets = PublishManager.GetPublishingTargets(_database);
-            if (publishingTargets == null)
-            {
-                Log.Info("No publishing targets found", this);
-                return Enumerable.Empty<Item>();
-
-            }
-
-            return publishingTargets;
-        }
-
-        private IEnumerable<Database> GetPublishingTargetDatabases()
-        {
-            var targets = GetPublishingTargets();
-            if (targets == null)
-            {
-                return Enumerable.Empty<Database>();
-            }
-
-            return targets.Select(t => Database.GetDatabase(t[FieldIDs.PublishingTargetDatabase]));
-        }
-
-        private string BuildPublishOptionsName(ID id)
-        {
-            return ItemUtil.ProposeValidItemName(string.Format("{0}_Options", id));
+            return ItemUtil.ProposeValidItemName(string.Format("{0}ScheduledPublishOptions", guid));
         }
     }
 }

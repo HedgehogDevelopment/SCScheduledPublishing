@@ -26,7 +26,7 @@
         <Scrollbox ID="SettingsPane" Border="none" Background="transparent">
           <Groupbox ID="PublishingPanel" Header="Publishing" Margin="0px 0px 16px 0px">
             <Border Padding="4">
-              <Radiobutton ID="SmartPublish" Name="PublishMode" Header="Smart publish - Publish Differences Between Source and Target Database." Value="SmartPublish" Checked="true"/>
+              <Radiobutton ID="SmartPublish" Name="PublishMode" Header="Smart publish - Publish Differences Between Source and Target Database." Value="SmartPublish" />
               <br/>
               <Radiobutton ID="Republish" Name="PublishMode" Header="Republish - Publish Everything." Value="Republish"/>
 

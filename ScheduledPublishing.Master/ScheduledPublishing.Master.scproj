@@ -100,6 +100,7 @@
     </SitecoreItem>
     <SitecoreItem Include="sitecore\system\Tasks\Commands\CreatePublishTasks.item">
       <ItemDeployment>DeployOnce</ItemDeployment>
+      <ChildItemSynchronization>NoChildSynchronization</ChildItemSynchronization>
     </SitecoreItem>
     <SitecoreItem Include="sitecore\system\Tasks\Commands\ScheduledPublishing.item">
       <Icon>/temp/IconCache/People/16x16/clock_stop.png</Icon>
@@ -140,6 +141,10 @@
       <ChildItemSynchronization>KeepAllChildrenSynchronized</ChildItemSynchronization>
       <ItemDeployment>AlwaysUpdate</ItemDeployment>
     </SitecoreItem>
+    <SitecoreItem Include="sitecore\templates\System\Scheduled Publish\PublishingSchedule\Data\ItemToPublish.item">
+      <ChildItemSynchronization>KeepAllChildrenSynchronized</ChildItemSynchronization>
+      <ItemDeployment>AlwaysUpdate</ItemDeployment>
+    </SitecoreItem>
     <SitecoreItem Include="sitecore\templates\System\Scheduled Publish\PublishingSchedule\Data\PublishChildren.item">
       <ChildItemSynchronization>KeepAllChildrenSynchronized</ChildItemSynchronization>
       <ItemDeployment>AlwaysUpdate</ItemDeployment>
@@ -148,7 +153,7 @@
       <ChildItemSynchronization>KeepAllChildrenSynchronized</ChildItemSynchronization>
       <ItemDeployment>AlwaysUpdate</ItemDeployment>
     </SitecoreItem>
-    <SitecoreItem Include="sitecore\templates\System\Scheduled Publish\PublishingSchedule\Data\PublishMethod.item">
+    <SitecoreItem Include="sitecore\templates\System\Scheduled Publish\PublishingSchedule\Data\PublishMode.item">
       <ChildItemSynchronization>KeepAllChildrenSynchronized</ChildItemSynchronization>
       <ItemDeployment>AlwaysUpdate</ItemDeployment>
     </SitecoreItem>
@@ -156,7 +161,11 @@
       <ChildItemSynchronization>KeepAllChildrenSynchronized</ChildItemSynchronization>
       <ItemDeployment>AlwaysUpdate</ItemDeployment>
     </SitecoreItem>
-    <SitecoreItem Include="sitecore\templates\System\Scheduled Publish\PublishingSchedule\Data\TargetDatabase.item">
+    <SitecoreItem Include="sitecore\templates\System\Scheduled Publish\PublishingSchedule\Data\SourceDatabase.item">
+      <ChildItemSynchronization>KeepAllChildrenSynchronized</ChildItemSynchronization>
+      <ItemDeployment>AlwaysUpdate</ItemDeployment>
+    </SitecoreItem>
+    <SitecoreItem Include="sitecore\templates\System\Scheduled Publish\PublishingSchedule\Data\TargetDatabases.item">
       <ChildItemSynchronization>KeepAllChildrenSynchronized</ChildItemSynchronization>
       <ItemDeployment>AlwaysUpdate</ItemDeployment>
     </SitecoreItem>

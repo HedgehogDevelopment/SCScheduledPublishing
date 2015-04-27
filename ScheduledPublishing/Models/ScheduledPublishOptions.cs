@@ -17,28 +17,40 @@ namespace ScheduledPublishing.Models
             this.InnerItem = item;
         }
 
-        private Item[] _publishItems;
-        public Item[] PublishItems
+        private string _schedulerEmail;
+        public string SchedulerEmail
         {
             get
             {
-                if (this._publishItems != null && this._publishItems.Any())
+                if (!string.IsNullOrWhiteSpace(this._schedulerEmail))
                 {
-                    return this._publishItems;
+                    return this._schedulerEmail;
                 }
 
-                var itemsIds = this.InnerItem[Constants.PUBLISH_OPTIONS_PUBLISH_ITEMS];
-                if (string.IsNullOrWhiteSpace(itemsIds))
+                this._schedulerEmail = this.InnerItem[Constants.PUBLISH_OPTIONS_CREATED_BY_EMAIL];
+                return this._schedulerEmail;
+            }
+        }
+
+        private Item _itemToPublish;
+        public Item ItemToPublish
+        {
+            get
+            {
+                if (this._itemToPublish != null)
                 {
-                    return this._publishItems;
+                    return this._itemToPublish;
                 }
 
-                this._publishItems = 
-                    itemsIds.Split('|')
-                            .Select(Database.GetDatabase("master").GetItem)
-                            .ToArray();
+                var itemsId = this.InnerItem[Constants.PUBLISH_OPTIONS_PUBLISH_ITEM];
+                if (string.IsNullOrWhiteSpace(itemsId) 
+                    || this.SourceDatabase == null)
+                {
+                    return this._itemToPublish;
+                }
 
-                return this._publishItems;
+                this._itemToPublish = this.SourceDatabase.GetItem(itemsId);
+                return this._itemToPublish;
             }
         }
 
@@ -56,6 +68,27 @@ namespace ScheduledPublishing.Models
             get
             {
                 return "1" == this.InnerItem[Constants.PUBLISH_OPTIONS_PUBLISH_CHILDREN];
+            }
+        }
+
+        private Database _sourceDatabase;
+        public Database SourceDatabase
+        {
+            get
+            {
+                if (this._sourceDatabase != null)
+                {
+                    return this._sourceDatabase;
+                }
+
+                var database = this.InnerItem[Constants.PUBLISH_OPTIONS_SOURCE_DATABASE];
+                if (string.IsNullOrWhiteSpace(database))
+                {
+                    return this._sourceDatabase;
+                }
+
+                this._sourceDatabase = Database.GetDatabase(database);
+                return this._sourceDatabase;
             }
         }
 
@@ -136,7 +169,7 @@ namespace ScheduledPublishing.Models
                 case "incremental":
                     return PublishMode.Incremental;
                 default:
-                    return PublishMode.Smart;
+                    return PublishMode.Unknown;
             }
         }
     }
