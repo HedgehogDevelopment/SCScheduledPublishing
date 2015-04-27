@@ -1,40 +1,40 @@
 ----item----
 version: 1
-id: {8EDE5C9E-265D-434A-9D1F-763B7755A9A0}
+id: {20DEB7CE-6AD1-459F-B1A4-F6AE88B2C62A}
 database: master
-path: /sitecore/system/Tasks/Schedules/CollectPublishableItems
-parent: {A705D262-5714-4880-9962-051E25F1416D}
-name: CollectPublishableItems
+path: /sitecore/templates/System/Scheduled Publish/ScheduledPublishEmail/ScheduledPublishEmail/ScheduledPublishEmailSubject
+parent: {D9012DCB-71D0-4A2E-94E1-083D66508092}
+name: ScheduledPublishEmailSubject
 master: {00000000-0000-0000-0000-000000000000}
-template: {70244923-FA84-477C-8CBD-62F39642C42B}
-templatekey: Schedule
+template: {455A3E98-A627-4B40-8035-E683A0331AC7}
+templatekey: Template field
 
 ----field----
-field: {62E64DBB-0A39-4DD7-BA05-7BD08C5404E0}
-name: Command
-key: command
-content-length: 38
+field: {AB162CC0-DC80-4ABF-8871-998EE5D7BA32}
+name: Type
+key: type
+content-length: 16
 
-{695B1E81-F0FB-4DCD-8AEA-0E735F62515C}
+Single-Line Text
 ----field----
-field: {50BE51F8-746D-4DC2-9C3B-B14ABC5CE9B7}
-name: Schedule
-key: schedule
-content-length: 44
+field: {BA3F86A2-4A1C-4D78-B63D-91C2779C1B5E}
+name: __Sortorder
+key: __sortorder
+content-length: 3
 
-20150406T013000|20450407T023100|127|00:01:00
-----field----
-field: {B1E16562-F3F9-4DDD-84CA-6E099950ECC0}
-name: Last run
-key: last run
-content-length: 15
-
-20150427T113827
+300
 ----version----
 language: en
 version: 1
-revision: fe917ab6-5bf0-41e4-b3dc-8accdc3bb756
+revision: 3e551917-e862-41b0-83a1-150274a76ca5
 
+----field----
+field: {19A69332-A23E-4E70-8D16-B2640CB24CC8}
+name: Title
+key: title
+content-length: 7
+
+Subject
 ----field----
 field: {52807595-0F8F-4B20-8D2A-CB71D28C6103}
 name: __Owner
@@ -48,7 +48,7 @@ name: __Created
 key: __created
 content-length: 15
 
-20150406T130835
+20150427T104400
 ----field----
 field: {5DD74568-4D4B-44C1-B513-0AF5F4CDA34F}
 name: __Created by
@@ -62,18 +62,18 @@ name: __Revision
 key: __revision
 content-length: 36
 
-fe917ab6-5bf0-41e4-b3dc-8accdc3bb756
+3e551917-e862-41b0-83a1-150274a76ca5
 ----field----
 field: {D9CF14B1-FA16-4BA6-9288-E8A174D4D522}
 name: __Updated
 key: __updated
 content-length: 34
 
-20150427T113827:635657315072947515
+20150427T104613:635657283731021277
 ----field----
 field: {BADD9CF9-53E0-4D0C-BCC0-2D784C282F6A}
 name: __Updated by
 key: __updated by
-content-length: 18
+content-length: 14
 
-sitecore\Anonymous
+sitecore\admin

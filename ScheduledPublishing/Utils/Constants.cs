@@ -21,5 +21,6 @@ namespace ScheduledPublishing.Utils
         public static readonly ID PUBLISH_OPTIONS_SOURCE_DATABASE = ID.Parse("{61632EB9-8A59-4AAB-B790-91AF3DA7B9F4}");
         public static readonly ID PUBLISH_OPTIONS_TARGET_DATABASES = ID.Parse("{193B7E69-8C83-422F-80B2-F7B48C42775E}");
         public static readonly ID PUBLISH_OPTIONS_TARGET_LANGUAGES = ID.Parse("{65C16118-BD34-4E45-9AAD-45C7AD0AE69A}");
+        public static readonly ID PUBLISH_OPTIONS_SCHEDULED_DATE = ID.Parse("{9691E387-E516-450E-83EA-845AF5BA7276}");
     }
 }

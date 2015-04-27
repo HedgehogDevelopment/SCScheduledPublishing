@@ -11,6 +11,7 @@ using System.Linq;
 using System.Text;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using Constants = ScheduledPublishing.Utils.Constants;
 
 namespace ScheduledPublishing.sitecore.shell.Applications.ContentManager.Dialogs
 {
@@ -39,9 +40,9 @@ namespace ScheduledPublishing.sitecore.shell.Applications.ContentManager.Dialogs
         /// </summary>
         private void RenderAllSchedules()
         {
-            Item schedulesFolder = Context.ContentDatabase.GetItem(Utils.Constants.PUBLISH_OPTIONS_FOLDER_ID);
+            Item schedulesFolder = Context.ContentDatabase.GetItem(Constants.PUBLISH_OPTIONS_FOLDER_ID);
             IEnumerable<Item> allSchedules = schedulesFolder.Children;
-            allSchedules = allSchedules.OrderBy(x => DateUtil.IsoDateToDateTime(x["Schedule"].Split('|').First()));
+            allSchedules = allSchedules.OrderBy(x => x[Constants.PUBLISH_OPTIONS_SCHEDULED_DATE]);
 
             StringBuilder sbHeader = new StringBuilder();
             sbHeader.Append("<table width=\"100%\" cellpadding=\"4\" cellspacing=\"0\">");
@@ -83,7 +84,7 @@ namespace ScheduledPublishing.sitecore.shell.Applications.ContentManager.Dialogs
                     DateTimePicker dtPicker = new DateTimePicker();
                     dtPicker.ID = "dt_" + schedule.ID;
                     dtPicker.Width = new Unit(100.0, UnitType.Percentage);
-                    dtPicker.Value = schedule["Schedule"].Split('|').First();
+                    dtPicker.Value = schedule[Constants.PUBLISH_OPTIONS_SCHEDULED_DATE];
                     this.AllSchedules.Controls.Add(dtPicker);
                     this.AllSchedules.Controls.Add(new LiteralControl("</td>"));
 
@@ -126,8 +127,7 @@ namespace ScheduledPublishing.sitecore.shell.Applications.ContentManager.Dialogs
                     {
                         task.Editing.BeginEdit();
                         string startDateTime = DateUtil.ToIsoDate(dateTime);
-                        string endDateTime = DateUtil.ToIsoDate(dateTime.AddHours(1).AddMinutes(1));
-                        task["Schedule"] = startDateTime + "|" + endDateTime + "|127|00:60:00";
+                        task[Constants.PUBLISH_OPTIONS_SCHEDULED_DATE] = startDateTime;
                         task.Editing.AcceptChanges();
                         task.Editing.EndEdit();
                     }

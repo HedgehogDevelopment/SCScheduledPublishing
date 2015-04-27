@@ -300,11 +300,9 @@ namespace ScheduledPublishing.sitecore.shell.Applications.ContentManager.Dialogs
             var existingSchedules =
                 this.PublishingSchedulesFolder.Axes.GetDescendants()
                     .Where(x => x.Name == publishingTaskName)
-                    .Select(
-                        x =>
-                            DateUtil.IsoDateToDateTime(x["Schedule"].Substring(0, x["Schedule"].IndexOf('|')))
-                                .ToString(Context.Culture))
-                    .OrderBy(DateTime.Parse);
+                    .Select(x => x[Constants.PUBLISH_OPTIONS_SCHEDULED_DATE].ToString());
+
+            existingSchedules = existingSchedules.OrderBy(DateTime.Parse);
 
             var sbExistingSchedules = new StringBuilder();
             if (existingSchedules.Any())

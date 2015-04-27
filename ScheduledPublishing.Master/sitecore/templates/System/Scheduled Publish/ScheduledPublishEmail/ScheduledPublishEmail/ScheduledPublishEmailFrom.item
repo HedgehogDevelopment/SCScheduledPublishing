@@ -1,10 +1,10 @@
 ----item----
 version: 1
-id: {65C16118-BD34-4E45-9AAD-45C7AD0AE69A}
+id: {4A6046AA-2B94-47B2-9A27-3B83F0601822}
 database: master
-path: /sitecore/templates/System/Scheduled Publish/PublishingSchedule/Data/PublishLanguages
-parent: {089776BB-E159-4F2E-AEFD-F1CDE718536B}
-name: PublishLanguages
+path: /sitecore/templates/System/Scheduled Publish/ScheduledPublishEmail/ScheduledPublishEmail/ScheduledPublishEmailFrom
+parent: {D9012DCB-71D0-4A2E-94E1-083D66508092}
+name: ScheduledPublishEmailFrom
 master: {00000000-0000-0000-0000-000000000000}
 template: {455A3E98-A627-4B40-8035-E683A0331AC7}
 templatekey: Template field
@@ -22,19 +22,19 @@ name: __Sortorder
 key: __sortorder
 content-length: 3
 
-247
+200
 ----version----
 language: en
 version: 1
-revision: 4e41a8ac-7e41-4d06-8736-44588cd86f5b
+revision: 5c1165c3-3692-44fa-b94e-7f602a2277fc
 
 ----field----
 field: {19A69332-A23E-4E70-8D16-B2640CB24CC8}
 name: Title
 key: title
-content-length: 17
+content-length: 4
 
-Publish Languages
+From
 ----field----
 field: {52807595-0F8F-4B20-8D2A-CB71D28C6103}
 name: __Owner
@@ -48,7 +48,7 @@ name: __Created
 key: __created
 content-length: 15
 
-20150406T161359
+20150427T104400
 ----field----
 field: {5DD74568-4D4B-44C1-B513-0AF5F4CDA34F}
 name: __Created by
@@ -62,14 +62,14 @@ name: __Revision
 key: __revision
 content-length: 36
 
-4e41a8ac-7e41-4d06-8736-44588cd86f5b
+5c1165c3-3692-44fa-b94e-7f602a2277fc
 ----field----
 field: {D9CF14B1-FA16-4BA6-9288-E8A174D4D522}
 name: __Updated
 key: __updated
 content-length: 34
 
-20150424T193304:635655007843572646
+20150427T104606:635657283667473311
 ----field----
 field: {BADD9CF9-53E0-4D0C-BCC0-2D784C282F6A}
 name: __Updated by

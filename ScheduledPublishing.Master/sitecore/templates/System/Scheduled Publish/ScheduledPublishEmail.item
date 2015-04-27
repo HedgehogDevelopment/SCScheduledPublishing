@@ -1,40 +1,47 @@
 ----item----
 version: 1
-id: {089776BB-E159-4F2E-AEFD-F1CDE718536B}
+id: {E59AE416-5B5C-48D4-A2F8-08D6214BC314}
 database: master
-path: /sitecore/templates/System/Scheduled Publish/PublishingSchedule/Data
-parent: {9F110258-0139-4FC9-AED8-5610C13DADF3}
-name: Data
+path: /sitecore/templates/System/Scheduled Publish/ScheduledPublishEmail
+parent: {9519E190-040A-492B-A2D0-8B3D3127F083}
+name: ScheduledPublishEmail
 master: {00000000-0000-0000-0000-000000000000}
-template: {E269FBB5-3750-427A-9149-7AA950B49301}
-templatekey: Template section
+template: {AB86861A-6030-46C5-B394-E8F99E8B87DB}
+templatekey: Template
 
+----field----
+field: {12C33F3F-86C5-43A5-AEB4-5598CEC45116}
+name: __Base template
+key: __base template
+content-length: 38
+
+{1930BBEB-7805-471A-A3BE-4858AC7CF696}
 ----field----
 field: {06D5295C-ED2F-4A54-9BF2-26228D113318}
 name: __Icon
 key: __icon
-content-length: 26
+content-length: 22
 
-People/16x16/clock_run.png
+Network/32x32/mail.png
 ----version----
 language: en
 version: 1
-revision: 9d2160ba-1547-401c-8d80-ec1a92da5917
+revision: 050f8a40-73da-4282-a104-4b7e2d985a50
 
 ----field----
 field: {B5E02AD9-D56F-4C41-A065-A133DB87BDEB}
 name: __Display name
 key: __display name
-content-length: 19
+content-length: 23
 
-Publishing Schedule
+Scheduled Publish Email
 ----field----
 field: {25BED78C-4957-4165-998A-CA1B52F67497}
 name: __Created
 key: __created
 content-length: 15
 
-20150402T123745
+20150427T103359
 ----field----
 field: {5DD74568-4D4B-44C1-B513-0AF5F4CDA34F}
 name: __Created by
@@ -48,14 +55,14 @@ name: __Revision
 key: __revision
 content-length: 36
 
-9d2160ba-1547-401c-8d80-ec1a92da5917
+050f8a40-73da-4282-a104-4b7e2d985a50
 ----field----
 field: {D9CF14B1-FA16-4BA6-9288-E8A174D4D522}
 name: __Updated
 key: __updated
 content-length: 34
 
-20150423T121312:635653879928465458
+20150427T103703:635657278237619753
 ----field----
 field: {BADD9CF9-53E0-4D0C-BCC0-2D784C282F6A}
 name: __Updated by
