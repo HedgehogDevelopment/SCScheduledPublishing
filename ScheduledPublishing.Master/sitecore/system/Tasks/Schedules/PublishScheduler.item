@@ -2,9 +2,9 @@
 version: 1
 id: {8EDE5C9E-265D-434A-9D1F-763B7755A9A0}
 database: master
-path: /sitecore/system/Tasks/Schedules/CollectPublishableItems
+path: /sitecore/system/Tasks/Schedules/PublishScheduler
 parent: {A705D262-5714-4880-9962-051E25F1416D}
-name: CollectPublishableItems
+name: PublishScheduler
 master: {00000000-0000-0000-0000-000000000000}
 template: {70244923-FA84-477C-8CBD-62F39642C42B}
 templatekey: Schedule
@@ -29,12 +29,26 @@ name: Last run
 key: last run
 content-length: 15
 
-20150427T113827
+20150427T113800
+----field----
+field: {A2C0C7A2-697D-40E2-9516-54E0C2D6028E}
+name: Async
+key: async
+content-length: 1
+
+1
 ----version----
 language: en
 version: 1
-revision: fe917ab6-5bf0-41e4-b3dc-8accdc3bb756
+revision: 02b7ee18-796c-4440-80ee-c9ef20d18f05
 
+----field----
+field: {B5E02AD9-D56F-4C41-A065-A133DB87BDEB}
+name: __Display name
+key: __display name
+content-length: 17
+
+Publish Scheduler
 ----field----
 field: {52807595-0F8F-4B20-8D2A-CB71D28C6103}
 name: __Owner
@@ -48,7 +62,7 @@ name: __Created
 key: __created
 content-length: 15
 
-20150406T130835
+20150406T130800
 ----field----
 field: {5DD74568-4D4B-44C1-B513-0AF5F4CDA34F}
 name: __Created by
@@ -62,18 +76,18 @@ name: __Revision
 key: __revision
 content-length: 36
 
-fe917ab6-5bf0-41e4-b3dc-8accdc3bb756
+02b7ee18-796c-4440-80ee-c9ef20d18f05
 ----field----
 field: {D9CF14B1-FA16-4BA6-9288-E8A174D4D522}
 name: __Updated
 key: __updated
 content-length: 34
 
-20150427T113827:635657315072947515
+20150427T143734:635657422545904441
 ----field----
 field: {BADD9CF9-53E0-4D0C-BCC0-2D784C282F6A}
 name: __Updated by
 key: __updated by
-content-length: 18
+content-length: 14
 
-sitecore\Anonymous
+sitecore\admin
