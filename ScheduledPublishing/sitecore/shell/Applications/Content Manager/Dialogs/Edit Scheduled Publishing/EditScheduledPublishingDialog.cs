@@ -24,9 +24,6 @@ namespace ScheduledPublishing.sitecore.shell.Applications.ContentManager.Dialogs
         {
             if (!Context.ClientPage.IsEvent)
             {
-                Item itemFromQueryString = UIUtil.GetItemFromQueryString(Context.ContentDatabase);
-                Error.AssertItemFound(itemFromQueryString);
-
                 ServerTime.Text = "Current time on server: " + DateTime.Now;
 
                 RenderAllSchedules();
@@ -41,8 +38,8 @@ namespace ScheduledPublishing.sitecore.shell.Applications.ContentManager.Dialogs
         private void RenderAllSchedules()
         {
             Item schedulesFolder = Context.ContentDatabase.GetItem(Constants.PUBLISH_OPTIONS_FOLDER_ID);
-            IEnumerable<Item> allSchedules = schedulesFolder.Children;
-            allSchedules = allSchedules.OrderBy(x => x[Constants.PUBLISH_OPTIONS_SCHEDULED_DATE]);
+            List<Item> allSchedules = schedulesFolder.Axes.GetDescendants().Where(x => x.TemplateID == Constants.PUBLISH_OPTIONS_TEMPLATE_ID).ToList();
+            allSchedules.Sort((a, b) => a[Constants.PUBLISH_OPTIONS_SCHEDULED_DATE].CompareTo(b[Constants.PUBLISH_OPTIONS_SCHEDULED_DATE]));
 
             StringBuilder sbHeader = new StringBuilder();
             sbHeader.Append("<table width=\"100%\" cellpadding=\"4\" cellspacing=\"0\">");

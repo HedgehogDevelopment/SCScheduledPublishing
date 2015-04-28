@@ -27,8 +27,13 @@ namespace ScheduledPublishing.Models
                     return this._schedulerEmail;
                 }
 
-                this._schedulerEmail = this.InnerItem[Constants.PUBLISH_OPTIONS_CREATED_BY_EMAIL];
+                this._schedulerEmail = this.InnerItem[ID.Parse("{0BBED214-85E7-4773-AB6A-9608CAC921FE}")];
                 return this._schedulerEmail;
+            }
+            set
+            {
+                this._schedulerEmail = value;
+                this.InnerItem[ID.Parse("{0BBED214-85E7-4773-AB6A-9608CAC921FE}")] = value;
             }
         }
 
@@ -42,7 +47,7 @@ namespace ScheduledPublishing.Models
                     return this._itemToPublish;
                 }
 
-                var itemsId = this.InnerItem[Constants.PUBLISH_OPTIONS_PUBLISH_ITEM];
+                var itemsId = this.InnerItem[ID.Parse("{8B07571D-D616-4373-8DB0-D77672911D16}")];
                 if (string.IsNullOrWhiteSpace(itemsId) 
                     || this.SourceDatabase == null)
                 {
@@ -54,12 +59,21 @@ namespace ScheduledPublishing.Models
             }
         }
 
+        public string ItemToPublishPath
+        {
+            get { return this._itemToPublish.Paths.FullPath; }
+            set { this.InnerItem[ID.Parse("{8B07571D-D616-4373-8DB0-D77672911D16}")] = value; }
+        }
+
         public bool Unpublish
         {
             get
             {
-                return "1" == this.InnerItem[Constants.PUBLISH_OPTIONS_UNPUBLISH];
-
+                return "1" == this.InnerItem[ID.Parse("{0A1E6524-43BA-4F3D-B7BF-1DD696FB2953}")];
+            }
+            set
+            {
+                this.InnerItem[ID.Parse("{0A1E6524-43BA-4F3D-B7BF-1DD696FB2953}")] = value ? "1" : string.Empty;
             }
         }
 
@@ -67,7 +81,23 @@ namespace ScheduledPublishing.Models
         {
             get
             {
-                return "1" == this.InnerItem[Constants.PUBLISH_OPTIONS_PUBLISH_CHILDREN];
+                return "1" == this.InnerItem[ID.Parse("{7E70DC6C-21E1-48C2-8AEC-ACA6A4B8BCB2}")];
+            }
+            set
+            {
+                this.InnerItem[ID.Parse("{7E70DC6C-21E1-48C2-8AEC-ACA6A4B8BCB2}")] = value ? "1" : string.Empty;
+            }
+        }
+
+        public string PublishDateString
+        {
+            get
+            {
+                return this.InnerItem[ID.Parse("{9691E387-E516-450E-83EA-845AF5BA7276}")];
+            }
+            set
+            {
+                this.InnerItem[ID.Parse("{9691E387-E516-450E-83EA-845AF5BA7276}")] = value;
             }
         }
 
@@ -81,7 +111,7 @@ namespace ScheduledPublishing.Models
                     return this._sourceDatabase;
                 }
 
-                var database = this.InnerItem[Constants.PUBLISH_OPTIONS_SOURCE_DATABASE];
+                var database = this.InnerItem[ID.Parse("{61632EB9-8A59-4AAB-B790-91AF3DA7B9F4}")];
                 if (string.IsNullOrWhiteSpace(database))
                 {
                     return this._sourceDatabase;
@@ -89,6 +119,18 @@ namespace ScheduledPublishing.Models
 
                 this._sourceDatabase = Database.GetDatabase(database);
                 return this._sourceDatabase;
+            }
+        }
+
+        public string SourceDatabaseString
+        {
+            get
+            {
+                return this.InnerItem[ID.Parse("{61632EB9-8A59-4AAB-B790-91AF3DA7B9F4}")];
+            }
+            set
+            {
+                this.InnerItem[ID.Parse("{61632EB9-8A59-4AAB-B790-91AF3DA7B9F4}")] = value;
             }
         }
 
@@ -102,7 +144,7 @@ namespace ScheduledPublishing.Models
                     return this._targetDatabases;
                 }
 
-                var databases = this.InnerItem[Constants.PUBLISH_OPTIONS_TARGET_DATABASES];
+                var databases = this.InnerItem[ID.Parse("{193B7E69-8C83-422F-80B2-F7B48C42775E}")];
                 if (string.IsNullOrWhiteSpace(databases))
                 {
                     return this._targetDatabases;
@@ -116,6 +158,18 @@ namespace ScheduledPublishing.Models
             }
         }
 
+        public string TargetDatabasesString
+        {
+            get
+            {
+                return this.InnerItem[ID.Parse("{193B7E69-8C83-422F-80B2-F7B48C42775E}")];
+            }
+            set
+            {
+                this.InnerItem[ID.Parse("{193B7E69-8C83-422F-80B2-F7B48C42775E}")] = value;
+            }
+        }
+
         private Language[] _languages;
         public Language[] Languages
         {
@@ -126,8 +180,8 @@ namespace ScheduledPublishing.Models
                     return this._languages;
                 }
 
-                var languages = this.InnerItem[Constants.PUBLISH_OPTIONS_TARGET_LANGUAGES];
-                if (string.IsNullOrWhiteSpace(languages))
+                var languages = this.InnerItem[ID.Parse("{65C16118-BD34-4E45-9AAD-45C7AD0AE69A}")];
+                if (string.IsNullOrWhiteSpace(languages)) // TODO: why?
                 {
                     return this._languages;
                 }
@@ -139,6 +193,19 @@ namespace ScheduledPublishing.Models
                     .ToArray();
 
                 return this._languages;
+            }
+            set { this.InnerItem[ID.Parse("{65C16118-BD34-4E45-9AAD-45C7AD0AE69A}")] = string.Join("|", (object[]) value); }
+        }
+
+        public string LanguagesString
+        {
+            get
+            {
+                return string.Join("|", this._languages.Select(x => x.Name));
+            }
+            set
+            {
+                this.InnerItem[ID.Parse("{65C16118-BD34-4E45-9AAD-45C7AD0AE69A}")] = value;
             }
         }
 
@@ -152,9 +219,27 @@ namespace ScheduledPublishing.Models
                     return this._publishMode;
                 }
 
-                var mode = this.InnerItem[Constants.PUBLISH_OPTIONS_PUBLISH_MODE];
+                var mode = this.InnerItem[ID.Parse("{F313EF5C-AC40-46DB-9AA1-52C70D590338}")];
                 this._publishMode = ParseMode(mode);
                 return this._publishMode;
+            }
+            set { this._publishMode = value; }
+        }
+
+        public string PublishModeString
+        {
+            get
+            {
+                if (this._publishMode != PublishMode.Unknown)
+                {
+                    return ParseMode(this._publishMode);
+                }
+
+                return this.InnerItem[ID.Parse("{F313EF5C-AC40-46DB-9AA1-52C70D590338}")];
+            }
+            set
+            {
+                this.InnerItem[ID.Parse("{F313EF5C-AC40-46DB-9AA1-52C70D590338}")] = value;
             }
         }
 
@@ -170,6 +255,21 @@ namespace ScheduledPublishing.Models
                     return PublishMode.Incremental;
                 default:
                     return PublishMode.Unknown;
+            }
+        }
+
+        private static string ParseMode(PublishMode mode)
+        {
+            switch (mode)
+            {
+                case PublishMode.Smart:
+                    return "smart";
+                case PublishMode.Full:
+                    return "full";
+                case PublishMode.Incremental:
+                    return "incremental";
+                default:
+                    return string.Empty;
             }
         }
     }
