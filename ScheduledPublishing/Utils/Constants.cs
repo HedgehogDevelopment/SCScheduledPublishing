@@ -7,6 +7,8 @@ namespace ScheduledPublishing.Utils
         public static readonly ID SCHEDULE_TEMPLATE_ID = ID.Parse("{70244923-FA84-477C-8CBD-62F39642C42B}");
         public static readonly ID SCHEDULE_PUBLISHING_COMMAND_ID = ID.Parse("{EF235C25-AE83-4678-9E2C-C22175925893}");
         public static readonly ID PUBLISH_OPTIONS_FOLDER_ID = ID.Parse("{7D8B2A62-A35A-4DA1-B7B6-89C11758C2E6}");
+        public static readonly ID SCHEDULED_PUBLISH_SETTINGS = ID.Parse("{C1813448-7B11-4813-B0B9-FAF8A7A8F48E}");
+        public static readonly ID SCHEUDLED_PUBLISH_EMAIL = ID.Parse("{292C5A92-A8BB-4F27-97A5-29564DF45329}");
 
         //Templates
         public static readonly ID PUBLISH_OPTIONS_TEMPLATE_ID = ID.Parse("{9F110258-0139-4FC9-AED8-5610C13DADF3}");
@@ -22,5 +24,6 @@ namespace ScheduledPublishing.Utils
         public static readonly ID PUBLISH_OPTIONS_TARGET_DATABASES = ID.Parse("{193B7E69-8C83-422F-80B2-F7B48C42775E}");
         public static readonly ID PUBLISH_OPTIONS_TARGET_LANGUAGES = ID.Parse("{65C16118-BD34-4E45-9AAD-45C7AD0AE69A}");
         public static readonly ID PUBLISH_OPTIONS_SCHEDULED_DATE = ID.Parse("{9691E387-E516-450E-83EA-845AF5BA7276}");
+        public static readonly ID SETTINGS_SEND_EMAIL = ID.Parse("{C3CDED2B-CD39-4AD9-B361-865773A41C74}");
     }
 }

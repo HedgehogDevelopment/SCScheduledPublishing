@@ -1,10 +1,10 @@
 ----item----
 version: 1
-id: {CB095BAB-E9B7-4131-88DB-13F6EB917310}
+id: {A35E5B44-1CD0-49C4-B210-DB4106685CE4}
 database: master
-path: /sitecore/templates/System/Scheduled Publish/ScheduledPublishEmail/ScheduledPublishEmail/ScheduledPublishEmailMailServer
+path: /sitecore/templates/System/Scheduled Publish/ScheduledPublishEmail/Notification Email/EmailTo
 parent: {D9012DCB-71D0-4A2E-94E1-083D66508092}
-name: ScheduledPublishEmailMailServer
+name: EmailTo
 master: {00000000-0000-0000-0000-000000000000}
 template: {455A3E98-A627-4B40-8035-E683A0331AC7}
 templatekey: Template field
@@ -22,19 +22,26 @@ name: __Sortorder
 key: __sortorder
 content-length: 3
 
-500
+100
 ----version----
 language: en
 version: 1
-revision: ab1a603b-cd3c-4d2c-a4a1-4ba832520274
+revision: dea9a32d-6f34-466a-b016-d17900947932
 
 ----field----
 field: {19A69332-A23E-4E70-8D16-B2640CB24CC8}
 name: Title
 key: title
-content-length: 11
+content-length: 2
 
-Mail Server
+To
+----field----
+field: {9541E67D-CE8C-4225-803D-33F7F29F09EF}
+name: __Short description
+key: __short description
+content-length: 68
+
+(optional) add additional email addresses separated by a comma (',')
 ----field----
 field: {52807595-0F8F-4B20-8D2A-CB71D28C6103}
 name: __Owner
@@ -48,7 +55,7 @@ name: __Created
 key: __created
 content-length: 15
 
-20150427T104500
+20150427T104300
 ----field----
 field: {5DD74568-4D4B-44C1-B513-0AF5F4CDA34F}
 name: __Created by
@@ -62,14 +69,14 @@ name: __Revision
 key: __revision
 content-length: 36
 
-ab1a603b-cd3c-4d2c-a4a1-4ba832520274
+dea9a32d-6f34-466a-b016-d17900947932
 ----field----
 field: {D9CF14B1-FA16-4BA6-9288-E8A174D4D522}
 name: __Updated
 key: __updated
 content-length: 34
 
-20150427T104630:635657283902677889
+20150428T133049:635658246495819848
 ----field----
 field: {BADD9CF9-53E0-4D0C-BCC0-2D784C282F6A}
 name: __Updated by
