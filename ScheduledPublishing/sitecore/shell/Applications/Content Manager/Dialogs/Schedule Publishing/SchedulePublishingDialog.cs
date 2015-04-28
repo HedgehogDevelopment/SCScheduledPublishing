@@ -67,8 +67,8 @@ namespace ScheduledPublishing.sitecore.shell.Applications.ContentManager.Dialogs
                     return this._selectedPublishDataTite;
                 }
 
-                this._selectedPublishDataTite = DateUtil.IsoDateToDateTime(this.PublishDateTimePicker.Value,
-                    DateTime.MinValue);
+                this._selectedPublishDataTite = 
+                    DateUtil.IsoDateToDateTime(this.PublishDateTimePicker.Value, DateTime.MinValue);
                 return this._selectedPublishDataTite;
             }
         }
@@ -475,13 +475,13 @@ namespace ScheduledPublishing.sitecore.shell.Applications.ContentManager.Dialogs
         /// <returns>The hour folder as an item</returns>
         private Item GetOrCreateFolder(DateTime date)
         {
-            Item publishOptionsFolder = _database.GetItem(Utils.Constants.PUBLISH_OPTIONS_FOLDER_ID);
+            Item publishOptionsFolder = _database.GetItem(Constants.PUBLISH_OPTIONS_FOLDER_ID);
             string yearName = date.Year.ToString();
             string monthName = date.Month.ToString();
             string dayName = date.Day.ToString();
-            string hourName = date.AddHours(1).Hour.ToString();
+            string hourName = date.Hour.ToString();
 
-            TemplateItem folderTemplate = _database.GetTemplate(Utils.Constants.FOLDER_TEMPLATE_ID);
+            TemplateItem folderTemplate = _database.GetTemplate(Constants.FOLDER_TEMPLATE_ID);
             Item yearFolder = publishOptionsFolder.Children.FirstOrDefault(x => x.Name == yearName) ??
                               publishOptionsFolder.Add(yearName, folderTemplate);
 
