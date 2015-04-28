@@ -161,7 +161,7 @@ namespace ScheduledPublishing.sitecore.shell.Applications.ContentManager.Dialogs
                             }
                         }
                     }
-                }2
+                }
             }
 
             base.OnOK(sender, args);
