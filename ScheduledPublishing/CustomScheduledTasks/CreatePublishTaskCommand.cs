@@ -7,6 +7,7 @@ using Sitecore.Tasks;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using ScheduledPublishing.Models;
 using Sitecore.Configuration;
 using Constants = ScheduledPublishing.Utils.Constants;
 
@@ -37,7 +38,8 @@ namespace ScheduledPublishing.CustomScheduledTasks
                 return null;
             }
 
-            var action = string.IsNullOrEmpty(item[Constants.PUBLISH_OPTIONS_UNPUBLISH]) ? "publish" : "unpublish";
+            var scheduledPublishOptions = new ScheduledPublishOptions(item);
+            var action = scheduledPublishOptions.Unpublish ? "unpublish" : "publish";
 
             try
             {
