@@ -28,8 +28,8 @@ namespace ScheduledPublishing.CustomScheduledTasks
                 var handle = ScheduledPublishManager.Publish(scheduledPublishOptions);
 
                 //TODO: if send email feature is activated. Not sure if this belongs here since publish is async
-                Item settings = Context.ContentDatabase.GetItem(Utils.Constants.SCHEDULED_PUBLISH_SETTINGS);
-                if (!string.IsNullOrEmpty(settings[Utils.Constants.SETTINGS_SEND_EMAIL]))
+                ScheduledPublishSettings settings = new ScheduledPublishSettings();
+                if (settings.IsSendEmailChecked)
                 {
                     var report = ScheduledPublishManager.GetPublishReport(handle);
                     var sendTo = scheduledPublishOptions.SchedulerEmail;

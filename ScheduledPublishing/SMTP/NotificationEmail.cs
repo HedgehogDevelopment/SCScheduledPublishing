@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using ScheduledPublishing.Utils;
+﻿using ScheduledPublishing.Utils;
 using Sitecore.Data;
 using Sitecore.Data.Items;
 using Sitecore.Diagnostics;
@@ -12,7 +11,7 @@ namespace ScheduledPublishing.SMTP
     {
         public static Item InnerItem
         {
-            get { return Sitecore.Context.ContentDatabase.GetItem(Constants.SCHEUDLED_PUBLISH_EMAIL); }
+            get { return Sitecore.Context.ContentDatabase.GetItem(ID.Parse("{292C5A92-A8BB-4F27-97A5-29564DF45329}")); }
         }
 
         public static string EmailTo
