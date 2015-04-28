@@ -136,7 +136,7 @@ namespace ScheduledPublishing.sitecore.shell.Applications.ContentManager.Dialogs
                     return this._publishingSchedulesFolder;
                 }
 
-                this._publishingSchedulesFolder = _database.GetItem(Utils.Constants.PUBLISH_OPTIONS_FOLDER_ID);
+                this._publishingSchedulesFolder = _database.GetItem(Constants.PUBLISH_OPTIONS_FOLDER_ID);
                 if (this._publishingSchedulesFolder == null)
                 {
                     Error.AssertItemFound(this._publishingSchedulesFolder);
@@ -291,18 +291,18 @@ namespace ScheduledPublishing.sitecore.shell.Applications.ContentManager.Dialogs
         /// <param name="item">The item that publishing is scheduled for</param>
         private void BuildExistingSchedules()
         {
-            if (this.PublishingSchedulesFolder.Children == null)
+            if (!this.PublishingSchedulesFolder.Children.Any())
             {
                 return;
             }
 
             var publishingTaskName = BuildPublishOptionsName(this.InnerItem);
-            var existingSchedules =
+            List<DateTime> existingSchedules =
                 this.PublishingSchedulesFolder.Axes.GetDescendants()
-                    .Where(x => x.Name == publishingTaskName)
-                    .Select(x => x[Constants.PUBLISH_OPTIONS_SCHEDULED_DATE].ToString());
+                    .Where(x => x.Name == publishingTaskName && !string.IsNullOrEmpty(x[Constants.PUBLISH_OPTIONS_SCHEDULED_DATE]))
+                    .Select(x => DateUtil.IsoDateToDateTime(x[Constants.PUBLISH_OPTIONS_SCHEDULED_DATE])).ToList();
 
-            existingSchedules = existingSchedules.OrderBy(DateTime.Parse);
+            existingSchedules.Sort((a, b) => a.CompareTo(b));
 
             var sbExistingSchedules = new StringBuilder();
             if (existingSchedules.Any())
@@ -446,6 +446,7 @@ namespace ScheduledPublishing.sitecore.shell.Applications.ContentManager.Dialogs
                     newPublishOptions[Constants.PUBLISH_OPTIONS_SOURCE_DATABASE] = this._database.Name;
                     newPublishOptions[Constants.PUBLISH_OPTIONS_TARGET_DATABASES] = string.Join("|",
                         this.SelectedTargets.Select(x => x.Name));
+                    newPublishOptions[Constants.PUBLISH_OPTIONS_SCHEDULED_DATE] = DateUtil.ToIsoDate(this.SelectedPublishDateTime);
 
                     newPublishOptions.Editing.AcceptChanges();
                     newPublishOptions.Editing.EndEdit();
