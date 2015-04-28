@@ -23,24 +23,30 @@ namespace ScheduledPublishing.Utils
                 : PublishWebsite(publishOptions);
         }
 
-        //TODO: Should check in some interval for status.State
         public static string GetPublishReport(Handle handle)
         {
             var sbResult = new StringBuilder();
 
-            if (handle != null)
+            if (handle == null)
+            {
+                sbResult.Append("Final Status: Fail. <br />");
+                sbResult.Append("Please, check log files for more information </br>");
+            }
+            else if (PublishManager.WaitFor(handle))
             {
                 var status = PublishManager.GetStatus(handle);
 
                 if (status == null)
                 {
                     sbResult.Append("The scheduled publishing process was unexpectedly interrupted. <br/>");
+                    sbResult.Append("Please, check log files for more information </br>");
                 }
                 else
                 {
                     if (status.Failed)
                     {
                         sbResult.Append("Final Status: Fail. <br/>");
+                        sbResult.Append("Please, check log files for more information </br>");
                     }
                     else if (status.IsDone)
                     {
@@ -59,11 +65,6 @@ namespace ScheduledPublishing.Utils
                         }
                     }
                 }
-            }
-            else
-            {
-                sbResult.Append("Final Status: Fail. <br />");
-                sbResult.Append("Please, check log files for more information </br>");
             }
 
             return sbResult.ToString();

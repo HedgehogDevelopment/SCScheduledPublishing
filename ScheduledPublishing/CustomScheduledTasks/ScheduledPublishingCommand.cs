@@ -1,8 +1,6 @@
-﻿using Sitecore;
-using Sitecore.Data.Items;
+﻿using Sitecore.Data.Items;
 using Sitecore.Diagnostics;
 using Sitecore.Tasks;
-using System.Linq;
 using ScheduledPublishing.Models;
 using ScheduledPublishing.SMTP;
 using ScheduledPublishing.Utils;
@@ -27,9 +25,7 @@ namespace ScheduledPublishing.CustomScheduledTasks
                 var scheduledPublishOptions = new ScheduledPublishOptions(item);
                 var handle = ScheduledPublishManager.Publish(scheduledPublishOptions);
 
-                //TODO: if send email feature is activated. Not sure if this belongs here since publish is async
-                ScheduledPublishSettings settings = new ScheduledPublishSettings();
-                if (settings.IsSendEmailChecked)
+                if (ScheduledPublishSettings.IsSendEmailChecked)
                 {
                     var report = ScheduledPublishManager.GetPublishReport(handle);
                     var sendTo = scheduledPublishOptions.SchedulerEmail;

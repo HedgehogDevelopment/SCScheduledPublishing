@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using Sitecore.Data;
 using Sitecore.Data.Items;
 
@@ -20,7 +18,7 @@ namespace ScheduledPublishing.Utils
             string yearName = date.Year.ToString();
             string monthName = date.Month.ToString();
             string dayName = date.Day.ToString();
-            string hourName = date.AddHours(1).Hour.ToString();
+            string hourName = date.Hour.ToString();
 
             TemplateItem folderTemplate = database.GetTemplate(Constants.FOLDER_TEMPLATE_ID);
             Item yearFolder = publishOptionsFolder.Children.FirstOrDefault(x => x.Name == yearName) ??
