@@ -67,8 +67,8 @@ namespace ScheduledPublishing.sitecore.shell.Applications.ContentManager.Dialogs
                     return this._selectedPublishDataTite;
                 }
 
-                this._selectedPublishDataTite = DateUtil.IsoDateToDateTime(this.PublishDateTimePicker.Value,
-                    DateTime.MinValue);
+                this._selectedPublishDataTite = 
+                    DateUtil.IsoDateToDateTime(this.PublishDateTimePicker.Value, DateTime.MinValue);
                 return this._selectedPublishDataTite;
             }
         }
