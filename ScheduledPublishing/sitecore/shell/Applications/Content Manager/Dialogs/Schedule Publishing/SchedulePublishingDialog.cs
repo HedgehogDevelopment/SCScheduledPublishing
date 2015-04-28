@@ -1,4 +1,5 @@
-﻿using Sitecore;
+﻿using ScheduledPublishing.Models;
+using Sitecore;
 using Sitecore.Configuration;
 using Sitecore.Data;
 using Sitecore.Data.Items;
@@ -297,6 +298,7 @@ namespace ScheduledPublishing.sitecore.shell.Applications.ContentManager.Dialogs
             }
 
             var publishingTaskName = BuildPublishOptionsName(this.InnerItem);
+            
             List<DateTime> existingSchedules =
                 this.PublishingSchedulesFolder.Axes.GetDescendants()
                     .Where(x => x.Name == publishingTaskName && !string.IsNullOrEmpty(x[Constants.PUBLISH_OPTIONS_SCHEDULED_DATE]))
@@ -425,31 +427,27 @@ namespace ScheduledPublishing.sitecore.shell.Applications.ContentManager.Dialogs
                     var publishOptionsTemplate = this._database.GetTemplate(Constants.PUBLISH_OPTIONS_TEMPLATE_ID);
                     var publishOptionsName = BuildPublishOptionsName(this.InnerItem);
                     var optionsFolder = this.GetOrCreateFolder(this.SelectedPublishDateTime);
-                    var newPublishOptions = optionsFolder.Add(publishOptionsName, publishOptionsTemplate);
+                    ScheduledPublishOptions newPublishOptions = new ScheduledPublishOptions(optionsFolder.Add(publishOptionsName, publishOptionsTemplate));
 
-                    newPublishOptions.Editing.BeginEdit();
+                    newPublishOptions.InnerItem.Editing.BeginEdit();
 
-                    newPublishOptions[Constants.PUBLISH_OPTIONS_CREATED_BY_EMAIL] = Context.User.Profile.Email;
-                    newPublishOptions[Constants.PUBLISH_OPTIONS_UNPUBLISH] = unpublish ? "1" : string.Empty;
+                    newPublishOptions.SchedulerEmail = Context.User.Profile.Email;
+                    newPublishOptions.Unpublish = unpublish;
                     if (this.InnerItem != null)
                     {
-                        newPublishOptions[Constants.PUBLISH_OPTIONS_PUBLISH_ITEM] = this.InnerItem.Paths.FullPath;
+                        newPublishOptions.ItemToPublishPath = this.InnerItem.Paths.FullPath;
                     }
-                    newPublishOptions[Constants.PUBLISH_OPTIONS_PUBLISH_MODE] = this.SmartPublish.Checked
+                    newPublishOptions.PublishModeString = this.SmartPublish.Checked //TODO - smart full incremental
                         ? "smart"
                         : "republish";
-                    newPublishOptions[Constants.PUBLISH_OPTIONS_PUBLISH_CHILDREN] = this.PublishChildren.Checked
-                        ? "1"
-                        : string.Empty;
-                    newPublishOptions[Constants.PUBLISH_OPTIONS_TARGET_LANGUAGES] = string.Join("|",
-                        this.SelectedLanguages.Select(x => x.Name));
-                    newPublishOptions[Constants.PUBLISH_OPTIONS_SOURCE_DATABASE] = this._database.Name;
-                    newPublishOptions[Constants.PUBLISH_OPTIONS_TARGET_DATABASES] = string.Join("|",
-                        this.SelectedTargets.Select(x => x.Name));
-                    newPublishOptions[Constants.PUBLISH_OPTIONS_SCHEDULED_DATE] = DateUtil.ToIsoDate(this.SelectedPublishDateTime);
+                    newPublishOptions.PublishChildren = this.PublishChildren.Checked;
+                    newPublishOptions.Languages = this.SelectedLanguages.ToArray(); //TODO: check (string.Join("|", this.SelectedLanguages.Select(x => x.Name))
+                    newPublishOptions.SourceDatabaseString = this._database.Name;
+                    newPublishOptions.TargetDatabasesString = string.Join("|", this.SelectedTargets.Select(x => x.Name));
+                    newPublishOptions.PublishDateString = DateUtil.ToIsoDate(this.SelectedPublishDateTime);
 
-                    newPublishOptions.Editing.AcceptChanges();
-                    newPublishOptions.Editing.EndEdit();
+                    newPublishOptions.InnerItem.Editing.AcceptChanges();
+                    newPublishOptions.InnerItem.Editing.EndEdit();
 
                     Log.Info(
                         string.Format("Created Publish Options: {0}: {1} {2} {3}",
