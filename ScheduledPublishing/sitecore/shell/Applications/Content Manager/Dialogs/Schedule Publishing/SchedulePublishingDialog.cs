@@ -426,7 +426,7 @@ namespace ScheduledPublishing.sitecore.shell.Applications.ContentManager.Dialogs
                 {
                     var publishOptionsTemplate = this._database.GetTemplate(Constants.PUBLISH_OPTIONS_TEMPLATE_ID);
                     var publishOptionsName = BuildPublishOptionsName(this.InnerItem);
-                    var optionsFolder = this.GetOrCreateFolder(this.SelectedPublishDateTime);
+                    var optionsFolder = Utils.Utils.GetOrCreateFolder(this.SelectedPublishDateTime, _database);
                     ScheduledPublishOptions newPublishOptions = new ScheduledPublishOptions(optionsFolder.Add(publishOptionsName, publishOptionsTemplate));
 
                     newPublishOptions.InnerItem.Editing.BeginEdit();
@@ -466,36 +466,6 @@ namespace ScheduledPublishing.sitecore.shell.Applications.ContentManager.Dialogs
                         this.InnerItem != null ? this.InnerItem.ID.ToString() : "Website",
                         ex), this);
             }
-        }
-
-        /// <summary>
-        /// Get appropriate hour folder or create one if not present using the year/month/day/hour structure
-        /// </summary>
-        /// <param name="date">Date chosen for publishing</param>
-        /// <returns>The hour folder as an item</returns>
-        private Item GetOrCreateFolder(DateTime date)
-        {
-            Item publishOptionsFolder = _database.GetItem(Utils.Constants.PUBLISH_OPTIONS_FOLDER_ID);
-            string yearName = date.Year.ToString();
-            string monthName = date.Month.ToString();
-            string dayName = date.Day.ToString();
-            string hourName = date.AddHours(1).Hour.ToString();
-
-            TemplateItem folderTemplate = _database.GetTemplate(Utils.Constants.FOLDER_TEMPLATE_ID);
-            Item yearFolder = publishOptionsFolder.Children.FirstOrDefault(x => x.Name == yearName) ??
-                              publishOptionsFolder.Add(yearName, folderTemplate);
-
-
-            Item monthFolder = yearFolder.Children.FirstOrDefault(x => x.Name == monthName) ??
-                               yearFolder.Add(monthName, folderTemplate);
-
-            Item dayFolder = monthFolder.Children.FirstOrDefault(x => x.Name == dayName) ??
-                             monthFolder.Add(dayName, folderTemplate);
-
-            Item hourFolder = dayFolder.Children.FirstOrDefault(x => x.Name == hourName) ??
-                              dayFolder.Add(hourName, folderTemplate);
-
-            return hourFolder;
         }
 
         private static string BuildPublishOptionsName(Item item)

@@ -60,6 +60,7 @@
     <Compile Include="Utils\Constants.cs" />
     <Compile Include="SMTP\NotificationEmail.cs" />
     <Compile Include="Utils\ScheduledPublishManager.cs" />
+    <Compile Include="Utils\Utils.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="sitecore\shell\Applications\Content Manager\Dialogs\Edit Scheduled Publishing\Edit Scheduled Publishing.xml">

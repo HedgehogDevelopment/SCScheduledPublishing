@@ -1,4 +1,5 @@
-﻿using Sitecore;
+﻿using ScheduledPublishing.Models;
+using Sitecore;
 using Sitecore.Data;
 using Sitecore.Data.Items;
 using Sitecore.Diagnostics;
@@ -38,8 +39,10 @@ namespace ScheduledPublishing.sitecore.shell.Applications.ContentManager.Dialogs
         private void RenderAllSchedules()
         {
             Item schedulesFolder = Context.ContentDatabase.GetItem(Constants.PUBLISH_OPTIONS_FOLDER_ID);
-            List<Item> allSchedules = schedulesFolder.Axes.GetDescendants().Where(x => x.TemplateID == Constants.PUBLISH_OPTIONS_TEMPLATE_ID).ToList();
-            allSchedules.Sort((a, b) => a[Constants.PUBLISH_OPTIONS_SCHEDULED_DATE].CompareTo(b[Constants.PUBLISH_OPTIONS_SCHEDULED_DATE]));
+            List<ScheduledPublishOptions> allSchedules = schedulesFolder.Axes.GetDescendants()
+                .Where(x => x.TemplateID == Constants.PUBLISH_OPTIONS_TEMPLATE_ID)
+                .Select(x => new ScheduledPublishOptions(x)).ToList();
+            allSchedules.Sort((a, b) => DateUtil.IsoDateToDateTime(a.PublishDateString).CompareTo(DateUtil.IsoDateToDateTime(b.PublishDateString)));
 
             StringBuilder sbHeader = new StringBuilder();
             sbHeader.Append("<table width=\"100%\" cellpadding=\"4\" cellspacing=\"0\">");
@@ -49,7 +52,7 @@ namespace ScheduledPublishing.sitecore.shell.Applications.ContentManager.Dialogs
             sbHeader.Append("<col />");
             sbHeader.Append("<tr style=\"background:#e9e9e9\">");
             sbHeader.Append("<td nowrap=\"nowrap\"><b>" + "Item" + "</b></td>");
-            sbHeader.Append("<td nowrap=\"nowrap\"><b>" + "Unpublish" + "</b></td>");
+            sbHeader.Append("<td nowrap=\"nowrap\"><b>" + "Action" + "</b></td>");
             sbHeader.Append("<td nowrap=\"nowrap\"><b>" + "Date" + "</b></td>");
             sbHeader.Append("<td nowrap=\"nowrap\"><b>" + "Delete" + "</b></td>");
             sbHeader.Append("</tr>");
@@ -57,38 +60,37 @@ namespace ScheduledPublishing.sitecore.shell.Applications.ContentManager.Dialogs
             
             foreach (var schedule in allSchedules)
             {
-                if (!string.IsNullOrEmpty(schedule["Command"]) && !string.IsNullOrEmpty(schedule["Items"]) &&
-                    !string.IsNullOrEmpty(schedule["Schedule"]))
+                if (schedule.InnerItem != null)
                 {
                     StringBuilder sbItem = new StringBuilder();
                     // Item name and path
                     sbItem.Append("<tr style='background:#cedff2;border-bottom:1px solid #F0F1F2;'>");
-                    Item scheduledItem = Context.ContentDatabase.GetItem(schedule["Items"].Split('|').First());
+                    Item scheduledItem = schedule.ItemToPublish;
                     sbItem.Append("<td><b>" + scheduledItem.DisplayName + "</b><br />" + scheduledItem.Paths.FullPath + "</td>");
 
-                    // Is unpublishing
-                    sbItem.Append("<td style='border-left:1px solid #F0F1F2;text-align:center;'>");
-                    string isUnpublishing = string.IsNullOrEmpty(schedule["Unpublish"]) ? "No" : "Yes";
+                    // Is publishing/unpublishing
+                    sbItem.Append("<td style='border-left:1px solid #F0F1F2;'>");
+                    string isUnpublishing = schedule.Unpublish ? "Unpublish" : "Publish";
                     sbItem.Append(isUnpublishing);
                     sbItem.Append("</td><td style='border-left:1px solid #F0F1F2;'>");
 
                     // Current scheudled publish date and time
                     this.AllSchedules.Controls.Add(new LiteralControl(sbItem.ToString()));
-                    DateTime pbDate = DateUtil.IsoDateToDateTime(schedule["Schedule"].Split('|').First());
+                    DateTime pbDate = DateUtil.IsoDateToDateTime(schedule.PublishDateString);
                     this.AllSchedules.Controls.Add(new LiteralControl(pbDate.ToString()));
 
                     // Pick new date and time
                     DateTimePicker dtPicker = new DateTimePicker();
-                    dtPicker.ID = "dt_" + schedule.ID;
+                    dtPicker.ID = "dt_" + schedule.InnerItem.ID;
                     dtPicker.Width = new Unit(100.0, UnitType.Percentage);
-                    dtPicker.Value = schedule[Constants.PUBLISH_OPTIONS_SCHEDULED_DATE];
+                    dtPicker.Value = schedule.PublishDateString;
                     this.AllSchedules.Controls.Add(dtPicker);
                     this.AllSchedules.Controls.Add(new LiteralControl("</td>"));
 
                     // Delete schedule
                     this.AllSchedules.Controls.Add(new LiteralControl("<td style='border-left:1px solid #F0F1F2;'>"));
                     Checkbox deleteCheckbox = new Checkbox();
-                    deleteCheckbox.ID = "del_" + schedule.ID;
+                    deleteCheckbox.ID = "del_" + schedule.InnerItem.ID;
                     this.AllSchedules.Controls.Add(deleteCheckbox);
 
                     this.AllSchedules.Controls.Add(new LiteralControl("</td></tr>"));
@@ -118,15 +120,22 @@ namespace ScheduledPublishing.sitecore.shell.Applications.ContentManager.Dialogs
                     Assert.IsNotNull(dtEditPicker, "dtEditPicker");
                     DateTime dateTime = DateUtil.IsoDateToDateTime(dtEditPicker.Value);
 
-                    Item task = Context.ContentDatabase.GetItem(new ID(id));
+                    ScheduledPublishOptions publishOption = new ScheduledPublishOptions(Context.ContentDatabase.GetItem(new ID(id)));
 
-                    using (new SecurityDisabler())
+                    //Scheudled time has changed
+                    if (publishOption.PublishDateString != DateUtil.ToIsoDate(dateTime))
                     {
-                        task.Editing.BeginEdit();
-                        string startDateTime = DateUtil.ToIsoDate(dateTime);
-                        task[Constants.PUBLISH_OPTIONS_SCHEDULED_DATE] = startDateTime;
-                        task.Editing.AcceptChanges();
-                        task.Editing.EndEdit();
+                        using (new SecurityDisabler())
+                        {
+                            publishOption.InnerItem.Editing.BeginEdit();
+                            string startDateTime = DateUtil.ToIsoDate(dateTime);
+                            publishOption.PublishDateString = startDateTime;
+                            publishOption.InnerItem.Editing.AcceptChanges();
+                            publishOption.InnerItem.Editing.EndEdit();
+
+                            Item newFolder = Utils.Utils.GetOrCreateFolder(dateTime, Context.ContentDatabase);
+                            publishOption.InnerItem.MoveTo(newFolder);
+                        }
                     }
                 }
                 else if (key != null && key.StartsWith("del_", StringComparison.InvariantCulture))
@@ -138,21 +147,21 @@ namespace ScheduledPublishing.sitecore.shell.Applications.ContentManager.Dialogs
 
                     if (doDelete)
                     {
-                        Item task = Context.ContentDatabase.GetItem(new ID(id));
+                        Item publishOption = Context.ContentDatabase.GetItem(new ID(id));
 
                         using (new SecurityDisabler())
                         {
                             if (Sitecore.Configuration.Settings.RecycleBinActive)
                             {
-                                task.Recycle();
+                                publishOption.Recycle();
                             }
                             else
                             {
-                                task.Delete();
+                                publishOption.Delete();
                             }
                         }
                     }
-                }
+                }2
             }
 
             base.OnOK(sender, args);
