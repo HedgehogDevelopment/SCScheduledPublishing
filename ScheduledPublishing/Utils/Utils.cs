@@ -23,8 +23,7 @@ namespace ScheduledPublishing.Utils
             TemplateItem folderTemplate = database.GetTemplate(Constants.FOLDER_TEMPLATE_ID);
             Item yearFolder = publishOptionsFolder.Children.FirstOrDefault(x => x.Name == yearName) ??
                               publishOptionsFolder.Add(yearName, folderTemplate);
-
-
+            
             Item monthFolder = yearFolder.Children.FirstOrDefault(x => x.Name == monthName) ??
                                yearFolder.Add(monthName, folderTemplate);
 

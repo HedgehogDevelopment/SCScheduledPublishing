@@ -1,4 +1,5 @@
-﻿using ScheduledPublishing.Utils;
+﻿using System.Linq;
+using ScheduledPublishing.Utils;
 using Sitecore.Data;
 using Sitecore.Data.Items;
 using Sitecore.Diagnostics;
@@ -42,6 +43,14 @@ namespace ScheduledPublishing.SMTP
         public static void SendEmail(string report, string sendTo)
         {
             string emailTo = sendTo;
+            if (string.IsNullOrWhiteSpace(emailTo))
+            {
+                if (string.IsNullOrWhiteSpace(EmailTo))
+                {
+                    return;
+                }
+                emailTo = EmailTo.Split(',').First();
+            }
 
             var mailMessage = new MailMessage(EmailFrom, emailTo)
             {
@@ -58,6 +67,15 @@ namespace ScheduledPublishing.SMTP
         public static void SendEmail(Item item, string sendTo)
         {
             string emailTo = sendTo;
+            if (string.IsNullOrWhiteSpace(emailTo))
+            {
+                if (string.IsNullOrWhiteSpace(EmailTo))
+                {
+                    return;
+                }
+                emailTo = EmailTo.Split(',').First();
+            }
+
             string body = Body.Replace("[item]", item.DisplayName)
                 .Replace("[path]", item.Paths.FullPath)
                 .Replace("[date]", DateTime.Now.ToShortDateString())
