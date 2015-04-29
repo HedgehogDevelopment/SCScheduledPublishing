@@ -8,7 +8,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using ScheduledPublishing.Models;
-using Sitecore.Configuration;
 using Constants = ScheduledPublishing.Utils.Constants;
 
 namespace ScheduledPublishing.CustomScheduledTasks
@@ -16,7 +15,7 @@ namespace ScheduledPublishing.CustomScheduledTasks
     public class CreatePublishTasksCommand
     {
         private const string DATE_TIME_FORMAT = "yyyyMMddTHHmmss";
-        private readonly Database _database = Context.ContentDatabase;
+        private readonly Database _database = Database.GetDatabase("master");
 
         public void CreatePublishTasks(Item[] itemArray, CommandItem commandItem, ScheduleItem scheduledItem)
         {
