@@ -67,7 +67,7 @@ namespace ScheduledPublishing.sitecore.shell.Applications.ContentManager.Dialogs
                     return this._selectedPublishDataTite;
                 }
 
-                this._selectedPublishDataTite = 
+                this._selectedPublishDataTite =
                     DateUtil.IsoDateToDateTime(this.PublishDateTimePicker.Value, DateTime.MinValue);
                 return this._selectedPublishDataTite;
             }
@@ -188,11 +188,12 @@ namespace ScheduledPublishing.sitecore.shell.Applications.ContentManager.Dialogs
             Assert.ArgumentNotNull(sender, "sender");
             Assert.ArgumentNotNull(args, "args");
 
-            var isValidSchedule = this.ValidateSchedule();
-            if (isValidSchedule)
+            if (!this.ValidateSchedule())
             {
-                this.CreatePublishOptionsItem();
+                return;
             }
+
+            this.CreatePublishOptionsItem();
 
             base.OnOK(sender, args);
         }
@@ -298,7 +299,7 @@ namespace ScheduledPublishing.sitecore.shell.Applications.ContentManager.Dialogs
             }
 
             var publishingTaskName = BuildPublishOptionsName(this.InnerItem);
-            
+
             List<DateTime> existingSchedules =
                 this.PublishingSchedulesFolder.Axes.GetDescendants()
                     .Where(x => x.Name == publishingTaskName && !string.IsNullOrEmpty(x[Constants.PUBLISH_OPTIONS_SCHEDULED_DATE]))
@@ -345,7 +346,7 @@ namespace ScheduledPublishing.sitecore.shell.Applications.ContentManager.Dialogs
         /// <returns>True if the item meets all date and time requirements for publishing</returns>
         private bool ValidatePublishable()
         {
-            if (this.InnerItem != null 
+            if (this.InnerItem != null
                 && !this.InnerItem.Publishing.IsPublishable(this.SelectedPublishDateTime, false))
             {
                 SheerResponse.Alert("Item is not publishable at that time.");
