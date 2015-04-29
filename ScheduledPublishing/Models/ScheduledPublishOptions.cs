@@ -2,7 +2,6 @@
 using System.Linq;
 using Sitecore.Data;
 using Sitecore.Publishing;
-using ScheduledPublishing.Utils;
 using Sitecore.Data.Managers;
 using Sitecore.Globalization;
 

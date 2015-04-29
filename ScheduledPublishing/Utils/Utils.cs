@@ -7,6 +7,14 @@ namespace ScheduledPublishing.Utils
 {
     public static class Utils
     {
+        public static Database ScheduledTasksContextDatabase
+        {
+            get
+            {
+                return Database.GetDatabase("master");
+            }
+        }
+
         /// <summary>
         /// Get appropriate hour folder or create one if not present using the year/month/day/hour structure
         /// </summary>
