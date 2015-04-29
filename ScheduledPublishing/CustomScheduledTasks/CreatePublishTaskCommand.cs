@@ -15,7 +15,7 @@ namespace ScheduledPublishing.CustomScheduledTasks
     public class CreatePublishTasksCommand
     {
         private const string DATE_TIME_FORMAT = "yyyyMMddTHHmmss";
-        private readonly Database _database = Database.GetDatabase("master");
+        private readonly Database _database = Utils.Utils.ScheduledTasksContextDatabase;
 
         public void CreatePublishTasks(Item[] itemArray, CommandItem commandItem, ScheduleItem scheduledItem)
         {

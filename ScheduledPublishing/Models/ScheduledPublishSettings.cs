@@ -5,9 +5,11 @@ namespace ScheduledPublishing.Models
 {
     public static class ScheduledPublishSettings
     {
+        private static readonly Database _database = Utils.Utils.ScheduledTasksContextDatabase;
+
         public static Item InnerItem
         {
-            get { return Sitecore.Context.ContentDatabase.GetItem(ID.Parse("{C1813448-7B11-4813-B0B9-FAF8A7A8F48E}")); }
+            get { return _database.GetItem(ID.Parse("{C1813448-7B11-4813-B0B9-FAF8A7A8F48E}")); }
         }
 
         public static bool IsSendEmailChecked
