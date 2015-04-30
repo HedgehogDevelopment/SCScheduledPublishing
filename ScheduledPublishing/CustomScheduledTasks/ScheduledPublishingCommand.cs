@@ -29,7 +29,7 @@ namespace ScheduledPublishing.CustomScheduledTasks
                 {
                     var report = ScheduledPublishManager.GetPublishReport(handle);
                     var sendTo = scheduledPublishOptions.SchedulerEmail;
-                    NotificationEmail.SendEmail(report, sendTo);
+                    MailManager.SendEmail(report, sendTo);
                 }
             }
         }

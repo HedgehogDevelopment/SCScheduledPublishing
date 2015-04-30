@@ -330,9 +330,8 @@ namespace ScheduledPublishing.sitecore.shell.Applications.ContentManager.Dialogs
                 return;
             }
 
-            var publishOptionsManager = new ScheduledPublishOptionsManager();
-            var existingSchedules = 
-                publishOptionsManager.GetScheduledOptions(PublishingSchedulesFolder, InnerItem.ID).ToList();
+            var existingSchedules =
+                ScheduledPublishOptionsManager.GetScheduledOptions(PublishingSchedulesFolder, InnerItem.ID).ToList();
 
             if (existingSchedules.Any())
             {

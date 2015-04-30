@@ -15,7 +15,7 @@ namespace ScheduledPublishing.SMTP
 
             if (message == null)
             {
-                Log.Error("No receiver for publishing email. " + DateTime.Now, message);
+                Log.Error("No receiver for publishing email. " + DateTime.Now, new object());
                 return;
             }
 
@@ -29,7 +29,7 @@ namespace ScheduledPublishing.SMTP
             }
         }
 
-        public static MailMessage ComposeEmail(string report, string sendTo)
+        private static MailMessage ComposeEmail(string report, string sendTo)
         {
             NotificationEmail mail = new NotificationEmail();
             string emailTo = sendTo;
