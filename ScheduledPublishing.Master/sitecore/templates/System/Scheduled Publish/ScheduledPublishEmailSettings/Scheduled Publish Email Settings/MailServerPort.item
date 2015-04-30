@@ -1,10 +1,10 @@
 ----item----
 version: 1
-id: {CB095BAB-E9B7-4131-88DB-13F6EB917310}
+id: {A08B5C87-8DD1-48BC-93BE-6001210791BD}
 database: master
-path: /sitecore/templates/System/Scheduled Publish/ScheduledPublishEmail/Notification Email/EmailMailServer
-parent: {D9012DCB-71D0-4A2E-94E1-083D66508092}
-name: EmailMailServer
+path: /sitecore/templates/System/Scheduled Publish/ScheduledPublishEmailSettings/Scheduled Publish Email Settings/MailServerPort
+parent: {D82ED0E5-8362-4F76-8883-D3B6F6F29A0E}
+name: MailServerPort
 master: {00000000-0000-0000-0000-000000000000}
 template: {455A3E98-A627-4B40-8035-E683A0331AC7}
 templatekey: Template field
@@ -22,19 +22,19 @@ name: __Sortorder
 key: __sortorder
 content-length: 3
 
-500
+250
 ----version----
 language: en
 version: 1
-revision: bc60b7d9-4dbb-4b7b-9aff-2681a69e2321
+revision: 914df4a5-ebb1-46c0-8cb8-21c4f3ef2b40
 
 ----field----
 field: {19A69332-A23E-4E70-8D16-B2640CB24CC8}
 name: Title
 key: title
-content-length: 11
+content-length: 4
 
-Mail Server
+Port
 ----field----
 field: {52807595-0F8F-4B20-8D2A-CB71D28C6103}
 name: __Owner
@@ -48,7 +48,7 @@ name: __Created
 key: __created
 content-length: 15
 
-20150427T104500
+20150429T154400
 ----field----
 field: {5DD74568-4D4B-44C1-B513-0AF5F4CDA34F}
 name: __Created by
@@ -62,14 +62,14 @@ name: __Revision
 key: __revision
 content-length: 36
 
-bc60b7d9-4dbb-4b7b-9aff-2681a69e2321
+914df4a5-ebb1-46c0-8cb8-21c4f3ef2b40
 ----field----
 field: {D9CF14B1-FA16-4BA6-9288-E8A174D4D522}
 name: __Updated
 key: __updated
 content-length: 34
 
-20150428T114856:635658185363876877
+20150429T154532:635659191327716989
 ----field----
 field: {BADD9CF9-53E0-4D0C-BCC0-2D784C282F6A}
 name: __Updated by
