@@ -6,9 +6,9 @@ using Sitecore.Data.Items;
 
 namespace ScheduledPublishing.Utils
 {
-    public class ScheduledPublishOptionsManager
+    public static class ScheduledPublishOptionsManager
     {
-        public IEnumerable<ScheduledPublishOptions> GetAllScheduledOptions(Item rootFolder)
+        public static IEnumerable<ScheduledPublishOptions> GetAllScheduledOptions(Item rootFolder)
         {
             if (rootFolder == null)
             {
@@ -21,7 +21,7 @@ namespace ScheduledPublishing.Utils
                 .OrderBy(t => t.PublishDateString);
         }
 
-        public IEnumerable<ScheduledPublishOptions> GetScheduledOptions(Item rootFolder, ID itemId)
+        public static IEnumerable<ScheduledPublishOptions> GetScheduledOptions(Item rootFolder, ID itemId)
         {
             if (rootFolder == null || ID.IsNullOrEmpty(itemId))
             {

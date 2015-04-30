@@ -1,23 +1,29 @@
-﻿using System.Linq;
-using Sitecore;
+﻿using ScheduledPublishing.Models;
+using ScheduledPublishing.Utils;
+using Sitecore.Data;
 using Sitecore.Data.Items;
 using Sitecore.Diagnostics;
 using Sitecore.Pipelines.GetContentEditorWarnings;
+using System.Collections.Generic;
+using System.Linq;
+using Constants = ScheduledPublishing.Utils.Constants;
 
 namespace ScheduledPublishing.Pipelines.ContentEditorWarnings
 {
     public class HasScheduledPublishing
     {
-        private const string SCHEDULES_FOLDER_PATH = "/sitecore/System/Tasks/Schedules/";
+        private readonly Database _database = Utils.Utils.ScheduledTasksContextDatabase;
 
         public void Process(GetContentEditorWarningsArgs args)
         {
+            Item publishingSchedulesFolder = _database.GetItem(Constants.PUBLISH_OPTIONS_FOLDER_ID);
             Item item = args.Item;
             Assert.IsNotNull(item, "item");
+            
+            IEnumerable<ScheduledPublishOptions> allScheudles =
+                ScheduledPublishOptionsManager.GetScheduledOptions(publishingSchedulesFolder, item.ID);
 
-            string id = item.ID.ToString().Replace("{", string.Empty).Replace("}", string.Empty);
-
-            if (Context.ContentDatabase.GetItem(SCHEDULES_FOLDER_PATH).Children.Any(x => x.Name.StartsWith(id)))
+            if (allScheudles.Any())
             {
                 GetContentEditorWarningsArgs.ContentEditorWarning warning = args.Add();
                 warning.Icon = "Applications/32x32/information2.png";
