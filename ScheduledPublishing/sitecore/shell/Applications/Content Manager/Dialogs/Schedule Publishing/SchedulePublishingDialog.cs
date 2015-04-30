@@ -30,17 +30,26 @@ namespace ScheduledPublishing.sitecore.shell.Applications.ContentManager.Dialogs
     /// </summary>
     public class SchedulePublishingDialog : DialogForm
     {
-        private readonly Database _database = Context.ContentDatabase;
-
-        protected DateTimePicker PublishDateTimePicker;
+        protected Groupbox ScheduleSettings;
+        protected Groupbox ScheduleLanguages;
+        protected Groupbox ScheduleTargets;
         protected Border ExistingSchedules;
+        protected Border Languages;
+        protected Border PublishModePanel;
+        protected Border PublishingTargets;
         protected Literal ServerTime;
         protected Literal PublishTimeLit;
-        protected Border PublishingTargets;
-        protected Border Languages;
         protected Checkbox PublishChildren;
         protected Radiobutton SmartPublish;
         protected Radiobutton Republish;
+        protected DateTimePicker PublishDateTimePicker;
+
+        private const string SCHEDULE_UNPUBLISH_SETTINGS_TITLE = "Scheduled Unpublish Settings";
+        private const string SCHEDULE_UNPUBLISH_LANGUAGES_TITLE = "Scheduled Unpublish Languages";
+        private const string SCHEDULE_UNPUBLISH_TARGETS_TITLE = "Scheduled Unpublish Targets";
+        private const string SCHEDULE_DATETIMEPICKER_UNPUBLISH_TITLE = "Unpiblish Time:";
+        private const string CURREN_TIME_ON_SERVER_TEXT = "Current time on server: ";
+        private readonly Database _database = Context.ContentDatabase;
 
         private Item _innerItem;
         private Item InnerItem
@@ -164,15 +173,18 @@ namespace ScheduledPublishing.sitecore.shell.Applications.ContentManager.Dialogs
 
             if (!Context.ClientPage.IsEvent)
             {
-                this.SmartPublish.Checked = true;
-
-                this.ServerTime.Text = "Current time on server: " + DateTime.Now;
-
-                this.PublishTimeLit.Text = Unpublish ? "Unpiblish Time: " : "Publish Time: ";
+                if (Unpublish)
+                {
+                    this.BuildUnpublishTitles();
+                    this.PublishModePanel.Visible = false;
+                }
 
                 this.BuildExistingSchedules();
                 this.BuildPublishingTargets();
                 this.BuildLanguages();
+
+                this.ServerTime.Text = CURREN_TIME_ON_SERVER_TEXT + DateTime.Now;
+                this.SmartPublish.Checked = true;
             }
 
             base.OnLoad(e);
@@ -248,21 +260,9 @@ namespace ScheduledPublishing.sitecore.shell.Applications.ContentManager.Dialogs
 
             foreach (var language in languages)
             {
-                if (Settings.CheckSecurityOnLanguages)
+                if (!this.CanWriteLanguage(language))
                 {
-                    var languageItemId = LanguageManager.GetLanguageItemId(language, _database);
-                    if (!ItemUtil.IsNull(languageItemId))
-                    {
-                        var languageItem = _database.GetItem(languageItemId);
-                        if (languageItem == null || !CanWriteLanguage(languageItem))
-                        {
-                            continue;
-                        }
-                    }
-                    else
-                    {
-                        continue;
-                    }
+                    continue;
                 }
 
                 var id = Control.GetUniqueID("lang_");
@@ -282,9 +282,39 @@ namespace ScheduledPublishing.sitecore.shell.Applications.ContentManager.Dialogs
             }
         }
 
-        private static bool CanWriteLanguage(ISecurable item)
+        private bool CanWriteLanguage(Language language)
         {
-            return AuthorizationManager.IsAllowed(item, AccessRight.LanguageWrite, Context.User);
+            if (language == null)
+            {
+                return false;
+            }
+
+            bool renderLanguage = true;
+
+            if (Settings.CheckSecurityOnLanguages)
+            {
+                var languageItemId = LanguageManager.GetLanguageItemId(language, _database);
+                if (!ItemUtil.IsNull(languageItemId))
+                {
+                    var languageItem = _database.GetItem(languageItemId);
+                    if (languageItem == null)
+                    {
+                        renderLanguage = false;
+                    }
+
+                    var canWriteLanguage = AuthorizationManager.IsAllowed(languageItem, AccessRight.LanguageWrite, Context.User);
+                    if (!canWriteLanguage)
+                    {
+                        renderLanguage = false;
+                    }
+                }
+                else
+                {
+                    renderLanguage = false;
+                }
+            }
+
+            return renderLanguage;
         }
 
         /// <summary>
@@ -476,6 +506,14 @@ namespace ScheduledPublishing.sitecore.shell.Applications.ContentManager.Dialogs
                 : Guid.NewGuid();
 
             return ItemUtil.ProposeValidItemName(string.Format("{0}ScheduledPublishOptions", guid));
+        }
+
+        private void BuildUnpublishTitles()
+        {
+            this.ScheduleSettings.Header = SCHEDULE_UNPUBLISH_SETTINGS_TITLE;
+            this.ScheduleLanguages.Header = SCHEDULE_UNPUBLISH_LANGUAGES_TITLE;
+            this.ScheduleTargets.Header = SCHEDULE_UNPUBLISH_TARGETS_TITLE;
+            this.PublishTimeLit.Text = SCHEDULE_DATETIMEPICKER_UNPUBLISH_TITLE;
         }
     }
 }
