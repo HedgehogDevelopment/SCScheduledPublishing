@@ -469,8 +469,8 @@ namespace ScheduledPublishing.sitecore.shell.Applications.ContentManager.Dialogs
                         newPublishOptions.ItemToPublishPath = this.InnerItem.Paths.FullPath;
                     }
                     newPublishOptions.PublishModeString = this.SmartPublish.Checked //TODO - smart full incremental
-                        ? "smart"
-                        : "republish";
+                        ? PublishMode.Smart.ToString()
+                        : PublishMode.Full.ToString();
                     newPublishOptions.PublishChildren = this.PublishChildren.Checked;
                     newPublishOptions.Languages = this.SelectedLanguages.ToArray(); //TODO: check (string.Join("|", this.SelectedLanguages.Select(x => x.Name))
                     newPublishOptions.SourceDatabaseString = this._database.Name;
