@@ -185,7 +185,7 @@ namespace ScheduledPublishing.sitecore.shell.Applications.ContentManager.Dialogs
                 this.BuildPublishingTargets();
                 this.BuildLanguages();
 
-                this.ServerTime.Text = CURREN_TIME_ON_SERVER_TEXT + DateTime.Now;
+                this.ServerTime.Text = CURREN_TIME_ON_SERVER_TEXT + DateTime.Now.ToString(Context.Culture);
                 this.SmartPublish.Checked = true;
             }
 
@@ -354,9 +354,23 @@ namespace ScheduledPublishing.sitecore.shell.Applications.ContentManager.Dialogs
                     languagesLit.Text = languages;
                     ExistingSchedulesTable.Controls.Add(languagesLit);
 
-                    var version = schedule.ItemToPublish.Publishing.GetValidVersion(time, true, false);
+                    var version = string.Empty;
+
+                    if (schedule.ItemToPublish == null)
+                    {
+                        version = "website";
+                    }
+                    else
+                    {
+                        var itemInVersion = schedule.ItemToPublish.Publishing.GetValidVersion(time, true, false);
+                        if (itemInVersion != null)
+                        {
+                            version = itemInVersion.Version.Number.ToString();
+                        }
+                    }
+                    
                     var versionLit = new Literal();
-                    versionLit.Text = version.Version.Number.ToString();
+                    versionLit.Text = version;
                     ExistingSchedulesTable.Controls.Add(versionLit);
                 }
             }

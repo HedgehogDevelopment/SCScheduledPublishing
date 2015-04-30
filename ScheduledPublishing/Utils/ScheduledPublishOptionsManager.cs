@@ -30,8 +30,8 @@ namespace ScheduledPublishing.Utils
 
             var allScheduledPublishOptions = GetAllScheduledOptions(rootFolder);
 
-            return allScheduledPublishOptions.Where(t => t.ItemToPublish.ID == itemId);
+            return allScheduledPublishOptions.Where(
+                t => t.ItemToPublish != null && t.ItemToPublish.ID == itemId);
         } 
-       
     }
 }
