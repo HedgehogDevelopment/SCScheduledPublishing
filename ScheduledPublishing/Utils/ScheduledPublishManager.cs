@@ -96,7 +96,7 @@ namespace ScheduledPublishing.Utils
                 if (publishOptions.Unpublish)
                 {
                     publishOptions.ItemToPublish.Editing.BeginEdit();
-                    publishOptions.ItemToPublish["__Never publish"] = "1";
+                    publishOptions.ItemToPublish.Publishing.NeverPublish= true;
                     publishOptions.ItemToPublish.Editing.AcceptChanges();
                     publishOptions.ItemToPublish.Editing.EndEdit();
                 }
@@ -111,7 +111,7 @@ namespace ScheduledPublishing.Utils
                 if (publishOptions.Unpublish)
                 {
                     publishOptions.ItemToPublish.Editing.BeginEdit();
-                    publishOptions.ItemToPublish["__Never publish"] = string.Empty;
+                    publishOptions.ItemToPublish.Publishing.NeverPublish = false;
                     publishOptions.ItemToPublish.Editing.AcceptChanges();
                     publishOptions.ItemToPublish.Editing.EndEdit();
                 }

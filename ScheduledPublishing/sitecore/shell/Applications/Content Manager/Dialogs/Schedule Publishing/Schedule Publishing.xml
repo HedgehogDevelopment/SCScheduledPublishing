@@ -10,7 +10,13 @@
           </Border>
         </Groupbox>
         <Groupbox Header="Existing Schedules" Margin="0px 0px 16px 0px">
-          <Border ID="ExistingSchedules" Padding="4px" Width="100%" />
+          <GridPanel ID="ExistingSchedulesTable" Height="100%" Width="100%" Columns="4" Padding="4px" >
+            <Literal Text="Time" />
+            <Literal Text="Action" />
+            <Literal Text="Languages" />
+            <Literal Text="Version" />
+          </GridPanel>
+          <Border ID="ExistingSchedulesDiv" Padding="4px" Width="100%" />
         </Groupbox>
         <Groupbox ID="ScheduleSettings" Header="Scheduled Publish Settings" Margin="0px 0px 16px 0px">
           <Border Padding="4">

@@ -16,9 +16,10 @@ using Sitecore.Web.UI.Sheer;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Web.UI;
 using System.Web.UI.HtmlControls;
+using ScheduledPublishing.Utils;
+using Sitecore.Web.UI.WebControls;
 using Constants = ScheduledPublishing.Utils.Constants;
 using Control = Sitecore.Web.UI.HtmlControls.Control;
 using Literal = Sitecore.Web.UI.HtmlControls.Literal;
@@ -33,7 +34,8 @@ namespace ScheduledPublishing.sitecore.shell.Applications.ContentManager.Dialogs
         protected Groupbox ScheduleSettings;
         protected Groupbox ScheduleLanguages;
         protected Groupbox ScheduleTargets;
-        protected Border ExistingSchedules;
+        protected Border ExistingSchedulesDiv;
+        protected GridPanel ExistingSchedulesTable;
         protected Border Languages;
         protected Border PublishModePanel;
         protected Border PublishingTargets;
@@ -328,33 +330,41 @@ namespace ScheduledPublishing.sitecore.shell.Applications.ContentManager.Dialogs
                 return;
             }
 
-            var publishingTaskName = BuildPublishOptionsName(this.InnerItem);
+            var publishOptionsManager = new ScheduledPublishOptionsManager();
+            var existingSchedules = 
+                publishOptionsManager.GetScheduledOptions(PublishingSchedulesFolder, InnerItem.ID).ToList();
 
-            List<DateTime> existingSchedules =
-                this.PublishingSchedulesFolder.Axes.GetDescendants()
-                    .Where(x => x.Name == publishingTaskName && !string.IsNullOrEmpty(x[Constants.PUBLISH_OPTIONS_SCHEDULED_DATE]))
-                    .Select(x => DateUtil.IsoDateToDateTime(x[Constants.PUBLISH_OPTIONS_SCHEDULED_DATE])).ToList();
-
-            existingSchedules.Sort((a, b) => a.CompareTo(b));
-
-            var sbExistingSchedules = new StringBuilder();
             if (existingSchedules.Any())
             {
-                foreach (var existingSchedule in existingSchedules)
+                ExistingSchedulesDiv.Visible = false;
+                foreach (var schedule in existingSchedules)
                 {
-                    sbExistingSchedules.Append("<div style=\"padding:0px 0px 2px 0px; width=100%;\">" + existingSchedule +
-                                               "</div>");
-                    sbExistingSchedules.Append("<br />");
+                    var time = DateUtil.IsoDateToDateTime(schedule.PublishDateString);
+                    var timeLit = new Literal();
+                    timeLit.Text = time.ToString(Context.Culture);
+                    ExistingSchedulesTable.Controls.Add(timeLit);
+
+                    var action = schedule.Unpublish ? "Unpublish" : "Publish";
+                    var actionLit = new Literal();
+                    actionLit.Text = action;
+                    ExistingSchedulesTable.Controls.Add(actionLit);
+
+                    var languages = string.Join(",", schedule.Languages.Select(la => la.Name)).TrimEnd(',');
+                    var languagesLit = new Literal();
+                    languagesLit.Text = languages;
+                    ExistingSchedulesTable.Controls.Add(languagesLit);
+
+                    var version = schedule.ItemToPublish.Publishing.GetValidVersion(time, true, false);
+                    var versionLit = new Literal();
+                    versionLit.Text = version.Version.Number.ToString();
+                    ExistingSchedulesTable.Controls.Add(versionLit);
                 }
             }
             else
             {
-                sbExistingSchedules.Append("<div style=\"padding:0px 0px 2px 0px; width=100%;\">" +
-                                           "This item has not been scheduled for publishing yet." + "</div>");
-                sbExistingSchedules.Append("<br />");
+                ExistingSchedulesTable.Visible = false;
+                ExistingSchedulesDiv.InnerHtml = "This item has not been scheduled for publishing yet.";
             }
-
-            this.ExistingSchedules.InnerHtml = sbExistingSchedules.ToString();
         }
 
         #region Validations
@@ -362,12 +372,13 @@ namespace ScheduledPublishing.sitecore.shell.Applications.ContentManager.Dialogs
         private bool ValidateSchedule()
         {
             var isValid =
-                (this.ValidatePublishable()
-                 && this.ValidateSelectedDate()
+                (this.ValidateSelectedDate()
                  && this.ValidateSelectedPublishTargets()
                  && this.ValidateSelectedLanguages());
 
-            return isValid;
+            return Unpublish
+                ? isValid
+                : isValid && this.ValidatePublishable();
         }
 
         /// <summary>
@@ -376,8 +387,12 @@ namespace ScheduledPublishing.sitecore.shell.Applications.ContentManager.Dialogs
         /// <returns>True if the item meets all date and time requirements for publishing</returns>
         private bool ValidatePublishable()
         {
+            //we should also check ancestors because if any ancestor is marked for unpublish
+            //our item will be also unpublished instead of published
+            //IsValid added for workflow state and DateTime range (Valid From/Valid To)
             if (this.InnerItem != null
-                && !this.InnerItem.Publishing.IsPublishable(this.SelectedPublishDateTime, false))
+                && !this.InnerItem.Publishing.IsPublishable(this.SelectedPublishDateTime, true)
+                && !this.InnerItem.Publishing.IsValid(this.SelectedPublishDateTime, true))
             {
                 SheerResponse.Alert("Item is not publishable at that time.");
                 return false;
