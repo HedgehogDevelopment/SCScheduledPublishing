@@ -348,12 +348,12 @@ namespace ScheduledPublishing.sitecore.shell.Applications.ContentManager.Dialogs
                     actionLit.Text = action;
                     ExistingSchedulesTable.Controls.Add(actionLit);
 
-                    var languages = string.Join(",", schedule.Languages.Select(la => la.Name)).TrimEnd(',');
+                    var languages = string.Join(",", schedule.Languages.Select(x => x.Name)).TrimEnd(',');
                     var languagesLit = new Literal();
                     languagesLit.Text = languages;
                     ExistingSchedulesTable.Controls.Add(languagesLit);
 
-                    var version = string.Empty;
+                    string version;
 
                     if (schedule.ItemToPublish == null)
                     {
@@ -362,12 +362,13 @@ namespace ScheduledPublishing.sitecore.shell.Applications.ContentManager.Dialogs
                     else
                     {
                         var itemInVersion = schedule.ItemToPublish.Publishing.GetValidVersion(time, true, false);
-                        if (itemInVersion != null)
-                        {
-                            version = itemInVersion.Version.Number.ToString();
-                        }
+                        version = itemInVersion != null 
+                            ? itemInVersion.Version.Number.ToString() 
+                            : "no valid verion";
+
+                        
                     }
-                    
+
                     var versionLit = new Literal();
                     versionLit.Text = version;
                     ExistingSchedulesTable.Controls.Add(versionLit);
