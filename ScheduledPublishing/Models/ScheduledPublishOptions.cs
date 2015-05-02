@@ -242,6 +242,18 @@ namespace ScheduledPublishing.Models
             }
         }
 
+        public bool IsPublished
+        {
+            get
+            {
+                return "1" == this.InnerItem[ID.Parse("{EEAC5DF6-19B2-425B-84F4-466D44213108}")];
+            }
+            set
+            {
+                this.InnerItem[ID.Parse("{EEAC5DF6-19B2-425B-84F4-466D44213108}")] = value ? "1" : string.Empty;
+            }
+        }
+
         private static PublishMode ParseMode(string mode)
         {
             switch (mode.ToLowerInvariant())

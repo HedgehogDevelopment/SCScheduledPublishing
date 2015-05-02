@@ -23,14 +23,15 @@ namespace ScheduledPublishing.Utils
                 : PublishWebsite(publishOptions);
         }
 
-        public static string GetPublishReport(Handle handle)
+        public static ScheduledPublishReport GetScheduledPublishReport(Handle handle)
         {
-            var sbResult = new StringBuilder();
+            var isSuccessful = false;
+            var sbMessage = new StringBuilder();
 
             if (handle == null)
             {
-                sbResult.Append("Final Status: Fail. <br />");
-                sbResult.Append("Please, check log files for more information </br>");
+                sbMessage.Append("Final Status: Fail. <br />");
+                sbMessage.Append("Please, check log files for more information </br>");
             }
             else if (PublishManager.WaitFor(handle))
             {
@@ -38,36 +39,43 @@ namespace ScheduledPublishing.Utils
 
                 if (status == null)
                 {
-                    sbResult.Append("The scheduled publishing process was unexpectedly interrupted. <br/>");
-                    sbResult.Append("Please, check log files for more information </br>");
+                    sbMessage.Append("The scheduled publishing process was unexpectedly interrupted. <br/>");
+                    sbMessage.Append("Please, check log files for more information </br>");
                 }
                 else
                 {
                     if (status.Failed)
                     {
-                        sbResult.Append("Final Status: Fail. <br/>");
-                        sbResult.Append("Please, check log files for more information </br>");
+                        sbMessage.Append("Final Status: Fail. <br/>");
+                        sbMessage.Append("Please, check log files for more information </br>");
                     }
                     else if (status.IsDone)
                     {
-                        sbResult.Append("Final Status: Success. <br/>");
+                        sbMessage.Append("Final Status: Success. <br/>");
+                        isSuccessful = true;
                     }
 
-                    sbResult.AppendFormat("Items processed: {0}. <br/><br/>", status.Processed);
+                    sbMessage.AppendFormat("Items processed: {0}. <br/><br/>", status.Processed);
 
                     if (status.Messages != null)
                     {
-                        sbResult.Append("Detailed Information: <br/>");
+                        sbMessage.Append("Detailed Information: <br/>");
 
                         foreach (var message in status.Messages)
                         {
-                            sbResult.AppendFormat("{0} <br/>", message);
+                            sbMessage.AppendFormat("{0} <br/>", message);
                         }
                     }
                 }
             }
 
-            return sbResult.ToString();
+            var report = new ScheduledPublishReport
+            {
+                IsSuccessful = isSuccessful, 
+                Message = sbMessage.ToString()
+            };
+
+            return report;
         }
 
         private static bool ValidatePublishOptions(ScheduledPublishOptions publishOptions)

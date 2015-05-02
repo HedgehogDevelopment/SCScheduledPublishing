@@ -47,11 +47,11 @@
     <Reference Include="System.Configuration" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CustomScheduledTasks\CreatePublishTaskCommand.cs" />
     <Compile Include="CustomScheduledTasks\OpenEditScheduledPublishingDialog.cs" />
-    <Compile Include="CustomScheduledTasks\ScheduledPublishingCommand.cs" />
+    <Compile Include="CustomScheduledTasks\ScheduledPublishCommand.cs" />
     <Compile Include="CustomScheduledTasks\OpenScheduledPublishingDialog.cs" />
     <Compile Include="Models\ScheduledPublishOptions.cs" />
+    <Compile Include="Models\ScheduledPublishReport.cs" />
     <Compile Include="Models\ScheduledPublishSettings.cs" />
     <Compile Include="Pipelines\ContentEditorWarnings\HasScheduledPublishing.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

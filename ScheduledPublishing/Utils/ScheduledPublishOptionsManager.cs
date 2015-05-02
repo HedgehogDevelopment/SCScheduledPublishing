@@ -1,8 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using ScheduledPublishing.Models;
+using Sitecore;
 using Sitecore.Data;
 using Sitecore.Data.Items;
+using System;
 
 namespace ScheduledPublishing.Utils
 {
@@ -18,7 +20,7 @@ namespace ScheduledPublishing.Utils
             return rootFolder.Axes.GetDescendants()
                 .Where(t => t.TemplateID == Constants.PUBLISH_OPTIONS_TEMPLATE_ID)
                 .Select(t => new ScheduledPublishOptions(t))
-                .OrderBy(t => t.PublishDateString);
+                .OrderBy(t => DateUtil.IsoDateToDateTime(t.PublishDateString));
         }
 
         public static IEnumerable<ScheduledPublishOptions> GetScheduledOptions(Item rootFolder, ID itemId)
@@ -32,6 +34,21 @@ namespace ScheduledPublishing.Utils
 
             return allScheduledPublishOptions.Where(
                 t => t.ItemToPublish != null && t.ItemToPublish.ID == itemId);
+        }
+
+        public static IEnumerable<ScheduledPublishOptions> GetUnpublishedScheduledOptions(Item rootFolder, DateTime fromDate, DateTime toDate)
+        {
+            if (rootFolder == null || fromDate > toDate)
+            {
+                return Enumerable.Empty<ScheduledPublishOptions>();
+            }
+
+            var allScheduledPublsihOptions = GetAllScheduledOptions(rootFolder);
+
+            return allScheduledPublsihOptions
+                .Where(t => !t.IsPublished
+                       && DateUtil.IsoDateToDateTime(t.PublishDateString) >= fromDate
+                       && DateUtil.IsoDateToDateTime(t.PublishDateString) <= toDate);
         } 
     }
 }
