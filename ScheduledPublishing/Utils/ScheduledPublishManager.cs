@@ -30,8 +30,8 @@ namespace ScheduledPublishing.Utils
 
             if (handle == null)
             {
-                sbMessage.Append("Final Status: Fail. <br />");
-                sbMessage.Append("Please, check log files for more information </br>");
+                sbMessage.Append("Final Status: Fail. <br/>");
+                sbMessage.Append("Please, check log files for more information <br/>");
             }
             else if (PublishManager.WaitFor(handle))
             {
@@ -40,14 +40,14 @@ namespace ScheduledPublishing.Utils
                 if (status == null)
                 {
                     sbMessage.Append("The scheduled publishing process was unexpectedly interrupted. <br/>");
-                    sbMessage.Append("Please, check log files for more information </br>");
+                    sbMessage.Append("Please, check log files for more information <br/>");
                 }
                 else
                 {
                     if (status.Failed)
                     {
                         sbMessage.Append("Final Status: Fail. <br/>");
-                        sbMessage.Append("Please, check log files for more information </br>");
+                        sbMessage.Append("Please, check log files for more information <br/>");
                     }
                     else if (status.IsDone)
                     {

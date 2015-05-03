@@ -36,6 +36,18 @@ namespace ScheduledPublishing.Utils
                 t => t.ItemToPublish != null && t.ItemToPublish.ID == itemId);
         }
 
+        public static IEnumerable<ScheduledPublishOptions> GetUnpublishedScheduledOptions(Item rootFolder)
+        {
+            if (rootFolder == null)
+            {
+                return Enumerable.Empty<ScheduledPublishOptions>();
+            }
+
+            var allScheduledPublsihOptions = GetAllScheduledOptions(rootFolder);
+
+            return allScheduledPublsihOptions.Where(t => !t.IsPublished);
+        } 
+
         public static IEnumerable<ScheduledPublishOptions> GetUnpublishedScheduledOptions(Item rootFolder, DateTime fromDate, DateTime toDate)
         {
             if (rootFolder == null || fromDate > toDate)

@@ -19,6 +19,7 @@ using System.Linq;
 using System.Web.UI;
 using System.Web.UI.HtmlControls;
 using ScheduledPublishing.Utils;
+using Sitecore.Tasks;
 using Sitecore.Web.UI.WebControls;
 using Constants = ScheduledPublishing.Utils.Constants;
 using Control = Sitecore.Web.UI.HtmlControls.Control;
@@ -325,11 +326,6 @@ namespace ScheduledPublishing.sitecore.shell.Applications.ContentManager.Dialogs
         /// <param name="item">The item that publishing is scheduled for</param>
         private void BuildExistingSchedules()
         {
-            if (!this.PublishingSchedulesFolder.Children.Any())
-            {
-                return;
-            }
-
             var existingSchedules =
                 ScheduledPublishOptionsManager.GetScheduledOptions(PublishingSchedulesFolder, InnerItem.ID).ToList();
 
