@@ -26,15 +26,15 @@ content-length: 3
 ----version----
 language: en
 version: 1
-revision: 23033204-be9a-4195-b047-d1b8f06d16ce
+revision: bced0af7-f468-4598-bfdc-2783fcd1ff0a
 
 ----field----
 field: {19A69332-A23E-4E70-8D16-B2640CB24CC8}
 name: Title
 key: title
-content-length: 22
+content-length: 12
 
-Scheduled Publish Task
+Is Published
 ----field----
 field: {52807595-0F8F-4B20-8D2A-CB71D28C6103}
 name: __Owner
@@ -62,14 +62,14 @@ name: __Revision
 key: __revision
 content-length: 36
 
-23033204-be9a-4195-b047-d1b8f06d16ce
+bced0af7-f468-4598-bfdc-2783fcd1ff0a
 ----field----
 field: {D9CF14B1-FA16-4BA6-9288-E8A174D4D522}
 name: __Updated
 key: __updated
 content-length: 34
 
-20150502T215237:635662003579367904
+20150503T180421:635662730610400587
 ----field----
 field: {BADD9CF9-53E0-4D0C-BCC0-2D784C282F6A}
 name: __Updated by
