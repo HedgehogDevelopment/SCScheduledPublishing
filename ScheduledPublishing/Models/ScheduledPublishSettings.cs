@@ -1,11 +1,12 @@
-﻿using Sitecore.Data;
+﻿using ScheduledPublishing.Utils;
+using Sitecore.Data;
 using Sitecore.Data.Items;
 
 namespace ScheduledPublishing.Models
 {
     public static class ScheduledPublishSettings
     {
-        private static readonly Database _database = Utils.Utils.ScheduledTasksContextDatabase;
+        private static readonly Database _database = Constants.ScheduledTasksContextDatabase;
 
         public static Item InnerItem
         {

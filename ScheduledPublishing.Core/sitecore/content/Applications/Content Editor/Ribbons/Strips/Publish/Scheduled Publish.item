@@ -1,40 +1,26 @@
 ----item----
 version: 1
-id: {EF235C25-AE83-4678-9E2C-C22175925893}
-database: master
-path: /sitecore/system/Tasks/Commands/ScheduledPublishCommand
-parent: {3EBEC263-B57E-4A3C-A232-7C70519F9908}
-name: ScheduledPublishCommand
+id: {D52D006E-94BC-40A5-BC3F-5FFF23D3D3DA}
+database: core
+path: /sitecore/content/Applications/Content Editor/Ribbons/Strips/Publish/Scheduled Publish
+parent: {6553636F-E904-4F2D-B222-090D0A26298C}
+name: Scheduled Publish
 master: {00000000-0000-0000-0000-000000000000}
-template: {58119A3E-560E-4DA6-97C6-1ACE8A5B1219}
-templatekey: Command
+template: {EF295CD8-19D4-4E02-9438-94C926EF5284}
+templatekey: Reference
 
 ----field----
-field: {752579A7-EF2F-45B7-B9D1-9B682308B7A5}
-name: Type
-key: type
-content-length: 73
+field: {C9CE97FB-3E8E-4384-9430-7DBA75B275DD}
+name: Reference
+key: reference
+content-length: 38
 
-ScheduledPublishing.Commands.ScheduledPublishCommand, ScheduledPublishing
-----field----
-field: {4BC75539-D5C4-487B-AF35-FF13D62BD286}
-name: Method
-key: method
-content-length: 3
-
-Run
+{4E222A0A-E3EF-4FEB-90D0-08B1B7EA0621}
 ----version----
 language: en
 version: 1
-revision: ae40364d-2009-4d85-8695-088d51680cb7
+revision: c59b343e-1c1f-4fd6-a6b8-4503215692bd
 
-----field----
-field: {B5E02AD9-D56F-4C41-A065-A133DB87BDEB}
-name: __Display name
-key: __display name
-content-length: 25
-
-Scheduled Publish Command
 ----field----
 field: {52807595-0F8F-4B20-8D2A-CB71D28C6103}
 name: __Owner
@@ -48,7 +34,7 @@ name: __Created
 key: __created
 content-length: 15
 
-20150320T150000
+20150320T174300
 ----field----
 field: {5DD74568-4D4B-44C1-B513-0AF5F4CDA34F}
 name: __Created by
@@ -62,14 +48,14 @@ name: __Revision
 key: __revision
 content-length: 36
 
-ae40364d-2009-4d85-8695-088d51680cb7
+c59b343e-1c1f-4fd6-a6b8-4503215692bd
 ----field----
 field: {D9CF14B1-FA16-4BA6-9288-E8A174D4D522}
 name: __Updated
 key: __updated
 content-length: 34
 
-20150507T004922:635665565621484379
+20150326T151934:635629799740852025
 ----field----
 field: {BADD9CF9-53E0-4D0C-BCC0-2D784C282F6A}
 name: __Updated by

@@ -1,12 +1,13 @@
 ﻿using Sitecore.Data;
 using Sitecore.Data.Items;
 using System;
+using ScheduledPublishing.Utils;
 
 namespace ScheduledPublishing.SMTP
 {
     public static class NotificationEmailSettings
     {
-        private static readonly Database _database = Utils.Utils.ScheduledTasksContextDatabase;
+        private static readonly Database _database = Constants.ScheduledTasksContextDatabase;
 
         public static Item InnerItem
         {

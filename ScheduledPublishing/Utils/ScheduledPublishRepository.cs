@@ -1,0 +1,314 @@
+﻿using Sitecore.Data.Items;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using ScheduledPublishing.Models;
+using Sitecore;
+using Sitecore.Data;
+using Sitecore.Diagnostics;
+using Sitecore.SecurityModel;
+
+namespace ScheduledPublishing.Utils
+{
+    public static class ScheduledPublishRepository
+    {
+        private static readonly Database _database = Constants.ScheduledTasksContextDatabase;
+
+        public static IEnumerable<PublishSchedule> AllSchedules
+        {
+            get
+            {
+                return RootFolder.Axes.GetDescendants()
+                .Where(t => t.TemplateID == Constants.PUBLISH_OPTIONS_TEMPLATE_ID)
+                .Select(t => new PublishSchedule(t))
+                .OrderBy(t => t.PublishDate);
+            }
+        }
+
+        private static Item RootFolder
+        {
+            get
+            {
+                var rootItem = _database.GetItem("{7D8B2A62-A35A-4DA1-B7B6-89C11758C2E6}");
+                Error.AssertItemFound(rootItem);
+                return rootItem;
+            }
+        }
+
+        public static IEnumerable<PublishSchedule> GetSchedules(ID itemId)
+        {
+            if (ID.IsNullOrEmpty(itemId))
+            {
+                return Enumerable.Empty<PublishSchedule>();
+            }
+
+            return AllSchedules.Where(
+                t => t.ItemToPublish != null
+                    && t.ItemToPublish.ID == itemId
+                    && !t.IsPublished);
+        }
+
+        public static IEnumerable<PublishSchedule> GetUnpublishedSchedules(DateTime fromDate, DateTime toDate)
+        {
+            if (fromDate > toDate)
+            {
+                return Enumerable.Empty<PublishSchedule>();
+            }
+
+            return AllSchedules
+                .Where(t => !t.IsPublished
+                       && t.PublishDate >= fromDate
+                       && t.PublishDate <= toDate);
+        }
+
+        public static void CreateScheduledPublishOptions(PublishSchedule publishSchedule)
+        {
+            var action = publishSchedule.Unpublish ? "unpublish" : "publish";
+
+            try
+            {
+                using (new SecurityDisabler())
+                {
+                    var publishOptionsTemplate = _database.GetTemplate(Constants.PUBLISH_OPTIONS_TEMPLATE_ID);
+                    var publishOptionsName = BuildPublishOptionsName(publishSchedule.ItemToPublish);
+                    var optionsFolder = GetOrCreateFolder(publishSchedule.PublishDate);
+                    var publishOptionsItem = optionsFolder.Add(publishOptionsName, publishOptionsTemplate);
+
+                    publishOptionsItem.Editing.BeginEdit();
+
+                    publishOptionsItem[PublishSchedule.SchedulerEmailId] = publishSchedule.SchedulerEmail;
+                    publishOptionsItem[PublishSchedule.UnpublishId] = publishSchedule.Unpublish ? "1" : string.Empty;
+                    if (publishSchedule.ItemToPublish != null)
+                    {
+                        publishOptionsItem[PublishSchedule.ItemToPublishId] = publishSchedule.ItemToPublish.Paths.FullPath;
+                    }
+                    publishOptionsItem[PublishSchedule.PublishModeId] = publishSchedule.PublishMode.ToString();
+                    publishOptionsItem[PublishSchedule.PublishChildrenId] = publishSchedule.PublishChildren ? "1" : string.Empty;
+                    publishOptionsItem[PublishSchedule.TargetLanguagesId] = string.Join("|",
+                        publishSchedule.TargetLanguages.Select(x => x.Name));
+                    publishOptionsItem[PublishSchedule.SourceDatabaseId] = publishSchedule.SourceDatabase.Name;
+                    publishOptionsItem[PublishSchedule.TargetDatabasesId] = string.Join("|", publishSchedule.TargetDatabases.Select(x => x.Name));
+                    publishOptionsItem[PublishSchedule.PublishDateId] = DateUtil.ToIsoDate(publishSchedule.PublishDate);
+
+                    publishOptionsItem.Editing.AcceptChanges();
+                    publishOptionsItem.Editing.EndEdit();
+
+                    Log.Info(
+                        string.Format("Created Publish Options: {0}: {1} {2} {3}",
+                            action,
+                            publishSchedule.ItemToPublish != null ? publishSchedule.ItemToPublish.Name : "Website",
+                            publishSchedule.ItemToPublish != null ? publishSchedule.ItemToPublish.ID.ToString() : "Website",
+                            DateTime.Now), new object());
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Info(
+                    string.Format("Failed creating Publish Options: {0}: {1} {2} {3}",
+                        action,
+                        publishSchedule.ItemToPublish != null ? publishSchedule.ItemToPublish.Name : "Website",
+                        publishSchedule.ItemToPublish != null ? publishSchedule.ItemToPublish.ID.ToString() : "Website",
+                        ex), new object());
+            }
+        }
+
+        public static void UpdateScheduledPublishOptions(PublishSchedule publishSchedule)
+        {
+            if (publishSchedule.InnerItem == null)
+            {
+                Log.Error("Scheduled Update Failed. Item is null.", new object());
+                return;
+            }
+
+            var action = publishSchedule.Unpublish ? "unpublish" : "publish";
+
+            try
+            {
+                using (new SecurityDisabler())
+                {
+                    publishSchedule.InnerItem.Editing.BeginEdit();
+
+                    publishSchedule.InnerItem[PublishSchedule.SchedulerEmailId] = publishSchedule.SchedulerEmail;
+                    publishSchedule.InnerItem[PublishSchedule.UnpublishId] = publishSchedule.Unpublish ? "1" : string.Empty;
+                    if (publishSchedule.ItemToPublish != null)
+                    {
+                        publishSchedule.InnerItem[PublishSchedule.ItemToPublishId] = publishSchedule.ItemToPublish.Paths.FullPath;
+                    }
+                    publishSchedule.InnerItem[PublishSchedule.PublishModeId] = publishSchedule.PublishMode.ToString();
+                    publishSchedule.InnerItem[PublishSchedule.PublishChildrenId] = publishSchedule.PublishChildren ? "1" : string.Empty;
+                    publishSchedule.InnerItem[PublishSchedule.TargetLanguagesId] = string.Join("|",
+                        publishSchedule.TargetLanguages.Select(x => x.Name));
+                    publishSchedule.InnerItem[PublishSchedule.SourceDatabaseId] = publishSchedule.SourceDatabase.Name;
+                    publishSchedule.InnerItem[PublishSchedule.TargetDatabasesId] = string.Join("|", publishSchedule.TargetDatabases.Select(x => x.Name));
+
+                    DateTime oldPublishDate =
+                        DateUtil.IsoDateToDateTime(publishSchedule.InnerItem[PublishSchedule.PublishDateId]);
+                    publishSchedule.InnerItem[PublishSchedule.PublishDateId] = DateUtil.ToIsoDate(publishSchedule.PublishDate);
+
+                    publishSchedule.InnerItem.Editing.AcceptChanges();
+                    publishSchedule.InnerItem.Editing.EndEdit();
+
+                    if (oldPublishDate != publishSchedule.PublishDate)
+                    {
+                        Item newFolder = GetOrCreateFolder(publishSchedule.PublishDate);
+                        publishSchedule.InnerItem.MoveTo(newFolder);
+                    }
+
+                    Log.Info(
+                        string.Format("Updated Publish Options: {0}: {1} {2} {3}",
+                            action,
+                            publishSchedule.ItemToPublish != null ? publishSchedule.ItemToPublish.Name : "Website",
+                            publishSchedule.ItemToPublish != null ? publishSchedule.ItemToPublish.ID.ToString() : "Website",
+                            DateTime.Now), new object());
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Info(
+                    string.Format("Failed updating Publish Options: {0}: {1} {2} {3}",
+                        action,
+                        publishSchedule.ItemToPublish != null ? publishSchedule.ItemToPublish.Name : "Website",
+                        publishSchedule.ItemToPublish != null ? publishSchedule.ItemToPublish.ID.ToString() : "Website",
+                        ex), new object());
+            }
+        }
+
+        public static void DeleteItem(Item item)
+        {
+            if (item == null)
+            {
+                return;
+            }
+
+            try
+            {
+                using (new SecurityDisabler())
+                {
+                    if (Sitecore.Configuration.Settings.RecycleBinActive)
+                    {
+                        item.Recycle();
+                    }
+                    else
+                    {
+                        item.Delete();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Error(string.Format("Failed delete item {0} {1} {2}",
+                    item.Paths.FullPath,
+                    item.ID,
+                    ex), new object());
+            }
+        }
+
+        public static void CleanBucket()
+        {
+            DateTime currentTime = DateTime.Now;
+            DateTime oneHourEarlier = currentTime.AddHours(-1);
+
+            if (oneHourEarlier.Year != currentTime.Year)
+            {
+                var yearFolder = GetDateFolder(oneHourEarlier, BucketFolderType.Year);
+                if (yearFolder != null)
+                {
+                    DeleteItem(yearFolder);
+                }
+            }
+            else if (oneHourEarlier.Month != currentTime.Month)
+            {
+                var monthFolder = GetDateFolder(oneHourEarlier, BucketFolderType.Month);
+                if (monthFolder != null)
+                {
+                    DeleteItem(monthFolder);
+                }
+            }
+            else if (oneHourEarlier.Day != currentTime.Day)
+            {
+                var dayFolder = GetDateFolder(oneHourEarlier, BucketFolderType.Day);
+                if (dayFolder != null)
+                {
+                    DeleteItem(dayFolder);
+                }
+            }
+            else
+            {
+                var hourFolder = GetDateFolder(oneHourEarlier, BucketFolderType.Hour);
+                if (hourFolder != null)
+                {
+                    DeleteItem(hourFolder);
+                }
+            }
+        }
+
+        private static Item GetOrCreateFolder(DateTime date)
+        {
+            string yearName = date.Year.ToString();
+            string monthName = date.Month.ToString();
+            string dayName = date.Day.ToString();
+            string hourName = date.Hour.ToString();
+
+            TemplateItem folderTemplate = _database.GetTemplate(Constants.FOLDER_TEMPLATE_ID);
+            Item yearFolder = RootFolder.Children.FirstOrDefault(x => x.Name == yearName) ??
+                              RootFolder.Add(yearName, folderTemplate);
+
+            Item monthFolder = yearFolder.Children.FirstOrDefault(x => x.Name == monthName) ??
+                               yearFolder.Add(monthName, folderTemplate);
+
+            Item dayFolder = monthFolder.Children.FirstOrDefault(x => x.Name == dayName) ??
+                             monthFolder.Add(dayName, folderTemplate);
+
+            Item hourFolder = dayFolder.Children.FirstOrDefault(x => x.Name == hourName) ??
+                              dayFolder.Add(hourName, folderTemplate);
+
+            return hourFolder;
+        }
+
+        private static Item GetDateFolder(DateTime date, BucketFolderType folderType)
+        {
+            var rootPath = RootFolder.Paths.FullPath;
+            string yearName = date.Year.ToString();
+            string monthName = date.Month.ToString();
+            string dayName = date.Day.ToString();
+            string hourName = date.Hour.ToString();
+
+            string itemPath = string.Empty;
+
+            switch (folderType)
+            {
+                case BucketFolderType.Year:
+                    {
+                        itemPath = string.Format("{0}/{1}/", rootPath, yearName);
+                        break;
+                    }
+                case BucketFolderType.Month:
+                    {
+                        itemPath = string.Format("{0}/{1}/{2}/", rootPath, yearName, monthName);
+                        break;
+                    }
+                case BucketFolderType.Day:
+                    {
+                        itemPath = string.Format("{0}/{1}/{2}/{3}/", rootPath, yearName, monthName, dayName);
+                        break;
+                    }
+                case BucketFolderType.Hour:
+                    {
+                        itemPath = string.Format("{0}/{1}/{2}/{3}/{4}/", rootPath, yearName, monthName, dayName, hourName);
+                        break;
+                    }
+            }
+
+            return _database.GetItem(itemPath);
+        }
+
+        private static string BuildPublishOptionsName(Item item)
+        {
+            var guid = item != null
+                ? item.ID.Guid
+                : Guid.NewGuid();
+
+            return ItemUtil.ProposeValidItemName(string.Format("{0}ScheduledPublishOptions", guid));
+        }
+    }
+}

@@ -1,40 +1,40 @@
 ----item----
 version: 1
-id: {EF235C25-AE83-4678-9E2C-C22175925893}
+id: {0BBED214-85E7-4773-AB6A-9608CAC921FE}
 database: master
-path: /sitecore/system/Tasks/Commands/ScheduledPublishCommand
-parent: {3EBEC263-B57E-4A3C-A232-7C70519F9908}
-name: ScheduledPublishCommand
+path: /sitecore/templates/System/Scheduled Publish/PublishSchedule/Publish Schedule/CreatedByEmail
+parent: {089776BB-E159-4F2E-AEFD-F1CDE718536B}
+name: CreatedByEmail
 master: {00000000-0000-0000-0000-000000000000}
-template: {58119A3E-560E-4DA6-97C6-1ACE8A5B1219}
-templatekey: Command
+template: {455A3E98-A627-4B40-8035-E683A0331AC7}
+templatekey: Template field
 
 ----field----
-field: {752579A7-EF2F-45B7-B9D1-9B682308B7A5}
+field: {AB162CC0-DC80-4ABF-8871-998EE5D7BA32}
 name: Type
 key: type
-content-length: 73
+content-length: 16
 
-ScheduledPublishing.Commands.ScheduledPublishCommand, ScheduledPublishing
+Single-Line Text
 ----field----
-field: {4BC75539-D5C4-487B-AF35-FF13D62BD286}
-name: Method
-key: method
+field: {BA3F86A2-4A1C-4D78-B63D-91C2779C1B5E}
+name: __Sortorder
+key: __sortorder
 content-length: 3
 
-Run
+100
 ----version----
 language: en
 version: 1
-revision: ae40364d-2009-4d85-8695-088d51680cb7
+revision: fd05ed0d-e3b5-4031-8e49-bc70abbfeefd
 
 ----field----
-field: {B5E02AD9-D56F-4C41-A065-A133DB87BDEB}
-name: __Display name
-key: __display name
-content-length: 25
+field: {19A69332-A23E-4E70-8D16-B2640CB24CC8}
+name: Title
+key: title
+content-length: 16
 
-Scheduled Publish Command
+Created By Email
 ----field----
 field: {52807595-0F8F-4B20-8D2A-CB71D28C6103}
 name: __Owner
@@ -48,7 +48,7 @@ name: __Created
 key: __created
 content-length: 15
 
-20150320T150000
+20150402T123700
 ----field----
 field: {5DD74568-4D4B-44C1-B513-0AF5F4CDA34F}
 name: __Created by
@@ -62,14 +62,14 @@ name: __Revision
 key: __revision
 content-length: 36
 
-ae40364d-2009-4d85-8695-088d51680cb7
+fd05ed0d-e3b5-4031-8e49-bc70abbfeefd
 ----field----
 field: {D9CF14B1-FA16-4BA6-9288-E8A174D4D522}
 name: __Updated
 key: __updated
 content-length: 34
 
-20150507T004922:635665565621484379
+20150507T004538:635665563383879171
 ----field----
 field: {BADD9CF9-53E0-4D0C-BCC0-2D784C282F6A}
 name: __Updated by

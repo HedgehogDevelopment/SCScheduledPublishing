@@ -47,29 +47,31 @@
     <Reference Include="System.Configuration" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CustomScheduledTasks\OpenEditScheduledPublishingDialog.cs" />
-    <Compile Include="CustomScheduledTasks\ScheduledPublishCommand.cs" />
-    <Compile Include="CustomScheduledTasks\OpenScheduledPublishingDialog.cs" />
-    <Compile Include="Models\ScheduledPublishOptions.cs" />
+    <Compile Include="Commands\OpenEditScheduledPublishDialog.cs" />
+    <Compile Include="Commands\ScheduledPublishCommand.cs" />
+    <Compile Include="Commands\OpenScheduledPublishDialog.cs" />
+    <Compile Include="Models\PublishSchedule.cs" />
     <Compile Include="Models\ScheduledPublishReport.cs" />
     <Compile Include="Models\ScheduledPublishSettings.cs" />
-    <Compile Include="Pipelines\ContentEditorWarnings\HasScheduledPublishing.cs" />
+    <Compile Include="Pipelines\ContentEditorWarnings\HasScheduledPublish.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="sitecore\shell\Applications\Content Manager\Dialogs\Edit Scheduled Publishing\EditScheduledPublishingDialog.cs" />
-    <Compile Include="sitecore\shell\Applications\Content Manager\Dialogs\Schedule Publishing\SchedulePublishingDialog.cs" />
+    <Compile Include="sitecore\shell\Applications\Content Manager\Dialogs\Edit Scheduled Publish\EditScheduledPublishDialog.cs" />
+    <Compile Include="sitecore\shell\Applications\Content Manager\Dialogs\Schedule Publish\SchedulePublishDialog.cs" />
     <Compile Include="SMTP\MailManager.cs" />
     <Compile Include="SMTP\NotificationEmailSettings.cs" />
+    <Compile Include="Models\BucketFolderType.cs" />
     <Compile Include="Utils\Constants.cs" />
-    <Compile Include="SMTP\NotificationEmail.cs" />
+    <Compile Include="Models\NotificationEmail.cs" />
+    <Compile Include="Utils\ScheduledPublishRepository.cs" />
     <Compile Include="Utils\ScheduledPublishManager.cs" />
-    <Compile Include="Utils\ScheduledPublishOptionsManager.cs" />
-    <Compile Include="Utils\Utils.cs" />
+    <Compile Include="Validation\ScheduledPublishValidator.cs" />
+    <Compile Include="Models\ValidationResult.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="sitecore\shell\Applications\Content Manager\Dialogs\Edit Scheduled Publishing\Edit Scheduled Publishing.xml">
+    <Content Include="sitecore\shell\Applications\Content Manager\Dialogs\Edit Scheduled Publish\Edit Scheduled Publish.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="sitecore\shell\Applications\Content Manager\Dialogs\Schedule Publishing\Schedule Publishing.xml">
+    <Content Include="sitecore\shell\Applications\Content Manager\Dialogs\Schedule Publish\Schedule Publish.xml">
       <SubType>Designer</SubType>
     </Content>
   </ItemGroup>

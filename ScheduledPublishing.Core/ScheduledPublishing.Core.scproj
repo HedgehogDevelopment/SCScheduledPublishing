@@ -95,21 +95,21 @@
       <ItemDeployment>DeployOnce</ItemDeployment>
       <ChildItemSynchronization>NoChildSynchronization</ChildItemSynchronization>
     </SitecoreItem>
-    <SitecoreItem Include="sitecore\content\Applications\Content Editor\Ribbons\Chunks\Scheduled Publishing.item">
+    <SitecoreItem Include="sitecore\content\Applications\Content Editor\Ribbons\Chunks\Scheduled Publish.item">
       <Icon>/temp/IconCache/Applications/32x32/Document.png</Icon>
       <ItemDeployment>AlwaysUpdate</ItemDeployment>
       <ChildItemSynchronization>KeepAllChildrenSynchronized</ChildItemSynchronization>
     </SitecoreItem>
-    <SitecoreItem Include="sitecore\content\Applications\Content Editor\Ribbons\Chunks\Scheduled Publishing\Edit Publishing Schedule.item">
+    <SitecoreItem Include="sitecore\content\Applications\Content Editor\Ribbons\Chunks\Scheduled Publish\Edit Publish Schedule.item">
       <ChildItemSynchronization>KeepAllChildrenSynchronized</ChildItemSynchronization>
       <ItemDeployment>AlwaysUpdate</ItemDeployment>
     </SitecoreItem>
-    <SitecoreItem Include="sitecore\content\Applications\Content Editor\Ribbons\Chunks\Scheduled Publishing\Schedule Publishing.item">
+    <SitecoreItem Include="sitecore\content\Applications\Content Editor\Ribbons\Chunks\Scheduled Publish\Schedule Publish.item">
       <Icon>/temp/IconCache/Applications/32x32/Document.png</Icon>
       <ChildItemSynchronization>KeepAllChildrenSynchronized</ChildItemSynchronization>
       <ItemDeployment>AlwaysUpdate</ItemDeployment>
     </SitecoreItem>
-    <SitecoreItem Include="sitecore\content\Applications\Content Editor\Ribbons\Chunks\Scheduled Publishing\Schedule Unpublish.item">
+    <SitecoreItem Include="sitecore\content\Applications\Content Editor\Ribbons\Chunks\Scheduled Publish\Schedule Unpublish.item">
       <ChildItemSynchronization>KeepAllChildrenSynchronized</ChildItemSynchronization>
       <ItemDeployment>AlwaysUpdate</ItemDeployment>
     </SitecoreItem>
@@ -123,7 +123,7 @@
       <ItemDeployment>DeployOnce</ItemDeployment>
       <ChildItemSynchronization>NoChildSynchronization</ChildItemSynchronization>
     </SitecoreItem>
-    <SitecoreItem Include="sitecore\content\Applications\Content Editor\Ribbons\Strips\Publish\Scheduled Publishing.item">
+    <SitecoreItem Include="sitecore\content\Applications\Content Editor\Ribbons\Strips\Publish\Scheduled Publish.item">
       <Icon>/temp/IconCache/Applications/32x32/Document.png</Icon>
       <ItemDeployment>AlwaysUpdate</ItemDeployment>
       <ChildItemSynchronization>KeepAllChildrenSynchronized</ChildItemSynchronization>

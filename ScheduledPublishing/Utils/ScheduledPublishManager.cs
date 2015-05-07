@@ -10,17 +10,11 @@ namespace ScheduledPublishing.Utils
 {
     public static class ScheduledPublishManager
     {
-        public static Handle Publish(ScheduledPublishOptions publishOptions)
+        public static Handle Publish(PublishSchedule publishSchedule)
         {
-            if (!ValidatePublishOptions(publishOptions))
-            {
-                Log.Info("Scheduled Publish Task didn't execute because of invalid Publish Options", new object());
-                return null;
-            }
-
-            return publishOptions.ItemToPublish != null
-                ? PublishItem(publishOptions)
-                : PublishWebsite(publishOptions);
+            return publishSchedule.ItemToPublish != null
+                ? PublishItem(publishSchedule)
+                : PublishWebsite(publishSchedule);
         }
 
         public static ScheduledPublishReport GetScheduledPublishReport(Handle handle)
@@ -78,20 +72,9 @@ namespace ScheduledPublishing.Utils
             return report;
         }
 
-        private static bool ValidatePublishOptions(ScheduledPublishOptions publishOptions)
+        private static Handle PublishItem(PublishSchedule publishSchedule)
         {
-            if (publishOptions == null) return false;
-            if (publishOptions.Languages == null || !publishOptions.Languages.Any()) return false;
-            if (publishOptions.TargetDatabases == null || !publishOptions.TargetDatabases.Any()) return false;
-            if (publishOptions.SourceDatabase == null) return false;
-            if (publishOptions.PublishMode == PublishMode.Unknown) return false;
-
-            return true;
-        }
-
-        private static Handle PublishItem(ScheduledPublishOptions publishOptions)
-        {
-            if (publishOptions.ItemToPublish == null)
+            if (publishSchedule.ItemToPublish == null)
             {
                 Log.Info("Scheduled Publish Task didn't execute because PublishOptions.ItemToPublish is null", new object());
                 return null;
@@ -101,85 +84,85 @@ namespace ScheduledPublishing.Utils
 
             try
             {
-                if (publishOptions.Unpublish)
+                if (publishSchedule.Unpublish)
                 {
-                    publishOptions.ItemToPublish.Editing.BeginEdit();
-                    publishOptions.ItemToPublish.Publishing.NeverPublish= true;
-                    publishOptions.ItemToPublish.Editing.AcceptChanges();
-                    publishOptions.ItemToPublish.Editing.EndEdit();
+                    publishSchedule.ItemToPublish.Editing.BeginEdit();
+                    publishSchedule.ItemToPublish.Publishing.NeverPublish= true;
+                    publishSchedule.ItemToPublish.Editing.AcceptChanges();
+                    publishSchedule.ItemToPublish.Editing.EndEdit();
                 }
 
                 handle = PublishManager.PublishItem(
-                    publishOptions.ItemToPublish,
-                    publishOptions.TargetDatabases,
-                    publishOptions.Languages,
-                    publishOptions.PublishChildren,
-                    publishOptions.PublishMode == PublishMode.Smart);
+                    publishSchedule.ItemToPublish,
+                    publishSchedule.TargetDatabases.ToArray(),
+                    publishSchedule.TargetLanguages.ToArray(),
+                    publishSchedule.PublishChildren,
+                    publishSchedule.PublishMode == PublishMode.Smart);
 
-                if (publishOptions.Unpublish)
+                if (publishSchedule.Unpublish)
                 {
-                    publishOptions.ItemToPublish.Editing.BeginEdit();
-                    publishOptions.ItemToPublish.Publishing.NeverPublish = false;
-                    publishOptions.ItemToPublish.Editing.AcceptChanges();
-                    publishOptions.ItemToPublish.Editing.EndEdit();
+                    publishSchedule.ItemToPublish.Editing.BeginEdit();
+                    publishSchedule.ItemToPublish.Publishing.NeverPublish = false;
+                    publishSchedule.ItemToPublish.Editing.AcceptChanges();
+                    publishSchedule.ItemToPublish.Editing.EndEdit();
                 }
             }
             catch (Exception ex)
             {
                 Log.Info(
                     string.Format("Scheduled Publish Task failed for {0} {1} {2}",
-                                   publishOptions.ItemToPublish.Name,
-                                   publishOptions.ItemToPublish.ID,
+                                   publishSchedule.ItemToPublish.Name,
+                                   publishSchedule.ItemToPublish.ID,
                                    ex), new object());
             }
 
             return handle;
         }
 
-        private static Handle PublishWebsite(ScheduledPublishOptions publishOptions)
+        private static Handle PublishWebsite(PublishSchedule publishSchedule)
         {
             Handle handle = null;
 
             try
             {
-                switch (publishOptions.PublishMode)
+                switch (publishSchedule.PublishMode)
                 {
                     case PublishMode.Smart:
                         {
                             handle = PublishManager.PublishSmart(
-                                publishOptions.SourceDatabase,
-                                publishOptions.TargetDatabases,
-                                publishOptions.Languages);
+                                publishSchedule.SourceDatabase,
+                                publishSchedule.TargetDatabases.ToArray(),
+                                publishSchedule.TargetLanguages.ToArray());
                             break;
                         }
                     case PublishMode.Full:
                         {
                             handle = PublishManager.Republish(
-                                publishOptions.SourceDatabase,
-                                publishOptions.TargetDatabases,
-                                publishOptions.Languages);
+                                publishSchedule.SourceDatabase,
+                                publishSchedule.TargetDatabases.ToArray(),
+                                publishSchedule.TargetLanguages.ToArray());
                             break;
                         }
                     case PublishMode.Incremental:
                         {
                             handle = PublishManager.PublishIncremental(
-                                publishOptions.SourceDatabase,
-                                publishOptions.TargetDatabases,
-                                publishOptions.Languages);
+                                publishSchedule.SourceDatabase,
+                                publishSchedule.TargetDatabases.ToArray(),
+                                publishSchedule.TargetLanguages.ToArray());
                             break;
                         }
                     default:
                         {
-                            Log.Info("Scheduled Publish Task didn't execute because invalid PublishMode", new object());
+                            Log.Error("Scheduled Publish Task didn't execute because invalid PublishMode", new object());
                             break;
                         }
                 }
             }
             catch (Exception ex)
             {
-                Log.Info(
+                Log.Error(
                     string.Format("Scheduled Publish Task failed for Website Publish in {0} Mode {1}",
-                                   publishOptions.PublishMode,
+                                   publishSchedule.PublishMode,
                                    ex), new object());
             }
 
