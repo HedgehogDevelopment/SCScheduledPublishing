@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using ScheduledPublishing.Models;
 using ScheduledPublishing.SMTP;
 using ScheduledPublishing.Utils;
+using Sitecore;
 using Sitecore.Data.Items;
 using Sitecore.Diagnostics;
 using Sitecore.Tasks;
@@ -17,12 +19,12 @@ namespace ScheduledPublishing.Commands
     {
         public void Run(Item[] items, CommandItem command, ScheduleItem schedule)
         {
-            var publishToDate = DateTime.Now;
-            var publishFromDate = new DateTime(publishToDate.Year, publishToDate.Month, publishToDate.Day, publishToDate.Hour, 0, 0);
+            DateTime publishToDate = DateTime.Now;
+            DateTime publishFromDate = new DateTime(publishToDate.Year, publishToDate.Month, publishToDate.Day, publishToDate.Hour, 0, 0);
             PublishSchedules(publishFromDate, publishToDate);
 
-            var alertToDate = publishFromDate.AddSeconds(-1);
-            var alertFromDate = publishFromDate.AddHours(-1);
+            DateTime alertToDate = publishFromDate.AddSeconds(-1);
+            DateTime alertFromDate = publishFromDate.AddHours(-1);
             AlertForFailedSchedules(alertFromDate, alertToDate);
 
             ScheduledPublishRepository.CleanBucket();
@@ -30,7 +32,7 @@ namespace ScheduledPublishing.Commands
 
         private static void PublishSchedules(DateTime fromDate, DateTime toDate)
         {
-            var duePublishOptions = ScheduledPublishRepository.GetUnpublishedSchedules(fromDate, toDate);
+            IEnumerable<PublishSchedule> duePublishOptions = ScheduledPublishRepository.GetUnpublishedSchedules(fromDate, toDate);
             if (duePublishOptions == null)
             {
                 return;
@@ -38,8 +40,8 @@ namespace ScheduledPublishing.Commands
 
             foreach (var publishOptions in duePublishOptions)
             {
-                var handle = ScheduledPublishManager.Publish(publishOptions);
-                var report = ScheduledPublishManager.GetScheduledPublishReport(handle);
+                Handle handle = ScheduledPublishManager.Publish(publishOptions);
+                ScheduledPublishReport report = ScheduledPublishManager.GetScheduledPublishReport(handle);
 
                 if (report.IsSuccessful)
                 {
@@ -55,19 +57,19 @@ namespace ScheduledPublishing.Commands
 
         private static void AlertForFailedSchedules(DateTime fromDate, DateTime toDate)
         {
-            var failedSchedules = ScheduledPublishRepository.GetUnpublishedSchedules(fromDate, toDate);
+            IEnumerable<PublishSchedule> failedSchedules = ScheduledPublishRepository.GetUnpublishedSchedules(fromDate, toDate);
             if (failedSchedules == null)
             {
                 return;
             }
 
-            var failedSchedulesList = failedSchedules.ToList();
+            List<PublishSchedule> failedSchedulesList = failedSchedules.ToList();
             if (!failedSchedulesList.Any())
             {
                 return;
             }
 
-            var sbMessage = new StringBuilder();
+            StringBuilder sbMessage = new StringBuilder();
 
             foreach (var schedule in failedSchedulesList)
             {
@@ -77,7 +79,7 @@ namespace ScheduledPublishing.Commands
                     schedule.PublishDate);
                 sbMessage.Append("Please, review and publish it manually.<br/>");
 
-                var message = sbMessage.ToString();
+                string message = sbMessage.ToString();
 
                 Log.Error(message, new object());
 

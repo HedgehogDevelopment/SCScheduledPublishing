@@ -43,7 +43,7 @@ namespace ScheduledPublishing.SMTP
                 emailTo = mail.EmailTo.Split(',').First();
             }
 
-            var mailMessage = new MailMessage(mail.EmailFrom, emailTo)
+            MailMessage mailMessage = new MailMessage(mail.EmailFrom, emailTo)
             {
                 Subject = mail.Subject,
                 Body = mail.Body + "\r\n" + report,

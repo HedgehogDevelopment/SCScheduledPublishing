@@ -20,6 +20,7 @@ using System.Web.UI.HtmlControls;
 using ScheduledPublishing.Models;
 using ScheduledPublishing.Utils;
 using ScheduledPublishing.Validation;
+using Sitecore.Collections;
 using Sitecore.Web.UI.WebControls;
 using Control = Sitecore.Web.UI.HtmlControls.Control;
 using Literal = Sitecore.Web.UI.HtmlControls.Literal;
@@ -97,12 +98,12 @@ namespace ScheduledPublishing.sitecore.shell.Applications.ContentManager.Dialogs
                     return _selectedTargets;
                 }
 
-                var targetItems = new List<Item>();
+                List<Item> targetItems = new List<Item>();
                 foreach (string str in Context.ClientPage.ClientRequest.Form.Keys)
                 {
                     if (str != null && str.StartsWith("pt_", StringComparison.InvariantCulture))
                     {
-                        var target = _database.Items[ShortID.Decode(str.Substring(3))];
+                        Item target = _database.Items[ShortID.Decode(str.Substring(3))];
                         Assert.IsNotNull(target, "Publish target not found.");
                         targetItems.Add(target);
                     }
@@ -124,12 +125,12 @@ namespace ScheduledPublishing.sitecore.shell.Applications.ContentManager.Dialogs
                     return _selectedLanguages;
                 }
 
-                var languages = new List<Language>();
+                List<Language> languages = new List<Language>();
                 foreach (string index in Context.ClientPage.ClientRequest.Form.Keys)
                 {
                     if (index != null && index.StartsWith("lang_", StringComparison.InvariantCulture))
                     {
-                        var language = LanguageManager.GetLanguage(Context.ClientPage.ClientRequest.Form[index]);
+                        Language language = LanguageManager.GetLanguage(Context.ClientPage.ClientRequest.Form[index]);
                         Assert.IsNotNull(language, "Publish language not found.");
                         languages.Add(language);
                     }
@@ -198,7 +199,7 @@ namespace ScheduledPublishing.sitecore.shell.Applications.ContentManager.Dialogs
                 IsPublished = false
             };
 
-            var validationResult = ScheduledPublishValidator.Validate(publishSchedule);
+            ValidationResult validationResult = ScheduledPublishValidator.Validate(publishSchedule);
             if (!validationResult.IsValid)
             {
                 SheerResponse.Alert(string.Join(Environment.NewLine, validationResult.ValidationErrors));
@@ -215,7 +216,7 @@ namespace ScheduledPublishing.sitecore.shell.Applications.ContentManager.Dialogs
         /// </summary>
         private void BuildPublishingTargets()
         {
-            var publishingTargets = PublishManager.GetPublishingTargets(_database);
+            Sitecore.Collections.ItemList publishingTargets = PublishManager.GetPublishingTargets(_database);
             if (publishingTargets == null)
             {
                 Log.Info("No publish targets found", this);
@@ -224,20 +225,20 @@ namespace ScheduledPublishing.sitecore.shell.Applications.ContentManager.Dialogs
 
             foreach (Item target in publishingTargets)
             {
-                var id = string.Format("pt_{0}", ShortID.Encode(target.ID));
-                var database = Database.GetDatabase(target[FieldIDs.PublishingTargetDatabase]);
+                string id = string.Format("pt_{0}", ShortID.Encode(target.ID));
+                Database database = Database.GetDatabase(target[FieldIDs.PublishingTargetDatabase]);
                 if (database == null)
                 {
                     continue;
                 }
 
-                var targetInput = new HtmlGenericControl("input");
+                HtmlGenericControl targetInput = new HtmlGenericControl("input");
                 targetInput.ID = id;
                 targetInput.Attributes["type"] = "checkbox";
                 targetInput.Disabled = !target.Access.CanWrite();
                 PublishingTargets.Controls.Add(targetInput);
 
-                var targetLabel = new HtmlGenericControl("label");
+                HtmlGenericControl targetLabel = new HtmlGenericControl("label");
                 targetLabel.Attributes["for"] = id;
                 targetLabel.InnerText = string.Format("{0} ({1})", target.DisplayName, database.Name);
                 PublishingTargets.Controls.Add(targetLabel);
@@ -251,7 +252,7 @@ namespace ScheduledPublishing.sitecore.shell.Applications.ContentManager.Dialogs
         /// </summary>
         private void BuildLanguages()
         {
-            var languages = LanguageManager.GetLanguages(_database);
+            LanguageCollection languages = LanguageManager.GetLanguages(_database);
             if (languages == null)
             {
                 Log.Info("No publish languages found", this);
@@ -265,15 +266,15 @@ namespace ScheduledPublishing.sitecore.shell.Applications.ContentManager.Dialogs
                     continue;
                 }
 
-                var id = Control.GetUniqueID("lang_");
+                string id = Control.GetUniqueID("lang_");
 
-                var langInput = new HtmlGenericControl("input");
+                HtmlGenericControl langInput = new HtmlGenericControl("input");
                 langInput.ID = id;
                 langInput.Attributes["type"] = "checkbox";
                 langInput.Attributes["value"] = language.Name;
                 Languages.Controls.Add(langInput);
 
-                var langLabel = new HtmlGenericControl("label");
+                HtmlGenericControl langLabel = new HtmlGenericControl("label");
                 langLabel.Attributes["for"] = id;
                 langLabel.InnerText = language.CultureInfo.DisplayName;
                 Languages.Controls.Add(langLabel);
@@ -293,16 +294,16 @@ namespace ScheduledPublishing.sitecore.shell.Applications.ContentManager.Dialogs
 
             if (Settings.CheckSecurityOnLanguages)
             {
-                var languageItemId = LanguageManager.GetLanguageItemId(language, _database);
+                ID languageItemId = LanguageManager.GetLanguageItemId(language, _database);
                 if (!ItemUtil.IsNull(languageItemId))
                 {
-                    var languageItem = _database.GetItem(languageItemId);
+                    Item languageItem = _database.GetItem(languageItemId);
                     if (languageItem == null)
                     {
                         renderLanguage = false;
                     }
 
-                    var canWriteLanguage = AuthorizationManager.IsAllowed(languageItem, AccessRight.LanguageWrite, Context.User);
+                    bool canWriteLanguage = AuthorizationManager.IsAllowed(languageItem, AccessRight.LanguageWrite, Context.User);
                     if (!canWriteLanguage)
                     {
                         renderLanguage = false;
@@ -323,7 +324,7 @@ namespace ScheduledPublishing.sitecore.shell.Applications.ContentManager.Dialogs
         /// <param name="item">The item that publishing is scheduled for</param>
         private void BuildExistingSchedules()
         {
-            var existingSchedules =
+            IEnumerable<PublishSchedule> existingSchedules =
                 ScheduledPublishRepository.GetSchedules(InnerItem.ID).ToList();
 
             if (existingSchedules.Any())
@@ -331,22 +332,22 @@ namespace ScheduledPublishing.sitecore.shell.Applications.ContentManager.Dialogs
                 ExistingSchedulesDiv.Visible = false;
                 foreach (var schedule in existingSchedules)
                 {
-                    var time = schedule.PublishDate;
-                    var timeLit = new Literal();
+                    DateTime time = schedule.PublishDate;
+                    Literal timeLit = new Literal();
                     timeLit.Text = time.ToString(_culture);
                     ExistingSchedulesTable.Controls.Add(timeLit);
 
-                    var action = schedule.Unpublish ? "Unpublish" : "Publish";
-                    var actionLit = new Literal();
+                    string action = schedule.Unpublish ? "Unpublish" : "Publish";
+                    Literal actionLit = new Literal();
                     actionLit.Text = action;
                     ExistingSchedulesTable.Controls.Add(actionLit);
 
-                    var languages = string.Join(",", schedule.TargetLanguages.Select(x => x.Name)).TrimEnd(',');
-                    var languagesLit = new Literal();
+                    string languages = string.Join(",", schedule.TargetLanguages.Select(x => x.Name)).TrimEnd(',');
+                    Literal languagesLit = new Literal();
                     languagesLit.Text = languages;
                     ExistingSchedulesTable.Controls.Add(languagesLit);
 
-                    var versionLit = new Literal();
+                    Literal versionLit = new Literal();
                     string version;
                     if (schedule.ItemToPublish == null)
                     {
@@ -354,7 +355,7 @@ namespace ScheduledPublishing.sitecore.shell.Applications.ContentManager.Dialogs
                     }
                     else
                     {
-                        var itemInVersion = schedule.ItemToPublish.Publishing.GetValidVersion(time, true, false);
+                        Item itemInVersion = schedule.ItemToPublish.Publishing.GetValidVersion(time, true, false);
                         if (itemInVersion != null)
                         {
                             version = itemInVersion.Version.Number.ToString();

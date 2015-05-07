@@ -29,7 +29,7 @@ namespace ScheduledPublishing.Utils
         {
             get
             {
-                var rootItem = _database.GetItem("{7D8B2A62-A35A-4DA1-B7B6-89C11758C2E6}");
+                Item rootItem = _database.GetItem("{7D8B2A62-A35A-4DA1-B7B6-89C11758C2E6}");
                 Error.AssertItemFound(rootItem);
                 return rootItem;
             }
@@ -63,16 +63,16 @@ namespace ScheduledPublishing.Utils
 
         public static void CreateScheduledPublishOptions(PublishSchedule publishSchedule)
         {
-            var action = publishSchedule.Unpublish ? "unpublish" : "publish";
+            string action = publishSchedule.Unpublish ? "unpublish" : "publish";
 
             try
             {
                 using (new SecurityDisabler())
                 {
-                    var publishOptionsTemplate = _database.GetTemplate(Constants.PUBLISH_OPTIONS_TEMPLATE_ID);
-                    var publishOptionsName = BuildPublishOptionsName(publishSchedule.ItemToPublish);
-                    var optionsFolder = GetOrCreateFolder(publishSchedule.PublishDate);
-                    var publishOptionsItem = optionsFolder.Add(publishOptionsName, publishOptionsTemplate);
+                    TemplateItem publishOptionsTemplate = _database.GetTemplate(Constants.PUBLISH_OPTIONS_TEMPLATE_ID);
+                    string publishOptionsName = BuildPublishOptionsName(publishSchedule.ItemToPublish);
+                    Item optionsFolder = GetOrCreateFolder(publishSchedule.PublishDate);
+                    Item publishOptionsItem = optionsFolder.Add(publishOptionsName, publishOptionsTemplate);
 
                     publishOptionsItem.Editing.BeginEdit();
 
@@ -120,7 +120,7 @@ namespace ScheduledPublishing.Utils
                 return;
             }
 
-            var action = publishSchedule.Unpublish ? "unpublish" : "publish";
+            string action = publishSchedule.Unpublish ? "unpublish" : "publish";
 
             try
             {
@@ -210,7 +210,7 @@ namespace ScheduledPublishing.Utils
 
             if (oneHourEarlier.Year != currentTime.Year)
             {
-                var yearFolder = GetDateFolder(oneHourEarlier, BucketFolderType.Year);
+                Item yearFolder = GetDateFolder(oneHourEarlier, BucketFolderType.Year);
                 if (yearFolder != null)
                 {
                     DeleteItem(yearFolder);
@@ -218,7 +218,7 @@ namespace ScheduledPublishing.Utils
             }
             else if (oneHourEarlier.Month != currentTime.Month)
             {
-                var monthFolder = GetDateFolder(oneHourEarlier, BucketFolderType.Month);
+                Item monthFolder = GetDateFolder(oneHourEarlier, BucketFolderType.Month);
                 if (monthFolder != null)
                 {
                     DeleteItem(monthFolder);
@@ -226,7 +226,7 @@ namespace ScheduledPublishing.Utils
             }
             else if (oneHourEarlier.Day != currentTime.Day)
             {
-                var dayFolder = GetDateFolder(oneHourEarlier, BucketFolderType.Day);
+                Item dayFolder = GetDateFolder(oneHourEarlier, BucketFolderType.Day);
                 if (dayFolder != null)
                 {
                     DeleteItem(dayFolder);
@@ -234,7 +234,7 @@ namespace ScheduledPublishing.Utils
             }
             else
             {
-                var hourFolder = GetDateFolder(oneHourEarlier, BucketFolderType.Hour);
+                Item hourFolder = GetDateFolder(oneHourEarlier, BucketFolderType.Hour);
                 if (hourFolder != null)
                 {
                     DeleteItem(hourFolder);
@@ -267,7 +267,7 @@ namespace ScheduledPublishing.Utils
 
         private static Item GetDateFolder(DateTime date, BucketFolderType folderType)
         {
-            var rootPath = RootFolder.Paths.FullPath;
+            string rootPath = RootFolder.Paths.FullPath;
             string yearName = date.Year.ToString();
             string monthName = date.Month.ToString();
             string dayName = date.Day.ToString();
@@ -304,7 +304,7 @@ namespace ScheduledPublishing.Utils
 
         private static string BuildPublishOptionsName(Item item)
         {
-            var guid = item != null
+            Guid guid = item != null
                 ? item.ID.Guid
                 : Guid.NewGuid();
 

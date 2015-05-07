@@ -36,31 +36,31 @@ namespace ScheduledPublishing.Models
             PublishMode = ParseMode(item[PublishModeId]);
             IsPublished = "1" == item[IsPublishedId];
 
-            var sourceDatabaseName = item[SourceDatabaseId];
+            string sourceDatabaseName = item[SourceDatabaseId];
             if (!string.IsNullOrWhiteSpace(sourceDatabaseName))
             {
                 SourceDatabase = Database.GetDatabase(sourceDatabaseName);
             }
 
-            var targetDatabaseNames = item[TargetDatabasesId];
+            string targetDatabaseNames = item[TargetDatabasesId];
             if (!string.IsNullOrWhiteSpace(targetDatabaseNames))
             {
                 TargetDatabases = targetDatabaseNames.Split('|').Select(Database.GetDatabase);
             }
 
-            var itemToPublishPath = item[ItemToPublishId];
+            string itemToPublishPath = item[ItemToPublishId];
             if (!string.IsNullOrWhiteSpace(itemToPublishPath) && SourceDatabase != null)
             {
                 ItemToPublish = SourceDatabase.GetItem(itemToPublishPath);
             }
 
-            var dateString = item[PublishDateId];
+            string dateString = item[PublishDateId];
             if (!string.IsNullOrWhiteSpace(dateString))
             {
                 PublishDate = DateUtil.IsoDateToDateTime(dateString, DateTime.MinValue);
             }
 
-            var languages = item[TargetLanguagesId];
+            string languages = item[TargetLanguagesId];
             if (!string.IsNullOrWhiteSpace(languages))
             {
                 TargetLanguages = languages.Split('|').Select(LanguageManager.GetLanguage).Where(l => l != null);
