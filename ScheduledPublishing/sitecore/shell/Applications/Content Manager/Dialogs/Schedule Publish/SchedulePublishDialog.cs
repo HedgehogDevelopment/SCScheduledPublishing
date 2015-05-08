@@ -185,7 +185,7 @@ namespace ScheduledPublishing.sitecore.shell.Applications.Content_Manager.Dialog
             Assert.ArgumentNotNull(sender, "sender");
             Assert.ArgumentNotNull(args, "args");
 
-            PublishSchedule publishSchedule = new PublishSchedule()
+            PublishSchedule publishSchedule = new PublishSchedule
             {
                 ItemToPublish = InnerItem,
                 PublishDate = SelectedPublishDate,
@@ -321,7 +321,6 @@ namespace ScheduledPublishing.sitecore.shell.Applications.Content_Manager.Dialog
         /// <summary>
         /// Displays a list of all already scheduled publishings' date and time for this item, ordered from most recent to furthest in time
         /// </summary>
-        /// <param name="item">The item that publishing is scheduled for</param>
         private void BuildExistingSchedules()
         {
             IEnumerable<PublishSchedule> existingSchedules =
