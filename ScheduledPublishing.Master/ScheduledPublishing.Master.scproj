@@ -128,132 +128,127 @@
       <ChildItemSynchronization>NoChildSynchronization</ChildItemSynchronization>
       <ItemDeployment>DeployOnce</ItemDeployment>
     </SitecoreItem>
-    <SitecoreItem Include="sitecore\templates\System.item">
-      <Icon>/temp/IconCache/Applications/16x16/folder_gear.png</Icon>
-      <ItemDeployment>DeployOnce</ItemDeployment>
-      <ChildItemSynchronization>NoChildSynchronization</ChildItemSynchronization>
-    </SitecoreItem>
-    <SitecoreItem Include="sitecore\templates\System\Scheduled Publish.item">
+    <SitecoreItem Include="sitecore\templates\Scheduled Publish.item">
       <ItemDeployment>AlwaysUpdate</ItemDeployment>
       <ChildItemSynchronization>KeepAllChildrenSynchronized</ChildItemSynchronization>
     </SitecoreItem>
-    <SitecoreItem Include="sitecore\templates\System\Scheduled Publish\PublishSchedule.item">
-      <ItemDeployment>AlwaysUpdate</ItemDeployment>
-      <ChildItemSynchronization>KeepAllChildrenSynchronized</ChildItemSynchronization>
-    </SitecoreItem>
-    <SitecoreItem Include="sitecore\templates\System\Scheduled Publish\PublishSchedule\Publish Schedule.item">
+    <SitecoreItem Include="sitecore\templates\Scheduled Publish\PublishSchedule.item">
       <ChildItemSynchronization>KeepAllChildrenSynchronized</ChildItemSynchronization>
       <ItemDeployment>AlwaysUpdate</ItemDeployment>
     </SitecoreItem>
-    <SitecoreItem Include="sitecore\templates\System\Scheduled Publish\PublishSchedule\Publish Schedule\CreatedByEmail.item">
+    <SitecoreItem Include="sitecore\templates\Scheduled Publish\PublishSchedule\Publish Schedule.item">
       <ChildItemSynchronization>KeepAllChildrenSynchronized</ChildItemSynchronization>
       <ItemDeployment>AlwaysUpdate</ItemDeployment>
     </SitecoreItem>
-    <SitecoreItem Include="sitecore\templates\System\Scheduled Publish\PublishSchedule\Publish Schedule\IsPublished.item">
+    <SitecoreItem Include="sitecore\templates\Scheduled Publish\PublishSchedule\Publish Schedule\CreatedByEmail.item">
       <ChildItemSynchronization>KeepAllChildrenSynchronized</ChildItemSynchronization>
       <ItemDeployment>AlwaysUpdate</ItemDeployment>
     </SitecoreItem>
-    <SitecoreItem Include="sitecore\templates\System\Scheduled Publish\PublishSchedule\Publish Schedule\ItemToPublish.item">
+    <SitecoreItem Include="sitecore\templates\Scheduled Publish\PublishSchedule\Publish Schedule\IsPublished.item">
       <ChildItemSynchronization>KeepAllChildrenSynchronized</ChildItemSynchronization>
       <ItemDeployment>AlwaysUpdate</ItemDeployment>
     </SitecoreItem>
-    <SitecoreItem Include="sitecore\templates\System\Scheduled Publish\PublishSchedule\Publish Schedule\PublishChildren.item">
+    <SitecoreItem Include="sitecore\templates\Scheduled Publish\PublishSchedule\Publish Schedule\ItemToPublish.item">
       <ChildItemSynchronization>KeepAllChildrenSynchronized</ChildItemSynchronization>
       <ItemDeployment>AlwaysUpdate</ItemDeployment>
     </SitecoreItem>
-    <SitecoreItem Include="sitecore\templates\System\Scheduled Publish\PublishSchedule\Publish Schedule\PublishLanguages.item">
+    <SitecoreItem Include="sitecore\templates\Scheduled Publish\PublishSchedule\Publish Schedule\PublishChildren.item">
       <ChildItemSynchronization>KeepAllChildrenSynchronized</ChildItemSynchronization>
       <ItemDeployment>AlwaysUpdate</ItemDeployment>
     </SitecoreItem>
-    <SitecoreItem Include="sitecore\templates\System\Scheduled Publish\PublishSchedule\Publish Schedule\PublishMode.item">
+    <SitecoreItem Include="sitecore\templates\Scheduled Publish\PublishSchedule\Publish Schedule\PublishLanguages.item">
       <ChildItemSynchronization>KeepAllChildrenSynchronized</ChildItemSynchronization>
       <ItemDeployment>AlwaysUpdate</ItemDeployment>
     </SitecoreItem>
-    <SitecoreItem Include="sitecore\templates\System\Scheduled Publish\PublishSchedule\Publish Schedule\ScheduledDate.item">
+    <SitecoreItem Include="sitecore\templates\Scheduled Publish\PublishSchedule\Publish Schedule\PublishMode.item">
       <ChildItemSynchronization>KeepAllChildrenSynchronized</ChildItemSynchronization>
       <ItemDeployment>AlwaysUpdate</ItemDeployment>
     </SitecoreItem>
-    <SitecoreItem Include="sitecore\templates\System\Scheduled Publish\PublishSchedule\Publish Schedule\SourceDatabase.item">
+    <SitecoreItem Include="sitecore\templates\Scheduled Publish\PublishSchedule\Publish Schedule\ScheduledDate.item">
       <ChildItemSynchronization>KeepAllChildrenSynchronized</ChildItemSynchronization>
       <ItemDeployment>AlwaysUpdate</ItemDeployment>
     </SitecoreItem>
-    <SitecoreItem Include="sitecore\templates\System\Scheduled Publish\PublishSchedule\Publish Schedule\TargetDatabases.item">
+    <SitecoreItem Include="sitecore\templates\Scheduled Publish\PublishSchedule\Publish Schedule\SourceDatabase.item">
       <ChildItemSynchronization>KeepAllChildrenSynchronized</ChildItemSynchronization>
       <ItemDeployment>AlwaysUpdate</ItemDeployment>
     </SitecoreItem>
-    <SitecoreItem Include="sitecore\templates\System\Scheduled Publish\PublishSchedule\Publish Schedule\Unpublish.item">
+    <SitecoreItem Include="sitecore\templates\Scheduled Publish\PublishSchedule\Publish Schedule\TargetDatabases.item">
       <ChildItemSynchronization>KeepAllChildrenSynchronized</ChildItemSynchronization>
       <ItemDeployment>AlwaysUpdate</ItemDeployment>
     </SitecoreItem>
-    <SitecoreItem Include="sitecore\templates\System\Scheduled Publish\ScheduledPublishEmail.item">
+    <SitecoreItem Include="sitecore\templates\Scheduled Publish\PublishSchedule\Publish Schedule\Unpublish.item">
       <ChildItemSynchronization>KeepAllChildrenSynchronized</ChildItemSynchronization>
       <ItemDeployment>AlwaysUpdate</ItemDeployment>
     </SitecoreItem>
-    <SitecoreItem Include="sitecore\templates\System\Scheduled Publish\ScheduledPublishEmail\__Standard Values.item">
+    <SitecoreItem Include="sitecore\templates\Scheduled Publish\ScheduledPublishEmail.item">
       <ChildItemSynchronization>KeepAllChildrenSynchronized</ChildItemSynchronization>
       <ItemDeployment>AlwaysUpdate</ItemDeployment>
     </SitecoreItem>
-    <SitecoreItem Include="sitecore\templates\System\Scheduled Publish\ScheduledPublishEmail\Notification Email.item">
+    <SitecoreItem Include="sitecore\templates\Scheduled Publish\ScheduledPublishEmail\__Standard Values.item">
       <ChildItemSynchronization>KeepAllChildrenSynchronized</ChildItemSynchronization>
       <ItemDeployment>AlwaysUpdate</ItemDeployment>
     </SitecoreItem>
-    <SitecoreItem Include="sitecore\templates\System\Scheduled Publish\ScheduledPublishEmail\Notification Email\EmailFrom.item">
+    <SitecoreItem Include="sitecore\templates\Scheduled Publish\ScheduledPublishEmail\Notification Email.item">
       <ChildItemSynchronization>KeepAllChildrenSynchronized</ChildItemSynchronization>
       <ItemDeployment>AlwaysUpdate</ItemDeployment>
     </SitecoreItem>
-    <SitecoreItem Include="sitecore\templates\System\Scheduled Publish\ScheduledPublishEmail\Notification Email\EmailMessage.item">
+    <SitecoreItem Include="sitecore\templates\Scheduled Publish\ScheduledPublishEmail\Notification Email\EmailFrom.item">
       <ChildItemSynchronization>KeepAllChildrenSynchronized</ChildItemSynchronization>
       <ItemDeployment>AlwaysUpdate</ItemDeployment>
     </SitecoreItem>
-    <SitecoreItem Include="sitecore\templates\System\Scheduled Publish\ScheduledPublishEmail\Notification Email\EmailSubject.item">
+    <SitecoreItem Include="sitecore\templates\Scheduled Publish\ScheduledPublishEmail\Notification Email\EmailMessage.item">
       <ChildItemSynchronization>KeepAllChildrenSynchronized</ChildItemSynchronization>
       <ItemDeployment>AlwaysUpdate</ItemDeployment>
     </SitecoreItem>
-    <SitecoreItem Include="sitecore\templates\System\Scheduled Publish\ScheduledPublishEmail\Notification Email\EmailTo.item">
+    <SitecoreItem Include="sitecore\templates\Scheduled Publish\ScheduledPublishEmail\Notification Email\EmailSubject.item">
       <ChildItemSynchronization>KeepAllChildrenSynchronized</ChildItemSynchronization>
       <ItemDeployment>AlwaysUpdate</ItemDeployment>
     </SitecoreItem>
-    <SitecoreItem Include="sitecore\templates\System\Scheduled Publish\ScheduledPublishEmailSettings.item">
+    <SitecoreItem Include="sitecore\templates\Scheduled Publish\ScheduledPublishEmail\Notification Email\EmailTo.item">
       <ChildItemSynchronization>KeepAllChildrenSynchronized</ChildItemSynchronization>
       <ItemDeployment>AlwaysUpdate</ItemDeployment>
     </SitecoreItem>
-    <SitecoreItem Include="sitecore\templates\System\Scheduled Publish\ScheduledPublishEmailSettings\__Standard Values.item">
+    <SitecoreItem Include="sitecore\templates\Scheduled Publish\ScheduledPublishEmailSettings.item">
       <ChildItemSynchronization>KeepAllChildrenSynchronized</ChildItemSynchronization>
       <ItemDeployment>AlwaysUpdate</ItemDeployment>
     </SitecoreItem>
-    <SitecoreItem Include="sitecore\templates\System\Scheduled Publish\ScheduledPublishEmailSettings\Scheduled Publish Email Settings.item">
+    <SitecoreItem Include="sitecore\templates\Scheduled Publish\ScheduledPublishEmailSettings\__Standard Values.item">
       <ChildItemSynchronization>KeepAllChildrenSynchronized</ChildItemSynchronization>
       <ItemDeployment>AlwaysUpdate</ItemDeployment>
     </SitecoreItem>
-    <SitecoreItem Include="sitecore\templates\System\Scheduled Publish\ScheduledPublishEmailSettings\Scheduled Publish Email Settings\MailServer.item">
+    <SitecoreItem Include="sitecore\templates\Scheduled Publish\ScheduledPublishEmailSettings\Scheduled Publish Email Settings.item">
       <ChildItemSynchronization>KeepAllChildrenSynchronized</ChildItemSynchronization>
       <ItemDeployment>AlwaysUpdate</ItemDeployment>
     </SitecoreItem>
-    <SitecoreItem Include="sitecore\templates\System\Scheduled Publish\ScheduledPublishEmailSettings\Scheduled Publish Email Settings\MailServerPassword.item">
+    <SitecoreItem Include="sitecore\templates\Scheduled Publish\ScheduledPublishEmailSettings\Scheduled Publish Email Settings\MailServer.item">
       <ChildItemSynchronization>KeepAllChildrenSynchronized</ChildItemSynchronization>
       <ItemDeployment>AlwaysUpdate</ItemDeployment>
     </SitecoreItem>
-    <SitecoreItem Include="sitecore\templates\System\Scheduled Publish\ScheduledPublishEmailSettings\Scheduled Publish Email Settings\MailServerPort.item">
+    <SitecoreItem Include="sitecore\templates\Scheduled Publish\ScheduledPublishEmailSettings\Scheduled Publish Email Settings\MailServerPassword.item">
       <ChildItemSynchronization>KeepAllChildrenSynchronized</ChildItemSynchronization>
       <ItemDeployment>AlwaysUpdate</ItemDeployment>
     </SitecoreItem>
-    <SitecoreItem Include="sitecore\templates\System\Scheduled Publish\ScheduledPublishEmailSettings\Scheduled Publish Email Settings\MailServerUsername.item">
+    <SitecoreItem Include="sitecore\templates\Scheduled Publish\ScheduledPublishEmailSettings\Scheduled Publish Email Settings\MailServerPort.item">
       <ChildItemSynchronization>KeepAllChildrenSynchronized</ChildItemSynchronization>
       <ItemDeployment>AlwaysUpdate</ItemDeployment>
     </SitecoreItem>
-    <SitecoreItem Include="sitecore\templates\System\Scheduled Publish\ScheduledPublishEmailSettings\Scheduled Publish Email Settings\UseWebConfig.item">
+    <SitecoreItem Include="sitecore\templates\Scheduled Publish\ScheduledPublishEmailSettings\Scheduled Publish Email Settings\MailServerUsername.item">
       <ChildItemSynchronization>KeepAllChildrenSynchronized</ChildItemSynchronization>
       <ItemDeployment>AlwaysUpdate</ItemDeployment>
     </SitecoreItem>
-    <SitecoreItem Include="sitecore\templates\System\Scheduled Publish\ScheduledPublishSettings.item">
+    <SitecoreItem Include="sitecore\templates\Scheduled Publish\ScheduledPublishEmailSettings\Scheduled Publish Email Settings\UseWebConfig.item">
       <ChildItemSynchronization>KeepAllChildrenSynchronized</ChildItemSynchronization>
       <ItemDeployment>AlwaysUpdate</ItemDeployment>
     </SitecoreItem>
-    <SitecoreItem Include="sitecore\templates\System\Scheduled Publish\ScheduledPublishSettings\ScheduledPublishSettings.item">
+    <SitecoreItem Include="sitecore\templates\Scheduled Publish\ScheduledPublishSettings.item">
       <ChildItemSynchronization>KeepAllChildrenSynchronized</ChildItemSynchronization>
       <ItemDeployment>AlwaysUpdate</ItemDeployment>
     </SitecoreItem>
-    <SitecoreItem Include="sitecore\templates\System\Scheduled Publish\ScheduledPublishSettings\ScheduledPublishSettings\ScheduledPublishSettingsSendEmail.item">
+    <SitecoreItem Include="sitecore\templates\Scheduled Publish\ScheduledPublishSettings\ScheduledPublishSettings.item">
+      <ChildItemSynchronization>KeepAllChildrenSynchronized</ChildItemSynchronization>
+      <ItemDeployment>AlwaysUpdate</ItemDeployment>
+    </SitecoreItem>
+    <SitecoreItem Include="sitecore\templates\Scheduled Publish\ScheduledPublishSettings\ScheduledPublishSettings\ScheduledPublishSettingsSendEmail.item">
       <ChildItemSynchronization>KeepAllChildrenSynchronized</ChildItemSynchronization>
       <ItemDeployment>AlwaysUpdate</ItemDeployment>
     </SitecoreItem>

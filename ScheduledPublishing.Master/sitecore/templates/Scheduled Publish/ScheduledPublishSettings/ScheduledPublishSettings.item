@@ -1,33 +1,40 @@
 ----item----
 version: 1
-id: {9D1F829B-FEB3-45A8-85E1-EF59EB156C3A}
+id: {78B6E432-159E-4763-A5A7-EB0BB69C58BB}
 database: master
-path: /sitecore/system/Modules/Scheduled Publish
-parent: {08477468-D438-43D4-9D6A-6D84A611971C}
-name: Scheduled Publish
+path: /sitecore/templates/Scheduled Publish/ScheduledPublishSettings/ScheduledPublishSettings
+parent: {3D78A46A-2385-442C-B30E-04C37DBD8C9D}
+name: ScheduledPublishSettings
 master: {00000000-0000-0000-0000-000000000000}
-template: {A87A00B1-E6DB-45AB-8B54-636FEC3B5523}
-templatekey: Folder
+template: {E269FBB5-3750-427A-9149-7AA950B49301}
+templatekey: Template section
 
 ----field----
 field: {06D5295C-ED2F-4A54-9BF2-26228D113318}
 name: __Icon
 key: __icon
-content-length: 40
+content-length: 27
 
-business/32x32/date-time_preferences.png
+applications/32x32/gear.png
 ----version----
 language: en
 version: 1
-revision: 06fd862c-e31b-4e06-9b3a-13b0ab2cd5cd
+revision: 7e9b702f-175d-4cbd-b430-027344b00ad3
 
+----field----
+field: {B5E02AD9-D56F-4C41-A065-A133DB87BDEB}
+name: __Display name
+key: __display name
+content-length: 26
+
+Scheduled Publish Settings
 ----field----
 field: {25BED78C-4957-4165-998A-CA1B52F67497}
 name: __Created
 key: __created
 content-length: 15
 
-20150423T114228
+20150427T104900
 ----field----
 field: {5DD74568-4D4B-44C1-B513-0AF5F4CDA34F}
 name: __Created by
@@ -41,14 +48,14 @@ name: __Revision
 key: __revision
 content-length: 36
 
-06fd862c-e31b-4e06-9b3a-13b0ab2cd5cd
+7e9b702f-175d-4cbd-b430-027344b00ad3
 ----field----
 field: {D9CF14B1-FA16-4BA6-9288-E8A174D4D522}
 name: __Updated
 key: __updated
 content-length: 34
 
-20150508T134555:635666895550379694
+20150427T112942:635657309821642627
 ----field----
 field: {BADD9CF9-53E0-4D0C-BCC0-2D784C282F6A}
 name: __Updated by

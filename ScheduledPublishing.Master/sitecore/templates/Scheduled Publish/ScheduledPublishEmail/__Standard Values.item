@@ -1,0 +1,71 @@
+----item----
+version: 1
+id: {6AC30BEF-6942-4975-9A5C-27990E78141B}
+database: master
+path: /sitecore/templates/Scheduled Publish/ScheduledPublishEmail/__Standard Values
+parent: {E59AE416-5B5C-48D4-A2F8-08D6214BC314}
+name: __Standard Values
+master: {00000000-0000-0000-0000-000000000000}
+template: {E59AE416-5B5C-48D4-A2F8-08D6214BC314}
+templatekey: ScheduledPublishEmail
+
+----version----
+language: en
+version: 1
+revision: 2e9090d7-9795-44f2-a0e7-99a6c8bf416d
+
+----field----
+field: {39A13A96-8BF0-4334-B366-16C0ACCC2B60}
+name: EmailMessage
+key: emailmessage
+content-length: 403
+
+<p>You can use any the following optional placeholders:</p>
+<p>[id] - the id of the item being published&nbsp;</p>
+<p>[item] - name of the item being published</p>
+<p>[path] - path of the item being published in the content tree</p>
+<p>[date] - date when the publishing took place</p>
+<p>[time] - the time when the publishing took place</p>
+<p>[version] - the version of the item which was published</p>
+----field----
+field: {52807595-0F8F-4B20-8D2A-CB71D28C6103}
+name: __Owner
+key: __owner
+content-length: 14
+
+sitecore\admin
+----field----
+field: {25BED78C-4957-4165-998A-CA1B52F67497}
+name: __Created
+key: __created
+content-length: 15
+
+20150428T133058
+----field----
+field: {5DD74568-4D4B-44C1-B513-0AF5F4CDA34F}
+name: __Created by
+key: __created by
+content-length: 14
+
+sitecore\admin
+----field----
+field: {8CDC337E-A112-42FB-BBB4-4143751E123F}
+name: __Revision
+key: __revision
+content-length: 36
+
+2e9090d7-9795-44f2-a0e7-99a6c8bf416d
+----field----
+field: {D9CF14B1-FA16-4BA6-9288-E8A174D4D522}
+name: __Updated
+key: __updated
+content-length: 34
+
+20150428T133322:635658248023058455
+----field----
+field: {BADD9CF9-53E0-4D0C-BCC0-2D784C282F6A}
+name: __Updated by
+key: __updated by
+content-length: 14
+
+sitecore\admin
