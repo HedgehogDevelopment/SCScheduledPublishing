@@ -27,7 +27,7 @@ namespace ScheduledPublishing.SMTP
                 {
                     MainUtil.SendMail(message);
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
                     Log.Error("Scheduled Publish: Sending publish email through web.config settings failed, continuing... ", message);
                 }

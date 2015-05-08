@@ -11,8 +11,8 @@ namespace ScheduledPublishing.Commands
     {
         public override void Execute(CommandContext context)
         {
-            Assert.ArgumentNotNull((object)context, "context");
-            Context.ClientPage.Start((object)this, "Run", new NameValueCollection());
+            Assert.ArgumentNotNull(context, "context");
+            Context.ClientPage.Start(this, "Run", new NameValueCollection());
         }
 
         protected void Run(ClientPipelineArgs args)

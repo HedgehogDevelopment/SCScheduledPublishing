@@ -18,7 +18,7 @@ namespace ScheduledPublishing.Commands
     {
         public override void Execute(CommandContext context)
         {
-            Assert.ArgumentNotNull((object)context, "context");
+            Assert.ArgumentNotNull(context, "context");
 
             if (context.Items.Length != 1)
             {
@@ -31,7 +31,7 @@ namespace ScheduledPublishing.Commands
 
         public void Execute(Item item, bool isUnpublish)
         {
-            Assert.ArgumentNotNull((object)item, "item");
+            Assert.ArgumentNotNull(item, "item");
 
             NameValueCollection parameters = new NameValueCollection();
             parameters["id"] = item.ID.ToString();
@@ -40,12 +40,12 @@ namespace ScheduledPublishing.Commands
             parameters["databasename"] = item.Database.Name;
             parameters["unpublish"] = isUnpublish.ToString();
 
-            Context.ClientPage.Start((object)this, "Run", parameters);
+            Context.ClientPage.Start(this, "Run", parameters);
         }
 
         protected void Run(ClientPipelineArgs args)
         {
-            Assert.ArgumentNotNull((object)args, "args");
+            Assert.ArgumentNotNull(args, "args");
 
             string dbName = args.Parameters["databasename"];
             string id = args.Parameters["id"];
@@ -53,7 +53,7 @@ namespace ScheduledPublishing.Commands
             string ver = args.Parameters["version"];
             Database database = Factory.GetDatabase(dbName);
 
-            Assert.IsNotNull((object)database, dbName);
+            Assert.IsNotNull(database, dbName);
 
             Item obj = database.Items[id, Language.Parse(lang), Version.Parse(ver)];
             if (obj == null)

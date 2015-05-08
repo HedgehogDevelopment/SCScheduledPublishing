@@ -10,7 +10,7 @@ namespace ScheduledPublishing.Validation
     {
         public static ValidationResult Validate(PublishSchedule publishSchedule)
         {
-            ValidationResult result = new ValidationResult()
+            ValidationResult result = new ValidationResult
             {
                 IsValid = true
             };
