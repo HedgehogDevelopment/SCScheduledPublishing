@@ -73,7 +73,7 @@ namespace ScheduledPublishing.Validation
             //IsValid added for workflow state and DateTime range (Valid From/Valid To)
             if (item != null 
                 && item.Publishing.IsPublishable(date, true)
-                && item.Publishing.IsValid(date, true))
+                && item.Versions.GetVersions().Any(x => x.Publishing.IsValid(date, true)))
             {
                 return true;
             }

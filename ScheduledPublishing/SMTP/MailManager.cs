@@ -60,7 +60,7 @@ namespace ScheduledPublishing.SMTP
 
             MailMessage mailMessage = new MailMessage(mail.EmailFrom, emailTo)
             {
-                Subject = mail.Subject,
+                Subject = mail.Subject.Replace("[item]", item.DisplayName),
                 Body = body + "\r\n" + report,
                 IsBodyHtml = true,
             };
