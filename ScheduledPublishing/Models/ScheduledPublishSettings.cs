@@ -6,7 +6,7 @@ namespace ScheduledPublishing.Models
 {
     public static class ScheduledPublishSettings
     {
-        private static readonly Database _database = Constants.ScheduledTasksContextDatabase;
+        private static readonly Database _database = Constants.SCHEDULED_TASK_CONTEXT_DATABASE;
 
         public static Item InnerItem
         {

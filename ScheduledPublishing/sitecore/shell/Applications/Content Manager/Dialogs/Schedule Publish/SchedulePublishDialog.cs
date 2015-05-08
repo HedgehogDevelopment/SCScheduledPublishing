@@ -1,4 +1,14 @@
-﻿using Sitecore;
+﻿using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
+using System.Web.UI;
+using System.Web.UI.HtmlControls;
+using ScheduledPublishing.Models;
+using ScheduledPublishing.Utils;
+using ScheduledPublishing.Validation;
+using Sitecore;
+using Sitecore.Collections;
 using Sitecore.Configuration;
 using Sitecore.Data;
 using Sitecore.Data.Items;
@@ -11,21 +21,11 @@ using Sitecore.Web;
 using Sitecore.Web.UI.HtmlControls;
 using Sitecore.Web.UI.Pages;
 using Sitecore.Web.UI.Sheer;
-using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Web.UI;
-using System.Web.UI.HtmlControls;
-using ScheduledPublishing.Models;
-using ScheduledPublishing.Utils;
-using ScheduledPublishing.Validation;
-using Sitecore.Collections;
 using Sitecore.Web.UI.WebControls;
 using Control = Sitecore.Web.UI.HtmlControls.Control;
-using Literal = Sitecore.Web.UI.HtmlControls.Literal;
+using ItemList = Sitecore.Collections.ItemList;
 
-namespace ScheduledPublishing.sitecore.shell.Applications.ContentManager.Dialogs
+namespace ScheduledPublishing.sitecore.shell.Applications.Content_Manager.Dialogs.Schedule_Publish
 {
     /// <summary>
     /// Schedule Publishing code-beside
@@ -206,7 +206,7 @@ namespace ScheduledPublishing.sitecore.shell.Applications.ContentManager.Dialogs
                 return;
             }
 
-            ScheduledPublishRepository.CreateScheduledPublishOptions(publishSchedule);
+            ScheduledPublishRepository.CreatePublishSchedule(publishSchedule);
 
             base.OnOK(sender, args);
         }
@@ -216,7 +216,7 @@ namespace ScheduledPublishing.sitecore.shell.Applications.ContentManager.Dialogs
         /// </summary>
         private void BuildPublishingTargets()
         {
-            Sitecore.Collections.ItemList publishingTargets = PublishManager.GetPublishingTargets(_database);
+            ItemList publishingTargets = PublishManager.GetPublishingTargets(_database);
             if (publishingTargets == null)
             {
                 Log.Warn("Scheduled Publish: " + "No publish targets found", this);

@@ -1,15 +1,15 @@
-﻿using ScheduledPublishing.Models;
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using System.Text;
+using ScheduledPublishing.Models;
 using ScheduledPublishing.SMTP;
 using ScheduledPublishing.Utils;
 using Sitecore;
 using Sitecore.Data.Items;
 using Sitecore.Diagnostics;
 using Sitecore.Tasks;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
 
 namespace ScheduledPublishing.Commands
 {
@@ -21,6 +21,7 @@ namespace ScheduledPublishing.Commands
         public void Run(Item[] items, CommandItem command, ScheduleItem schedule)
         {
             Log.Info("Scheduled Publish: started", this);
+
             Stopwatch commandStopwatch = new Stopwatch();
             commandStopwatch.Start();
             Stopwatch publishStopwatch = new Stopwatch();
@@ -28,35 +29,29 @@ namespace ScheduledPublishing.Commands
             Stopwatch bucketStopwatch = new Stopwatch();
             
             publishStopwatch.Start();
-
             DateTime publishToDate = DateTime.Now;
-            DateTime publishFromDate = new DateTime(publishToDate.Year, publishToDate.Month, publishToDate.Day, publishToDate.Hour, 0, 0);
-
+            DateTime publishFromDate = publishToDate.AddHours(-1);
             PublishSchedules(publishFromDate, publishToDate);
             publishStopwatch.Stop();
-            Log.Info("Scheduled Publish: Publishing Stopwatch " + publishStopwatch.ElapsedMilliseconds, this);
 
+            Log.Info("Scheduled Publish: Publishing Stopwatch " + publishStopwatch.ElapsedMilliseconds, this);
             Log.Info("Scheduled Publish: Total after Published Schedules " + commandStopwatch.ElapsedMilliseconds, this);
 
-
             alertStopwatch.Start();
-
-            DateTime alertToDate = publishFromDate.AddSeconds(-1);
-            DateTime alertFromDate = publishFromDate.AddHours(-1);
-
+            DateTime alertToDate = publishFromDate.AddHours(-1).AddSeconds(-1);
+            DateTime alertFromDate = publishFromDate.AddHours(-2);
             AlertForFailedSchedules(alertFromDate, alertToDate);
             alertStopwatch.Stop();
-            Log.Info("Scheduled Publish: Alert Failed Schedules Stopwatch " + alertStopwatch.ElapsedMilliseconds, this);
 
+            Log.Info("Scheduled Publish: Alert Failed Schedules Stopwatch " + alertStopwatch.ElapsedMilliseconds, this);
             Log.Info("Scheduled Publish: Total after Alerted Failed Schedules " + commandStopwatch.ElapsedMilliseconds, this);
 
             bucketStopwatch.Start();
             ScheduledPublishRepository.CleanBucket();
             bucketStopwatch.Stop();
+
             Log.Info("Scheduled Publish: Cleaning Buckets Stopwatch " + bucketStopwatch.ElapsedMilliseconds, this);
-
             Log.Info("Scheduled Publish: Total after Cleaned Buckets " + commandStopwatch.ElapsedMilliseconds, this);
-
             Log.Info("Scheduled Publish: Total Run " + commandStopwatch.ElapsedMilliseconds, this);
         }
 
@@ -146,7 +141,7 @@ namespace ScheduledPublishing.Commands
 
             publishSchedule.IsPublished = true;
 
-            ScheduledPublishRepository.UpdateScheduledPublishOptions(publishSchedule);
+            ScheduledPublishRepository.UpdatePublishSchedule(publishSchedule);
         }
     }
 }
