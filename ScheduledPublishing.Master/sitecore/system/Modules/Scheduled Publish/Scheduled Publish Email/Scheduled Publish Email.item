@@ -12,15 +12,37 @@ templatekey: ScheduledPublishEmail
 ----version----
 language: en
 version: 1
-revision: 33e8ec76-dd11-4aab-bf2a-ca5de348e4d1
+revision: 7ebdf3e7-686e-4d69-9b6e-a450a26f5151
 
 ----field----
+field: {A35E5B44-1CD0-49C4-B210-DB4106685CE4}
+name: EmailTo
+key: emailto
+content-length: 34
+
+spareva@hhogdev.com,spareva@abv.bg
+----field----
 field: {4A6046AA-2B94-47B2-9A27-3B83F0601822}
-name: ScheduledPublishEmailFrom
-key: scheduledpublishemailfrom
-content-length: 0
+name: EmailFrom
+key: emailfrom
+content-length: 13
 
+test@test.com
+----field----
+field: {20DEB7CE-6AD1-459F-B1A4-F6AE88B2C62A}
+name: EmailSubject
+key: emailsubject
+content-length: 23
 
+Item Published - [item]
+----field----
+field: {39A13A96-8BF0-4334-B366-16C0ACCC2B60}
+name: EmailMessage
+key: emailmessage
+content-length: 130
+
+<p>Item [item] (path: [path]; version: [version]) published on [date] @ [time].</p>
+<p>Thanks for using scheduled publishing! </p>
 ----field----
 field: {52807595-0F8F-4B20-8D2A-CB71D28C6103}
 name: __Owner
@@ -48,14 +70,14 @@ name: __Revision
 key: __revision
 content-length: 36
 
-33e8ec76-dd11-4aab-bf2a-ca5de348e4d1
+7ebdf3e7-686e-4d69-9b6e-a450a26f5151
 ----field----
 field: {D9CF14B1-FA16-4BA6-9288-E8A174D4D522}
 name: __Updated
 key: __updated
 content-length: 34
 
-20150427T110507:635657295073144909
+20150508T144354:635666930346823853
 ----field----
 field: {BADD9CF9-53E0-4D0C-BCC0-2D784C282F6A}
 name: __Updated by
