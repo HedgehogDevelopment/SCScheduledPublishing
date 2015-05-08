@@ -80,7 +80,15 @@ namespace ScheduledPublishing.Commands
 
                 if (ScheduledPublishSettings.IsSendEmailChecked)
                 {
-                    MailManager.SendEmail(report.Message, publishOptions.SchedulerEmail);
+                    try
+                    {
+                        MailManager.SendEmail(report.Message, publishOptions.SchedulerEmail);
+                    }
+                    catch (Exception)
+                    {
+                        Log.Error("Scheduled Publish: Sending publish email confirmation failed, continuing... ", publishOptions);
+                    }
+                    
                 }
             }
         }
@@ -103,11 +111,11 @@ namespace ScheduledPublishing.Commands
 
             foreach (var schedule in failedSchedulesList)
             {
-                sbMessage.Append("Following item failed for scheduled publish: <br/>");
-                sbMessage.AppendFormat("{0} for {1}.<br/>",
+                sbMessage.Append("Following item failed for scheduled publish: \r\n");
+                sbMessage.AppendFormat("{0} for {1}.\r\n",
                     schedule.ItemToPublish != null ? schedule.ItemToPublish.Paths.FullPath : "website",
                     schedule.PublishDate);
-                sbMessage.Append("Please, review and publish it manually.<br/>");
+                sbMessage.Append("Please, review and publish it manually.\r\n");
 
                 string message = sbMessage.ToString();
 
@@ -115,7 +123,14 @@ namespace ScheduledPublishing.Commands
 
                 if (ScheduledPublishSettings.IsSendEmailChecked)
                 {
-                    MailManager.SendEmail(message, schedule.SchedulerEmail);
+                    try
+                    {
+                        MailManager.SendEmail(message, schedule.SchedulerEmail);
+                    }
+                    catch (Exception)
+                    {
+                        Log.Error("Scheduled Publish: Sending failed publish email notification failed, continuing... ", schedule);
+                    }
                 }
 
                 sbMessage.Clear();

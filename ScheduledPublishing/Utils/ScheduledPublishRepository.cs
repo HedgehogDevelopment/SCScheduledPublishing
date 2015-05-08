@@ -1,13 +1,12 @@
-﻿using Sitecore.Data.Items;
+﻿using ScheduledPublishing.Models;
+using Sitecore;
+using Sitecore.Data;
+using Sitecore.Data.Items;
+using Sitecore.Diagnostics;
+using Sitecore.SecurityModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using ScheduledPublishing.Models;
-using Sitecore;
-using Sitecore.Data;
-using Sitecore.Diagnostics;
-using Sitecore.SecurityModel;
-using Sitecore.Shell.Framework.Commands;
 
 namespace ScheduledPublishing.Utils
 {
@@ -20,9 +19,18 @@ namespace ScheduledPublishing.Utils
             get
             {
                 return RootFolder.Axes.GetDescendants()
-                .Where(t => t.TemplateID == Constants.PUBLISH_OPTIONS_TEMPLATE_ID)
-                .Select(t => new PublishSchedule(t))
-                .OrderBy(t => t.PublishDate);
+                .Where(x => x.TemplateID == Constants.PUBLISH_OPTIONS_TEMPLATE_ID)
+                .Select(x => new PublishSchedule(x))
+                .OrderBy(x => x.PublishDate);
+            }
+        }
+
+        public static IEnumerable<PublishSchedule> AllUnpublishedSchedules
+        {
+            get 
+            { 
+                return AllSchedules.Where(x => !x.IsPublished)
+                .OrderBy(x => x.PublishDate); 
             }
         }
 
@@ -44,9 +52,9 @@ namespace ScheduledPublishing.Utils
             }
 
             return AllSchedules.Where(
-                t => t.ItemToPublish != null
-                    && t.ItemToPublish.ID == itemId
-                    && !t.IsPublished);
+                x => x.ItemToPublish != null
+                    && x.ItemToPublish.ID == itemId
+                    && !x.IsPublished);
         }
 
         public static IEnumerable<PublishSchedule> GetUnpublishedSchedules(DateTime fromDate, DateTime toDate)
@@ -57,9 +65,9 @@ namespace ScheduledPublishing.Utils
             }
 
             return AllSchedules
-                .Where(t => !t.IsPublished
-                       && t.PublishDate >= fromDate
-                       && t.PublishDate <= toDate);
+                .Where(x => !x.IsPublished
+                       && x.PublishDate >= fromDate
+                       && x.PublishDate <= toDate);
         }
 
         public static void CreateScheduledPublishOptions(PublishSchedule publishSchedule)
@@ -207,39 +215,29 @@ namespace ScheduledPublishing.Utils
         public static void CleanBucket()
         {
             DateTime currentTime = DateTime.Now;
-            DateTime oneHourEarlier = currentTime.AddHours(-1);
+            DateTime oneDayEarlier = currentTime.AddDays(-1);
 
-            if (oneHourEarlier.Year != currentTime.Year)
+            if (oneDayEarlier.Year != currentTime.Year)
             {
-                Item yearFolder = GetDateFolder(oneHourEarlier, BucketFolderType.Year);
+                Item yearFolder = GetDateFolder(oneDayEarlier, BucketFolderType.Year);
                 if (yearFolder != null)
                 {
                     DeleteItem(yearFolder);
                 }
             }
-            else if (oneHourEarlier.Month != currentTime.Month)
+            else if (oneDayEarlier.Month != currentTime.Month)
             {
-                Item monthFolder = GetDateFolder(oneHourEarlier, BucketFolderType.Month);
+                Item monthFolder = GetDateFolder(oneDayEarlier, BucketFolderType.Month);
                 if (monthFolder != null)
                 {
                     DeleteItem(monthFolder);
                 }
             }
-            else if (oneHourEarlier.Day != currentTime.Day)
+
+            Item dayFolder = GetDateFolder(oneDayEarlier, BucketFolderType.Day);
+            if (dayFolder != null)
             {
-                Item dayFolder = GetDateFolder(oneHourEarlier, BucketFolderType.Day);
-                if (dayFolder != null)
-                {
-                    DeleteItem(dayFolder);
-                }
-            }
-            else
-            {
-                Item hourFolder = GetDateFolder(oneHourEarlier, BucketFolderType.Hour);
-                if (hourFolder != null)
-                {
-                    DeleteItem(hourFolder);
-                }
+                DeleteItem(dayFolder);
             }
 
             //clean older folders, if there are any left under special circumstances

@@ -57,7 +57,7 @@ namespace ScheduledPublishing.sitecore.shell.Applications.ContentManager.Dialogs
             sbHeader.Append("</tr>");
             AllSchedules.Controls.Add(new LiteralControl(sbHeader.ToString()));
 
-            IEnumerable<PublishSchedule> allSchedules = ScheduledPublishRepository.AllSchedules;
+            IEnumerable<PublishSchedule> allSchedules = ScheduledPublishRepository.AllUnpublishedSchedules;
             foreach (var schedule in allSchedules)
             {
                 if (schedule.InnerItem != null)

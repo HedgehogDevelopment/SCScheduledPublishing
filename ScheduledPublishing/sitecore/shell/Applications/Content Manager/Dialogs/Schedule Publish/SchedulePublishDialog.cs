@@ -110,7 +110,7 @@ namespace ScheduledPublishing.sitecore.shell.Applications.ContentManager.Dialogs
                 }
 
                 _selectedTargets =
-                    targetItems.Select(t => Database.GetDatabase(t[FieldIDs.PublishingTargetDatabase]));
+                    targetItems.Select(x => Database.GetDatabase(x[FieldIDs.PublishingTargetDatabase]));
                 return _selectedTargets;
             }
         }

@@ -22,7 +22,14 @@ namespace ScheduledPublishing.SMTP
 
             if (NotificationEmailSettings.UseWebConfig)
             {
-                MainUtil.SendMail(message);
+                try
+                {
+                    MainUtil.SendMail(message);
+                }
+                catch (Exception e)
+                {
+                    Log.Error("Scheduled Publish: Sending publish email through web.config settings failed, continuing... ", message);
+                }
             }
             else
             {
@@ -58,8 +65,8 @@ namespace ScheduledPublishing.SMTP
         private static void SendMailMessage(MailMessage mailMessage)
         {
             SmtpClient client = new SmtpClient(NotificationEmailSettings.MailServer, NotificationEmailSettings.Port);
-            //NetworkCredential credentials = new NetworkCredential(NotificationEmailSettings.Username, NotificationEmailSettings.Password);
-            //client.Credentials = credentials;
+            NetworkCredential credentials = new NetworkCredential(NotificationEmailSettings.Username, NotificationEmailSettings.Password);
+            client.Credentials = credentials;
 
             try
             {
