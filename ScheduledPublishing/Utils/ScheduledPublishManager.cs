@@ -78,7 +78,7 @@ namespace ScheduledPublishing.Utils
         {
             if (publishSchedule.ItemToPublish == null)
             {
-                Log.Error("Scheduled Publish: Scheduled Publish Task didn't execute because PublishOptions.ItemToPublish is null", new object());
+                Log.Error("Scheduled Publish: Scheduled Publish Task didn't execute because PublishSchedule.ItemToPublish is null", new object());
                 return null;
             }
 

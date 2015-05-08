@@ -20,7 +20,7 @@ namespace ScheduledPublishing.Utils
             get
             {
                 return RootFolder.Axes.GetDescendants()
-                .Where(x => x.TemplateID == Constants.PUBLISH_OPTIONS_TEMPLATE_ID)
+                .Where(x => x.TemplateID == Constants.PUBLISH_SCHEDULE_TEMPLATE_ID)
                 .Select(x => new PublishSchedule(x))
                 .OrderBy(x => x.PublishDate);
             }
@@ -79,7 +79,7 @@ namespace ScheduledPublishing.Utils
             {
                 using (new SecurityDisabler())
                 {
-                    TemplateItem publishOptionsTemplate = _database.GetTemplate(Constants.PUBLISH_OPTIONS_TEMPLATE_ID);
+                    TemplateItem publishOptionsTemplate = _database.GetTemplate(Constants.PUBLISH_SCHEDULE_TEMPLATE_ID);
                     string publishOptionsName = BuildPublishScheduleName(publishSchedule.ItemToPublish);
                     Item optionsFolder = GetOrCreateFolder(publishSchedule.PublishDate);
                     Item publishOptionsItem = optionsFolder.Add(publishOptionsName, publishOptionsTemplate);
@@ -104,7 +104,7 @@ namespace ScheduledPublishing.Utils
                     publishOptionsItem.Editing.EndEdit();
 
                     Log.Info(
-                        string.Format("Scheduled Publish: Created Publish Options: {0}: {1} {2} {3}",
+                        string.Format("Scheduled Publish: Created Publish Schedule: {0}: {1} {2} {3}",
                             action,
                             publishSchedule.ItemToPublish != null ? publishSchedule.ItemToPublish.Name : "Website",
                             publishSchedule.ItemToPublish != null ? publishSchedule.ItemToPublish.ID.ToString() : "Website",
@@ -114,7 +114,7 @@ namespace ScheduledPublishing.Utils
             catch (Exception ex)
             {
                 Log.Error(
-                    string.Format("Scheduled Publish: Failed creating Publish Options: {0}: {1} {2} {3}",
+                    string.Format("Scheduled Publish: Failed creating Publish Schedule: {0}: {1} {2} {3}",
                         action,
                         publishSchedule.ItemToPublish != null ? publishSchedule.ItemToPublish.Name : "Website",
                         publishSchedule.ItemToPublish != null ? publishSchedule.ItemToPublish.ID.ToString() : "Website",
@@ -165,7 +165,7 @@ namespace ScheduledPublishing.Utils
                     }
 
                     Log.Info(
-                        string.Format("Scheduled Publish: Updated Publish Options: {0}: {1} {2} {3}",
+                        string.Format("Scheduled Publish: Updated Publish Schedule: {0}: {1} {2} {3}",
                             action,
                             publishSchedule.ItemToPublish != null ? publishSchedule.ItemToPublish.Name : "Website",
                             publishSchedule.ItemToPublish != null ? publishSchedule.ItemToPublish.ID.ToString() : "Website",
@@ -175,7 +175,7 @@ namespace ScheduledPublishing.Utils
             catch (Exception ex)
             {
                 Log.Error(
-                    string.Format("Scheduled Publish: Failed updating Publish Options: {0}: {1} {2} {3}",
+                    string.Format("Scheduled Publish: Failed updating Publish Schedule: {0}: {1} {2} {3}",
                         action,
                         publishSchedule.ItemToPublish != null ? publishSchedule.ItemToPublish.Name : "Website",
                         publishSchedule.ItemToPublish != null ? publishSchedule.ItemToPublish.ID.ToString() : "Website",
@@ -323,7 +323,7 @@ namespace ScheduledPublishing.Utils
                 ? item.ID.Guid
                 : Guid.NewGuid();
 
-            return ItemUtil.ProposeValidItemName(string.Format("{0}ScheduledPublishOptions", guid));
+            return ItemUtil.ProposeValidItemName(string.Format("{0}PublishSchedule", guid));
         }
     }
 }
