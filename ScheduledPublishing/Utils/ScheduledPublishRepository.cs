@@ -150,6 +150,7 @@ namespace ScheduledPublishing.Utils
                         publishSchedule.TargetLanguages.Select(x => x.Name));
                     publishSchedule.InnerItem[PublishSchedule.SourceDatabaseId] = publishSchedule.SourceDatabase.Name;
                     publishSchedule.InnerItem[PublishSchedule.TargetDatabasesId] = string.Join("|", publishSchedule.TargetDatabases.Select(x => x.Name));
+                    publishSchedule.InnerItem[PublishSchedule.IsPublishedId] = publishSchedule.IsPublished ? "1" : string.Empty;
 
                     DateTime oldPublishDate =
                         DateUtil.IsoDateToDateTime(publishSchedule.InnerItem[PublishSchedule.PublishDateId]);

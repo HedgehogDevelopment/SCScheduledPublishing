@@ -1,5 +1,6 @@
 ﻿using ScheduledPublishing.Models;
 using Sitecore;
+using Sitecore.Data.Items;
 using Sitecore.Diagnostics;
 using System;
 using System.Linq;
@@ -10,9 +11,9 @@ namespace ScheduledPublishing.SMTP
 {
     public static class MailManager
     {
-        public static void SendEmail(string report, string sendTo)
+        public static void SendEmail(string report, Item item, string sendTo)
         {
-            MailMessage message = ComposeEmail(report, sendTo);
+            MailMessage message = ComposeEmail(report, item, sendTo);
 
             if (message == null)
             {
@@ -37,7 +38,7 @@ namespace ScheduledPublishing.SMTP
             }
         }
 
-        private static MailMessage ComposeEmail(string report, string sendTo)
+        private static MailMessage ComposeEmail(string report, Item item, string sendTo)
         {
             NotificationEmail mail = new NotificationEmail();
             string emailTo = sendTo;
@@ -50,10 +51,17 @@ namespace ScheduledPublishing.SMTP
                 emailTo = mail.EmailTo.Split(',').First();
             }
 
+            string body = mail.Body.Replace("[item]", item.DisplayName)
+                .Replace("[path]", item.Paths.FullPath)
+                .Replace("[date]", DateTime.Now.ToShortDateString())
+                .Replace("[time]", DateTime.Now.ToShortTimeString())
+                .Replace("[version]", item.Version.ToString())
+                .Replace("[id]", item.ID.ToString());
+
             MailMessage mailMessage = new MailMessage(mail.EmailFrom, emailTo)
             {
                 Subject = mail.Subject,
-                Body = mail.Body + "\r\n" + report,
+                Body = body + "\r\n" + report,
                 IsBodyHtml = true,
             };
 
