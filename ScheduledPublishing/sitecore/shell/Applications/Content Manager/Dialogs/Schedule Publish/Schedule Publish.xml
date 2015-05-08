@@ -2,7 +2,7 @@
 <control xmlns:def="Definition" xmlns="http://schemas.sitecore.net/Visual-Studio-Intellisense">
   <SchedulePublish>
     <FormDialog ID="ScheduleFormDialog" Icon="Network/32x32/earth_time.png" Header="Scheduled Publish" Text="Configure when the current item is scheduled for publish.">
-      <CodeBeside Type="ScheduledPublishing.sitecore.shell.Applications.ContentManager.Dialogs.SchedulePublishDialog,ScheduledPublishing"/>
+      <CodeBeside Type="ScheduledPublishing.sitecore.shell.Applications.Content_Manager.Dialogs.Schedule_Publish.SchedulePublishDialog, ScheduledPublishing"/>
       <GridPanel Width="100%" Height="100%" Fixed="true">
         <Groupbox Header="Help" Margin="0px 0px 16px 0px">
           <Border Padding="4">

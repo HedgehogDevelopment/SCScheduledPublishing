@@ -62,7 +62,7 @@ namespace ScheduledPublishing.Utils
                        && t.PublishDate <= toDate);
         }
 
-        public static void CreateScheduledPublishOptions(PublishSchedule publishSchedule)
+        public static void CreatePublishSchedule(PublishSchedule publishSchedule)
         {
             string action = publishSchedule.Unpublish ? "unpublish" : "publish";
 
@@ -71,7 +71,7 @@ namespace ScheduledPublishing.Utils
                 using (new SecurityDisabler())
                 {
                     TemplateItem publishOptionsTemplate = _database.GetTemplate(Constants.PUBLISH_OPTIONS_TEMPLATE_ID);
-                    string publishOptionsName = BuildPublishOptionsName(publishSchedule.ItemToPublish);
+                    string publishOptionsName = BuildPublishScheduleName(publishSchedule.ItemToPublish);
                     Item optionsFolder = GetOrCreateFolder(publishSchedule.PublishDate);
                     Item publishOptionsItem = optionsFolder.Add(publishOptionsName, publishOptionsTemplate);
 
@@ -113,7 +113,7 @@ namespace ScheduledPublishing.Utils
             }
         }
 
-        public static void UpdateScheduledPublishOptions(PublishSchedule publishSchedule)
+        public static void UpdatePublishSchedule(PublishSchedule publishSchedule)
         {
             if (publishSchedule.InnerItem == null)
             {
@@ -318,7 +318,7 @@ namespace ScheduledPublishing.Utils
             return _database.GetItem(itemPath);
         }
 
-        private static string BuildPublishOptionsName(Item item)
+        private static string BuildPublishScheduleName(Item item)
         {
             Guid guid = item != null
                 ? item.ID.Guid

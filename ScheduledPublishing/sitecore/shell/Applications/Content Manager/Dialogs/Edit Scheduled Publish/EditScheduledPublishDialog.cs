@@ -1,22 +1,21 @@
-﻿using ScheduledPublishing.Models;
-using ScheduledPublishing.Utils;
-using Sitecore;
-using Sitecore.Data;
-using Sitecore.Data.Items;
-using Sitecore.Diagnostics;
-using Sitecore.SecurityModel;
-using Sitecore.Web.UI.HtmlControls;
-using Sitecore.Web.UI.Pages;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using ScheduledPublishing.Models;
+using ScheduledPublishing.Utils;
 using ScheduledPublishing.Validation;
+using Sitecore;
+using Sitecore.Data;
+using Sitecore.Data.Items;
+using Sitecore.Diagnostics;
+using Sitecore.Web.UI.HtmlControls;
+using Sitecore.Web.UI.Pages;
 using Sitecore.Web.UI.Sheer;
 
-namespace ScheduledPublishing.sitecore.shell.Applications.ContentManager.Dialogs
+namespace ScheduledPublishing.sitecore.shell.Applications.Content_Manager.Dialogs.Edit_Scheduled_Publish
 {
     public class EditScheduledPublishDialog : DialogForm
     {
@@ -135,7 +134,7 @@ namespace ScheduledPublishing.sitecore.shell.Applications.ContentManager.Dialogs
                             return;
                         }
 
-                        ScheduledPublishRepository.UpdateScheduledPublishOptions(publishSchedule);
+                        ScheduledPublishRepository.UpdatePublishSchedule(publishSchedule);
                     }
                 }
                 else if (key != null && key.StartsWith("del_", StringComparison.InvariantCulture))
