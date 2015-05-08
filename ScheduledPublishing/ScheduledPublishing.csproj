@@ -78,6 +78,7 @@
   <ItemGroup>
     <Content Include="App_Config\Include\ZZ_SchedulePublishingControl.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </Content>
   </ItemGroup>
   <PropertyGroup>

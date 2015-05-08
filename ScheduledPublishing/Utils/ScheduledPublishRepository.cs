@@ -12,7 +12,7 @@ namespace ScheduledPublishing.Utils
 {
     public static class ScheduledPublishRepository
     {
-        private static readonly Database _database = Constants.ScheduledTasksContextDatabase;
+        private static readonly Database _database = Constants.SCHEDULED_TASK_CONTEXT_DATABASE;
 
         public static IEnumerable<PublishSchedule> AllSchedules
         {
@@ -70,7 +70,7 @@ namespace ScheduledPublishing.Utils
                        && x.PublishDate <= toDate);
         }
 
-        public static void CreateScheduledPublishOptions(PublishSchedule publishSchedule)
+        public static void CreatePublishSchedule(PublishSchedule publishSchedule)
         {
             string action = publishSchedule.Unpublish ? "unpublish" : "publish";
 
@@ -121,7 +121,7 @@ namespace ScheduledPublishing.Utils
             }
         }
 
-        public static void UpdateScheduledPublishOptions(PublishSchedule publishSchedule)
+        public static void UpdatePublishSchedule(PublishSchedule publishSchedule)
         {
             if (publishSchedule.InnerItem == null)
             {
