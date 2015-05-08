@@ -27,7 +27,7 @@ namespace ScheduledPublishing.Commands
             Stopwatch publishStopwatch = new Stopwatch();
             Stopwatch alertStopwatch = new Stopwatch();
             Stopwatch bucketStopwatch = new Stopwatch();
-            
+
             publishStopwatch.Start();
             DateTime publishToDate = DateTime.Now;
             DateTime publishFromDate = publishToDate.AddHours(-1);
@@ -55,11 +55,14 @@ namespace ScheduledPublishing.Commands
             Log.Info("Scheduled Publish: Total Run " + commandStopwatch.ElapsedMilliseconds, this);
         }
 
-        private static void PublishSchedules(DateTime fromDate, DateTime toDate)
+        private void PublishSchedules(DateTime fromDate, DateTime toDate)
         {
             IEnumerable<PublishSchedule> duePublishSchedules = ScheduledPublishRepository.GetUnpublishedSchedules(fromDate, toDate);
             if (duePublishSchedules == null)
             {
+                Log.Info(string.Format("Scheduled Publish: No publish schedules from {0} to {1}",
+                    fromDate.ToString(Context.Culture),
+                    toDate.ToString(Context.Culture)), this);
                 return;
             }
 

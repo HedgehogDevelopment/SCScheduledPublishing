@@ -17,7 +17,7 @@ namespace ScheduledPublishing.SMTP
 
             if (message == null)
             {
-                Log.Error("Scheduled Publish: " + "No receiver for publishing email. " + DateTime.Now, new object());
+                Log.Error("Scheduled Publish: No receiver for publishing email. " + DateTime.Now, new object());
                 return;
             }
 
@@ -82,7 +82,7 @@ namespace ScheduledPublishing.SMTP
             }
             catch (Exception e)
             {
-                Log.Error("Scheduled Publish: " + "Sending email failed: " + e, mailMessage);
+                Log.Error("Scheduled Publish: Sending email failed: " + e, mailMessage);
             }
         }
     }
