@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using ScheduledPublishing.Models;
@@ -17,15 +18,42 @@ namespace ScheduledPublishing.Commands
     {
         public void Run(Item[] items, CommandItem command, ScheduleItem schedule)
         {
+            Log.Info("Scheduled Publish: started", this);
+            Stopwatch commandStopwatch = new Stopwatch();
+            commandStopwatch.Start();
+            Stopwatch publishStopwatch = new Stopwatch();
+            Stopwatch alertStopwatch = new Stopwatch();
+            Stopwatch bucketStopwatch = new Stopwatch();
+
             var publishToDate = DateTime.Now;
             var publishFromDate = new DateTime(publishToDate.Year, publishToDate.Month, publishToDate.Day, publishToDate.Hour, 0, 0);
+
+            publishStopwatch.Start();
             PublishSchedules(publishFromDate, publishToDate);
+            publishStopwatch.Stop();
+            Log.Info("Scheduled Publish: Publishing Stopwatch " + publishStopwatch.ElapsedMilliseconds, this);
+
+            Log.Info("Scheduled Publish: Total after Published Schedules " + commandStopwatch.ElapsedMilliseconds, this);
+
 
             var alertToDate = publishFromDate.AddSeconds(-1);
             var alertFromDate = publishFromDate.AddHours(-1);
-            AlertForFailedSchedules(alertFromDate, alertToDate);
 
+            alertStopwatch.Start();
+            AlertForFailedSchedules(alertFromDate, alertToDate);
+            alertStopwatch.Stop();
+            Log.Info("Scheduled Publish: Alert Failed Schedules Stopwatch " + alertStopwatch.ElapsedMilliseconds, this);
+
+            Log.Info("Scheduled Publish: Total after Alerted Failed Schedules " + commandStopwatch.ElapsedMilliseconds, this);
+
+            bucketStopwatch.Start();
             ScheduledPublishRepository.CleanBucket();
+            bucketStopwatch.Stop();
+            Log.Info("Scheduled Publish: Cleaning Buckets Stopwatch " + bucketStopwatch.ElapsedMilliseconds, this);
+
+            Log.Info("Scheduled Publish: Total after Cleaned Buckets " + commandStopwatch.ElapsedMilliseconds, this);
+
+            Log.Info("Scheduled Publish: Total Run " + commandStopwatch.ElapsedMilliseconds, this);
         }
 
         private static void PublishSchedules(DateTime fromDate, DateTime toDate)
@@ -79,7 +107,7 @@ namespace ScheduledPublishing.Commands
 
                 var message = sbMessage.ToString();
 
-                Log.Error(message, new object());
+                Log.Error("Scheduled Publish: " + message, new object());
 
                 if (ScheduledPublishSettings.IsSendEmailChecked)
                 {

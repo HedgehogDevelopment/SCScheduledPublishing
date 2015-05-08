@@ -7,6 +7,7 @@ using Sitecore;
 using Sitecore.Data;
 using Sitecore.Diagnostics;
 using Sitecore.SecurityModel;
+using Sitecore.Shell.Framework.Commands;
 
 namespace ScheduledPublishing.Utils
 {
@@ -94,7 +95,7 @@ namespace ScheduledPublishing.Utils
                     publishOptionsItem.Editing.EndEdit();
 
                     Log.Info(
-                        string.Format("Created Publish Options: {0}: {1} {2} {3}",
+                        string.Format("Scheduled Publish: " + "Created Publish Options: {0}: {1} {2} {3}",
                             action,
                             publishSchedule.ItemToPublish != null ? publishSchedule.ItemToPublish.Name : "Website",
                             publishSchedule.ItemToPublish != null ? publishSchedule.ItemToPublish.ID.ToString() : "Website",
@@ -103,8 +104,8 @@ namespace ScheduledPublishing.Utils
             }
             catch (Exception ex)
             {
-                Log.Info(
-                    string.Format("Failed creating Publish Options: {0}: {1} {2} {3}",
+                Log.Error(
+                    string.Format("Scheduled Publish: " + "Failed creating Publish Options: {0}: {1} {2} {3}",
                         action,
                         publishSchedule.ItemToPublish != null ? publishSchedule.ItemToPublish.Name : "Website",
                         publishSchedule.ItemToPublish != null ? publishSchedule.ItemToPublish.ID.ToString() : "Website",
@@ -116,7 +117,7 @@ namespace ScheduledPublishing.Utils
         {
             if (publishSchedule.InnerItem == null)
             {
-                Log.Error("Scheduled Update Failed. Item is null.", new object());
+                Log.Error("Scheduled Publish: " + "Scheduled Update Failed. Item is null.", new object());
                 return;
             }
 
@@ -155,7 +156,7 @@ namespace ScheduledPublishing.Utils
                     }
 
                     Log.Info(
-                        string.Format("Updated Publish Options: {0}: {1} {2} {3}",
+                        string.Format("Scheduled Publish: " + "Updated Publish Options: {0}: {1} {2} {3}",
                             action,
                             publishSchedule.ItemToPublish != null ? publishSchedule.ItemToPublish.Name : "Website",
                             publishSchedule.ItemToPublish != null ? publishSchedule.ItemToPublish.ID.ToString() : "Website",
@@ -164,8 +165,8 @@ namespace ScheduledPublishing.Utils
             }
             catch (Exception ex)
             {
-                Log.Info(
-                    string.Format("Failed updating Publish Options: {0}: {1} {2} {3}",
+                Log.Error(
+                    string.Format("Scheduled Publish: " + "Failed updating Publish Options: {0}: {1} {2} {3}",
                         action,
                         publishSchedule.ItemToPublish != null ? publishSchedule.ItemToPublish.Name : "Website",
                         publishSchedule.ItemToPublish != null ? publishSchedule.ItemToPublish.ID.ToString() : "Website",
@@ -196,7 +197,7 @@ namespace ScheduledPublishing.Utils
             }
             catch (Exception ex)
             {
-                Log.Error(string.Format("Failed delete item {0} {1} {2}",
+                Log.Error(string.Format("Scheduled Publish: " + "Failed delete item {0} {1} {2}",
                     item.Paths.FullPath,
                     item.ID,
                     ex), new object());
@@ -239,6 +240,21 @@ namespace ScheduledPublishing.Utils
                 {
                     DeleteItem(hourFolder);
                 }
+            }
+
+            //clean older folders, if there are any left under special circumstances
+            DateTime lastMonth = currentTime.AddMonths(-1);
+            var lastMonthFolder = GetDateFolder(lastMonth, BucketFolderType.Month);
+            if (lastMonthFolder != null)
+            {
+                DeleteItem(lastMonthFolder);
+            }
+
+            DateTime lastYear = currentTime.AddYears(-1);
+            var lastYearFolder = GetDateFolder(lastYear, BucketFolderType.Year);
+            if (lastYearFolder != null)
+            {
+                DeleteItem(lastYearFolder);
             }
         }
 

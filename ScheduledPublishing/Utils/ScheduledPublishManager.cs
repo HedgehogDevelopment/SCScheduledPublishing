@@ -76,7 +76,7 @@ namespace ScheduledPublishing.Utils
         {
             if (publishSchedule.ItemToPublish == null)
             {
-                Log.Info("Scheduled Publish Task didn't execute because PublishOptions.ItemToPublish is null", new object());
+                Log.Error("Scheduled Publish: " + "Scheduled Publish Task didn't execute because PublishOptions.ItemToPublish is null", new object());
                 return null;
             }
 
@@ -109,8 +109,8 @@ namespace ScheduledPublishing.Utils
             }
             catch (Exception ex)
             {
-                Log.Info(
-                    string.Format("Scheduled Publish Task failed for {0} {1} {2}",
+                Log.Error(
+                    string.Format("Scheduled Publish: " + "Scheduled Publish Task failed for {0} {1} {2}",
                                    publishSchedule.ItemToPublish.Name,
                                    publishSchedule.ItemToPublish.ID,
                                    ex), new object());
@@ -153,7 +153,7 @@ namespace ScheduledPublishing.Utils
                         }
                     default:
                         {
-                            Log.Error("Scheduled Publish Task didn't execute because invalid PublishMode", new object());
+                            Log.Error("Scheduled Publish: " + "Scheduled Publish Task didn't execute because invalid PublishMode", new object());
                             break;
                         }
                 }
@@ -161,7 +161,7 @@ namespace ScheduledPublishing.Utils
             catch (Exception ex)
             {
                 Log.Error(
-                    string.Format("Scheduled Publish Task failed for Website Publish in {0} Mode {1}",
+                    string.Format("Scheduled Publish: " + "Scheduled Publish Task failed for Website Publish in {0} Mode {1}",
                                    publishSchedule.PublishMode,
                                    ex), new object());
             }

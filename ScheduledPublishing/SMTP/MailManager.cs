@@ -16,7 +16,7 @@ namespace ScheduledPublishing.SMTP
 
             if (message == null)
             {
-                Log.Error("No receiver for publishing email. " + DateTime.Now, new object());
+                Log.Error("Scheduled Publish: " + "No receiver for publishing email. " + DateTime.Now, new object());
                 return;
             }
 
@@ -58,8 +58,8 @@ namespace ScheduledPublishing.SMTP
         private static void SendMailMessage(MailMessage mailMessage)
         {
             SmtpClient client = new SmtpClient(NotificationEmailSettings.MailServer, NotificationEmailSettings.Port);
-            NetworkCredential credentials = new NetworkCredential(NotificationEmailSettings.Username, NotificationEmailSettings.Password);
-            client.Credentials = credentials;
+            //NetworkCredential credentials = new NetworkCredential(NotificationEmailSettings.Username, NotificationEmailSettings.Password);
+            //client.Credentials = credentials;
 
             try
             {
@@ -67,7 +67,7 @@ namespace ScheduledPublishing.SMTP
             }
             catch (Exception e)
             {
-                Log.Error("Sending email failed: " + e, mailMessage);
+                Log.Error("Scheduled Publish: " + "Sending email failed: " + e, mailMessage);
             }
         }
     }

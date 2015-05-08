@@ -218,7 +218,7 @@ namespace ScheduledPublishing.sitecore.shell.Applications.ContentManager.Dialogs
             var publishingTargets = PublishManager.GetPublishingTargets(_database);
             if (publishingTargets == null)
             {
-                Log.Info("No publish targets found", this);
+                Log.Warn("Scheduled Publish: " + "No publish targets found", this);
                 return;
             }
 
@@ -254,7 +254,7 @@ namespace ScheduledPublishing.sitecore.shell.Applications.ContentManager.Dialogs
             var languages = LanguageManager.GetLanguages(_database);
             if (languages == null)
             {
-                Log.Info("No publish languages found", this);
+                Log.Warn("Scheduled Publish: " + "No publish languages found", this);
                 return;
             }
 
