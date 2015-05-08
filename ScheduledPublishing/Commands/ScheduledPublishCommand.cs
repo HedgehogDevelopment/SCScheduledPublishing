@@ -1,13 +1,15 @@
-﻿using System;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using ScheduledPublishing.Models;
+﻿using ScheduledPublishing.Models;
 using ScheduledPublishing.SMTP;
 using ScheduledPublishing.Utils;
+using Sitecore;
 using Sitecore.Data.Items;
 using Sitecore.Diagnostics;
 using Sitecore.Tasks;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using System.Text;
 
 namespace ScheduledPublishing.Commands
 {
@@ -24,11 +26,12 @@ namespace ScheduledPublishing.Commands
             Stopwatch publishStopwatch = new Stopwatch();
             Stopwatch alertStopwatch = new Stopwatch();
             Stopwatch bucketStopwatch = new Stopwatch();
-
-            var publishToDate = DateTime.Now;
-            var publishFromDate = new DateTime(publishToDate.Year, publishToDate.Month, publishToDate.Day, publishToDate.Hour, 0, 0);
-
+            
             publishStopwatch.Start();
+
+            DateTime publishToDate = DateTime.Now;
+            DateTime publishFromDate = new DateTime(publishToDate.Year, publishToDate.Month, publishToDate.Day, publishToDate.Hour, 0, 0);
+
             PublishSchedules(publishFromDate, publishToDate);
             publishStopwatch.Stop();
             Log.Info("Scheduled Publish: Publishing Stopwatch " + publishStopwatch.ElapsedMilliseconds, this);
@@ -36,10 +39,11 @@ namespace ScheduledPublishing.Commands
             Log.Info("Scheduled Publish: Total after Published Schedules " + commandStopwatch.ElapsedMilliseconds, this);
 
 
-            var alertToDate = publishFromDate.AddSeconds(-1);
-            var alertFromDate = publishFromDate.AddHours(-1);
-
             alertStopwatch.Start();
+
+            DateTime alertToDate = publishFromDate.AddSeconds(-1);
+            DateTime alertFromDate = publishFromDate.AddHours(-1);
+
             AlertForFailedSchedules(alertFromDate, alertToDate);
             alertStopwatch.Stop();
             Log.Info("Scheduled Publish: Alert Failed Schedules Stopwatch " + alertStopwatch.ElapsedMilliseconds, this);
@@ -58,7 +62,7 @@ namespace ScheduledPublishing.Commands
 
         private static void PublishSchedules(DateTime fromDate, DateTime toDate)
         {
-            var duePublishOptions = ScheduledPublishRepository.GetUnpublishedSchedules(fromDate, toDate);
+            IEnumerable<PublishSchedule> duePublishOptions = ScheduledPublishRepository.GetUnpublishedSchedules(fromDate, toDate);
             if (duePublishOptions == null)
             {
                 return;
@@ -66,8 +70,8 @@ namespace ScheduledPublishing.Commands
 
             foreach (var publishOptions in duePublishOptions)
             {
-                var handle = ScheduledPublishManager.Publish(publishOptions);
-                var report = ScheduledPublishManager.GetScheduledPublishReport(handle);
+                Handle handle = ScheduledPublishManager.Publish(publishOptions);
+                ScheduledPublishReport report = ScheduledPublishManager.GetScheduledPublishReport(handle);
 
                 if (report.IsSuccessful)
                 {
@@ -83,19 +87,19 @@ namespace ScheduledPublishing.Commands
 
         private static void AlertForFailedSchedules(DateTime fromDate, DateTime toDate)
         {
-            var failedSchedules = ScheduledPublishRepository.GetUnpublishedSchedules(fromDate, toDate);
+            IEnumerable<PublishSchedule> failedSchedules = ScheduledPublishRepository.GetUnpublishedSchedules(fromDate, toDate);
             if (failedSchedules == null)
             {
                 return;
             }
 
-            var failedSchedulesList = failedSchedules.ToList();
+            List<PublishSchedule> failedSchedulesList = failedSchedules.ToList();
             if (!failedSchedulesList.Any())
             {
                 return;
             }
 
-            var sbMessage = new StringBuilder();
+            StringBuilder sbMessage = new StringBuilder();
 
             foreach (var schedule in failedSchedulesList)
             {
@@ -105,7 +109,7 @@ namespace ScheduledPublishing.Commands
                     schedule.PublishDate);
                 sbMessage.Append("Please, review and publish it manually.<br/>");
 
-                var message = sbMessage.ToString();
+                string message = sbMessage.ToString();
 
                 Log.Error("Scheduled Publish: " + message, new object());
 

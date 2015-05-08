@@ -19,8 +19,8 @@ namespace ScheduledPublishing.Utils
 
         public static ScheduledPublishReport GetScheduledPublishReport(Handle handle)
         {
-            var isSuccessful = false;
-            var sbMessage = new StringBuilder();
+            bool isSuccessful = false;
+            StringBuilder sbMessage = new StringBuilder();
 
             if (handle == null)
             {
@@ -29,7 +29,7 @@ namespace ScheduledPublishing.Utils
             }
             else if (PublishManager.WaitFor(handle))
             {
-                var status = PublishManager.GetStatus(handle);
+                PublishStatus status = PublishManager.GetStatus(handle);
 
                 if (status == null)
                 {
@@ -63,7 +63,7 @@ namespace ScheduledPublishing.Utils
                 }
             }
 
-            var report = new ScheduledPublishReport
+            ScheduledPublishReport report = new ScheduledPublishReport
             {
                 IsSuccessful = isSuccessful, 
                 Message = sbMessage.ToString()

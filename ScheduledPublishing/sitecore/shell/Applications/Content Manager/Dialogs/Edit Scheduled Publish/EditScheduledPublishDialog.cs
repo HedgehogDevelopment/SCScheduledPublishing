@@ -128,7 +128,7 @@ namespace ScheduledPublishing.sitecore.shell.Applications.ContentManager.Dialogs
                     {
                         publishSchedule.PublishDate = dateTime;
 
-                        var validationResult = ScheduledPublishValidator.Validate(publishSchedule);
+                        ValidationResult validationResult = ScheduledPublishValidator.Validate(publishSchedule);
                         if (!validationResult.IsValid)
                         {
                             SheerResponse.Alert(string.Join(Environment.NewLine, validationResult.ValidationErrors));
