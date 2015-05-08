@@ -1,7 +1,7 @@
-﻿using System;
-using ScheduledPublishing.Utils;
+﻿using ScheduledPublishing.Utils;
 using Sitecore.Data;
 using Sitecore.Data.Items;
+using System;
 
 namespace ScheduledPublishing.SMTP
 {

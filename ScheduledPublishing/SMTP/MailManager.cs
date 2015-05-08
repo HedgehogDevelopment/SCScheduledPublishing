@@ -1,10 +1,10 @@
-﻿using System;
+﻿using ScheduledPublishing.Models;
+using Sitecore;
+using Sitecore.Diagnostics;
+using System;
 using System.Linq;
 using System.Net;
 using System.Net.Mail;
-using ScheduledPublishing.Models;
-using Sitecore;
-using Sitecore.Diagnostics;
 
 namespace ScheduledPublishing.SMTP
 {

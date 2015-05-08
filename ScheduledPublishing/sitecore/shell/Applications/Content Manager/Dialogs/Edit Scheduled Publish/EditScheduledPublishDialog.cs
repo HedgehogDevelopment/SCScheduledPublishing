@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Text;
-using System.Web.UI;
-using System.Web.UI.WebControls;
-using ScheduledPublishing.Models;
+﻿using ScheduledPublishing.Models;
 using ScheduledPublishing.Utils;
 using ScheduledPublishing.Validation;
 using Sitecore;
@@ -14,6 +8,12 @@ using Sitecore.Diagnostics;
 using Sitecore.Web.UI.HtmlControls;
 using Sitecore.Web.UI.Pages;
 using Sitecore.Web.UI.Sheer;
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Text;
+using System.Web.UI;
+using System.Web.UI.WebControls;
 using Literal = Sitecore.Web.UI.HtmlControls.Literal;
 
 namespace ScheduledPublishing.sitecore.shell.Applications.Content_Manager.Dialogs.Edit_Scheduled_Publish
