@@ -1,5 +1,4 @@
-﻿using System.Collections.Specialized;
-using Sitecore;
+﻿using Sitecore;
 using Sitecore.Configuration;
 using Sitecore.Data;
 using Sitecore.Data.Items;
@@ -8,6 +7,7 @@ using Sitecore.Globalization;
 using Sitecore.Shell.Framework.Commands;
 using Sitecore.Text;
 using Sitecore.Web.UI.Sheer;
+using System.Collections.Specialized;
 
 namespace ScheduledPublishing.Commands
 {
