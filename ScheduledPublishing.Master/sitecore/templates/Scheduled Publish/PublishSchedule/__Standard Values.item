@@ -1,26 +1,19 @@
 ----item----
 version: 1
-id: {C1813448-7B11-4813-B0B9-FAF8A7A8F48E}
+id: {B4634F61-D9E8-4D02-BC21-DFEA5E720C91}
 database: master
-path: /sitecore/system/Modules/Scheduled Publish/Settings
-parent: {9D1F829B-FEB3-45A8-85E1-EF59EB156C3A}
-name: Settings
+path: /sitecore/templates/Scheduled Publish/PublishSchedule/__Standard Values
+parent: {9F110258-0139-4FC9-AED8-5610C13DADF3}
+name: __Standard Values
 master: {00000000-0000-0000-0000-000000000000}
-template: {3D78A46A-2385-442C-B30E-04C37DBD8C9D}
-templatekey: ScheduledPublishSettings
+template: {9F110258-0139-4FC9-AED8-5610C13DADF3}
+templatekey: PublishSchedule
 
 ----version----
 language: en
 version: 1
-revision: 900df67a-4d80-4630-a844-db01eef387a0
+revision: 23f69b8e-cd30-47c0-b588-44eaaef0e07e
 
-----field----
-field: {C3CDED2B-CD39-4AD9-B361-865773A41C74}
-name: ScheduledPublishSettingsSendEmail
-key: scheduledpublishsettingssendemail
-content-length: 1
-
-1
 ----field----
 field: {52807595-0F8F-4B20-8D2A-CB71D28C6103}
 name: __Owner
@@ -34,7 +27,7 @@ name: __Created
 key: __created
 content-length: 15
 
-20150427T105521
+20150508T172938
 ----field----
 field: {5DD74568-4D4B-44C1-B513-0AF5F4CDA34F}
 name: __Created by
@@ -48,14 +41,14 @@ name: __Revision
 key: __revision
 content-length: 36
 
-900df67a-4d80-4630-a844-db01eef387a0
+23f69b8e-cd30-47c0-b588-44eaaef0e07e
 ----field----
 field: {D9CF14B1-FA16-4BA6-9288-E8A174D4D522}
 name: __Updated
 key: __updated
 content-length: 34
 
-20150428T112624:635658171845009590
+20150508T172938:635667029789765462
 ----field----
 field: {BADD9CF9-53E0-4D0C-BCC0-2D784C282F6A}
 name: __Updated by

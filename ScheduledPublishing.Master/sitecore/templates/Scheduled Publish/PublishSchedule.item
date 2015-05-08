@@ -17,6 +17,13 @@ content-length: 0
 
 
 ----field----
+field: {F7D48A55-2158-4F02-9356-756654404F73}
+name: __Standard values
+key: __standard values
+content-length: 38
+
+{B4634F61-D9E8-4D02-BC21-DFEA5E720C91}
+----field----
 field: {06D5295C-ED2F-4A54-9BF2-26228D113318}
 name: __Icon
 key: __icon
@@ -26,7 +33,7 @@ People/16x16/clock_run.png
 ----version----
 language: en
 version: 1
-revision: b14c2b0c-e2a4-4abb-a6c0-0bc90538ebc6
+revision: a7d5b766-9a3b-47ff-be95-83af000fa687
 
 ----field----
 field: {B5E02AD9-D56F-4C41-A065-A133DB87BDEB}
@@ -62,14 +69,14 @@ name: __Revision
 key: __revision
 content-length: 36
 
-b14c2b0c-e2a4-4abb-a6c0-0bc90538ebc6
+a7d5b766-9a3b-47ff-be95-83af000fa687
 ----field----
 field: {D9CF14B1-FA16-4BA6-9288-E8A174D4D522}
 name: __Updated
 key: __updated
 content-length: 34
 
-20150507T004641:635665564013346070
+20150508T172938:635667029789835494
 ----field----
 field: {BADD9CF9-53E0-4D0C-BCC0-2D784C282F6A}
 name: __Updated by

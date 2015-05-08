@@ -17,6 +17,13 @@ content-length: 38
 
 {1930BBEB-7805-471A-A3BE-4858AC7CF696}
 ----field----
+field: {F7D48A55-2158-4F02-9356-756654404F73}
+name: __Standard values
+key: __standard values
+content-length: 38
+
+{F0D22E55-0D5A-4362-A618-360E6698EB4E}
+----field----
 field: {06D5295C-ED2F-4A54-9BF2-26228D113318}
 name: __Icon
 key: __icon
@@ -26,7 +33,7 @@ Applications/32x32/gear.png
 ----version----
 language: en
 version: 1
-revision: 13defe48-7611-4182-b446-421bdb212283
+revision: 5732c3a6-f5d1-423a-b14a-253d70c60b70
 
 ----field----
 field: {B5E02AD9-D56F-4C41-A065-A133DB87BDEB}
@@ -55,14 +62,14 @@ name: __Revision
 key: __revision
 content-length: 36
 
-13defe48-7611-4182-b446-421bdb212283
+5732c3a6-f5d1-423a-b14a-253d70c60b70
 ----field----
 field: {D9CF14B1-FA16-4BA6-9288-E8A174D4D522}
 name: __Updated
 key: __updated
 content-length: 34
 
-20150427T112942:635657309822642976
+20150508T172930:635667029709558658
 ----field----
 field: {BADD9CF9-53E0-4D0C-BCC0-2D784C282F6A}
 name: __Updated by
