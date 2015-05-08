@@ -57,33 +57,32 @@ namespace ScheduledPublishing.Commands
 
         private static void PublishSchedules(DateTime fromDate, DateTime toDate)
         {
-            IEnumerable<PublishSchedule> duePublishOptions = ScheduledPublishRepository.GetUnpublishedSchedules(fromDate, toDate);
-            if (duePublishOptions == null)
+            IEnumerable<PublishSchedule> duePublishSchedules = ScheduledPublishRepository.GetUnpublishedSchedules(fromDate, toDate);
+            if (duePublishSchedules == null)
             {
                 return;
             }
 
-            foreach (var publishOptions in duePublishOptions)
+            foreach (var schedule in duePublishSchedules)
             {
-                Handle handle = ScheduledPublishManager.Publish(publishOptions);
+                Handle handle = ScheduledPublishManager.Publish(schedule);
                 ScheduledPublishReport report = ScheduledPublishManager.GetScheduledPublishReport(handle);
 
                 if (report.IsSuccessful)
                 {
-                    MarkAsPublished(publishOptions);
+                    MarkAsPublished(schedule);
                 }
 
                 if (ScheduledPublishSettings.IsSendEmailChecked)
                 {
                     try
                     {
-                        MailManager.SendEmail(report.Message, publishOptions.SchedulerEmail);
+                        MailManager.SendEmail(report.Message, schedule.ItemToPublish, schedule.SchedulerEmail);
                     }
                     catch (Exception)
                     {
-                        Log.Error("Scheduled Publish: Sending publish email confirmation failed, continuing... ", publishOptions);
+                        Log.Error("Scheduled Publish: Sending publish email confirmation failed, continuing... ", schedule);
                     }
-                    
                 }
             }
         }
@@ -96,21 +95,21 @@ namespace ScheduledPublishing.Commands
                 return;
             }
 
-            List<PublishSchedule> failedSchedulesList = failedSchedules.ToList();
-            if (!failedSchedulesList.Any())
+            List<PublishSchedule> failedPublishSchedules = failedSchedules.ToList();
+            if (!failedPublishSchedules.Any())
             {
                 return;
             }
 
             StringBuilder sbMessage = new StringBuilder();
 
-            foreach (var schedule in failedSchedulesList)
+            foreach (var schedule in failedPublishSchedules)
             {
                 sbMessage.Append("Following item failed for scheduled publish: \r\n");
                 sbMessage.AppendFormat("{0} for {1}.\r\n",
                     schedule.ItemToPublish != null ? schedule.ItemToPublish.Paths.FullPath : "website",
                     schedule.PublishDate);
-                sbMessage.Append("Please, review and publish it manually.\r\n");
+                sbMessage.Append("Please, review and publish it manually.");
 
                 string message = sbMessage.ToString();
 
@@ -120,7 +119,7 @@ namespace ScheduledPublishing.Commands
                 {
                     try
                     {
-                        MailManager.SendEmail(message, schedule.SchedulerEmail);
+                        MailManager.SendEmail(message, schedule.ItemToPublish, schedule.SchedulerEmail);
                     }
                     catch (Exception)
                     {
