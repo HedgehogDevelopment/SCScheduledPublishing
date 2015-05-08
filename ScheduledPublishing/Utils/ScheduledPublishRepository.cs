@@ -85,8 +85,8 @@ namespace ScheduledPublishing.Utils
                     }
                     publishOptionsItem[PublishSchedule.PublishModeId] = publishSchedule.PublishMode.ToString();
                     publishOptionsItem[PublishSchedule.PublishChildrenId] = publishSchedule.PublishChildren ? "1" : string.Empty;
-                    publishOptionsItem[PublishSchedule.TargetLanguagesId] = string.Join("|",
-                        publishSchedule.TargetLanguages.Select(x => x.Name));
+                    publishOptionsItem[PublishSchedule.TargetLanguagesId] = 
+                        string.Join("|", publishSchedule.TargetLanguages.Select(x => x.Name));
                     publishOptionsItem[PublishSchedule.SourceDatabaseId] = publishSchedule.SourceDatabase.Name;
                     publishOptionsItem[PublishSchedule.TargetDatabasesId] = string.Join("|", publishSchedule.TargetDatabases.Select(x => x.Name));
                     publishOptionsItem[PublishSchedule.PublishDateId] = DateUtil.ToIsoDate(publishSchedule.PublishDate);
@@ -95,7 +95,7 @@ namespace ScheduledPublishing.Utils
                     publishOptionsItem.Editing.EndEdit();
 
                     Log.Info(
-                        string.Format("Scheduled Publish: " + "Created Publish Options: {0}: {1} {2} {3}",
+                        string.Format("Scheduled Publish: Created Publish Options: {0}: {1} {2} {3}",
                             action,
                             publishSchedule.ItemToPublish != null ? publishSchedule.ItemToPublish.Name : "Website",
                             publishSchedule.ItemToPublish != null ? publishSchedule.ItemToPublish.ID.ToString() : "Website",
@@ -105,7 +105,7 @@ namespace ScheduledPublishing.Utils
             catch (Exception ex)
             {
                 Log.Error(
-                    string.Format("Scheduled Publish: " + "Failed creating Publish Options: {0}: {1} {2} {3}",
+                    string.Format("Scheduled Publish: Failed creating Publish Options: {0}: {1} {2} {3}",
                         action,
                         publishSchedule.ItemToPublish != null ? publishSchedule.ItemToPublish.Name : "Website",
                         publishSchedule.ItemToPublish != null ? publishSchedule.ItemToPublish.ID.ToString() : "Website",
@@ -117,7 +117,7 @@ namespace ScheduledPublishing.Utils
         {
             if (publishSchedule.InnerItem == null)
             {
-                Log.Error("Scheduled Publish: " + "Scheduled Update Failed. Item is null.", new object());
+                Log.Error("Scheduled Publish: Scheduled Update Failed. Item is null.", new object());
                 return;
             }
 
@@ -156,7 +156,7 @@ namespace ScheduledPublishing.Utils
                     }
 
                     Log.Info(
-                        string.Format("Scheduled Publish: " + "Updated Publish Options: {0}: {1} {2} {3}",
+                        string.Format("Scheduled Publish: Updated Publish Options: {0}: {1} {2} {3}",
                             action,
                             publishSchedule.ItemToPublish != null ? publishSchedule.ItemToPublish.Name : "Website",
                             publishSchedule.ItemToPublish != null ? publishSchedule.ItemToPublish.ID.ToString() : "Website",
@@ -166,7 +166,7 @@ namespace ScheduledPublishing.Utils
             catch (Exception ex)
             {
                 Log.Error(
-                    string.Format("Scheduled Publish: " + "Failed updating Publish Options: {0}: {1} {2} {3}",
+                    string.Format("Scheduled Publish: Failed updating Publish Options: {0}: {1} {2} {3}",
                         action,
                         publishSchedule.ItemToPublish != null ? publishSchedule.ItemToPublish.Name : "Website",
                         publishSchedule.ItemToPublish != null ? publishSchedule.ItemToPublish.ID.ToString() : "Website",
@@ -197,7 +197,7 @@ namespace ScheduledPublishing.Utils
             }
             catch (Exception ex)
             {
-                Log.Error(string.Format("Scheduled Publish: " + "Failed delete item {0} {1} {2}",
+                Log.Error(string.Format("Scheduled Publish: Failed delete item {0} {1} {2}",
                     item.Paths.FullPath,
                     item.ID,
                     ex), new object());

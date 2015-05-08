@@ -24,8 +24,8 @@ namespace ScheduledPublishing.Utils
 
             if (handle == null)
             {
-                sbMessage.Append("Final Status: Fail. <br/>");
-                sbMessage.Append("Please, check log files for more information <br/>");
+                sbMessage.AppendLine("Final Status: Fail.");
+                sbMessage.AppendLine("Please, check log files for more information.");
             }
             else if (PublishManager.WaitFor(handle))
             {
@@ -33,31 +33,33 @@ namespace ScheduledPublishing.Utils
 
                 if (status == null)
                 {
-                    sbMessage.Append("The scheduled publishing process was unexpectedly interrupted. <br/>");
-                    sbMessage.Append("Please, check log files for more information <br/>");
+                    sbMessage.AppendLine("The scheduled publishing process was unexpectedly interrupted.");
+                    sbMessage.AppendLine("Please, check log files for more information.");
                 }
                 else
                 {
                     if (status.Failed)
                     {
-                        sbMessage.Append("Final Status: Fail. <br/>");
-                        sbMessage.Append("Please, check log files for more information <br/>");
+                        sbMessage.AppendLine("Final Status: Fail.");
+                        sbMessage.AppendLine("Please, check log files for more information.");
                     }
                     else if (status.IsDone)
                     {
-                        sbMessage.Append("Final Status: Success. <br/>");
+                        sbMessage.AppendLine("Final Status: Success.");
                         isSuccessful = true;
                     }
 
-                    sbMessage.AppendFormat("Items processed: {0}. <br/><br/>", status.Processed);
+                    sbMessage.AppendFormat("Items processed: {0}.", status.Processed);
+                    sbMessage.AppendLine();
+                    sbMessage.AppendLine();
 
                     if (status.Messages != null)
                     {
-                        sbMessage.Append("Detailed Information: <br/>");
+                        sbMessage.AppendLine("Detailed Information:");
 
                         foreach (var message in status.Messages)
                         {
-                            sbMessage.AppendFormat("{0} <br/>", message);
+                            sbMessage.AppendLine(message);
                         }
                     }
                 }
@@ -76,7 +78,7 @@ namespace ScheduledPublishing.Utils
         {
             if (publishSchedule.ItemToPublish == null)
             {
-                Log.Error("Scheduled Publish: " + "Scheduled Publish Task didn't execute because PublishOptions.ItemToPublish is null", new object());
+                Log.Error("Scheduled Publish: Scheduled Publish Task didn't execute because PublishOptions.ItemToPublish is null", new object());
                 return null;
             }
 
@@ -110,7 +112,7 @@ namespace ScheduledPublishing.Utils
             catch (Exception ex)
             {
                 Log.Error(
-                    string.Format("Scheduled Publish: " + "Scheduled Publish Task failed for {0} {1} {2}",
+                    string.Format("Scheduled Publish: Scheduled Publish Task failed for {0} {1} {2}",
                                    publishSchedule.ItemToPublish.Name,
                                    publishSchedule.ItemToPublish.ID,
                                    ex), new object());
@@ -153,7 +155,7 @@ namespace ScheduledPublishing.Utils
                         }
                     default:
                         {
-                            Log.Error("Scheduled Publish: " + "Scheduled Publish Task didn't execute because invalid PublishMode", new object());
+                            Log.Error("Scheduled Publish: Scheduled Publish Task didn't execute because invalid PublishMode", new object());
                             break;
                         }
                 }
@@ -161,7 +163,7 @@ namespace ScheduledPublishing.Utils
             catch (Exception ex)
             {
                 Log.Error(
-                    string.Format("Scheduled Publish: " + "Scheduled Publish Task failed for Website Publish in {0} Mode {1}",
+                    string.Format("Scheduled Publish: Scheduled Publish Task failed for Website Publish in {0} Mode {1}",
                                    publishSchedule.PublishMode,
                                    ex), new object());
             }

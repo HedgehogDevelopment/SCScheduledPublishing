@@ -80,27 +80,5 @@ namespace ScheduledPublishing.Validation
 
             return false;
         }
-
-
-        //private bool ValidateItemValidators()
-        //{
-        //    this.InnerItem.Fields.ReadAll();
-        //    ValidatorCollection validators = ValidatorManager.GetGlobalValidatorsForItem(ValidatorsMode.Workflow, this.InnerItem);
-        //    ValidatorCollection validatorsBar = ValidatorManager.GetGlobalValidatorsForItem(ValidatorsMode.ValidatorBar, this.InnerItem);
-        //    ValidatorCollection validatorsButton = ValidatorManager.GetGlobalValidatorsForItem(ValidatorsMode.ValidateButton, this.InnerItem);
-        //    ValidatorCollection validatorsGutter = ValidatorManager.GetGlobalValidatorsForItem(ValidatorsMode.Gutter, this.InnerItem);
-        //    var options = new ValidatorOptions(true);
-        //    ValidatorManager.Validate(validatorsBar, options);
-        //    foreach (BaseValidator validator in validatorsBar)
-        //    {
-        //        if (validator.Result != ValidatorResult.Valid)
-        //        {
-        //            SheerResponse.Alert("This item has validation errors. You may want to review them and schedule another publish.");
-        //            return false;
-        //        }
-        //    }
-
-        //    return true;
-        //}
     }
 }
