@@ -14,13 +14,14 @@ using Sitecore.Diagnostics;
 using Sitecore.Web.UI.HtmlControls;
 using Sitecore.Web.UI.Pages;
 using Sitecore.Web.UI.Sheer;
+using Literal = Sitecore.Web.UI.HtmlControls.Literal;
 
 namespace ScheduledPublishing.sitecore.shell.Applications.Content_Manager.Dialogs.Edit_Scheduled_Publish
 {
     public class EditScheduledPublishDialog : DialogForm
     {
         protected Scrollbox AllSchedules;
-        protected Sitecore.Web.UI.HtmlControls.Literal ServerTime;
+        protected Literal ServerTime;
 
         private const string CURREN_TIME_ON_SERVER_TEXT = "Current time on server: ";
         private readonly Database _database = Context.ContentDatabase;

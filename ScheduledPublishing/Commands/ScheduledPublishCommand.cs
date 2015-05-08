@@ -1,15 +1,15 @@
-﻿using ScheduledPublishing.Models;
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using System.Text;
+using ScheduledPublishing.Models;
 using ScheduledPublishing.SMTP;
 using ScheduledPublishing.Utils;
 using Sitecore;
 using Sitecore.Data.Items;
 using Sitecore.Diagnostics;
 using Sitecore.Tasks;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
 
 namespace ScheduledPublishing.Commands
 {

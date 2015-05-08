@@ -6,7 +6,7 @@ namespace ScheduledPublishing.Models
 {
     public class NotificationEmail
     {
-        private static readonly Database _database = Constants.ScheduledTasksContextDatabase;
+        private static readonly Database _database = Constants.SCHEDULED_TASK_CONTEXT_DATABASE;
 
         private Item _innerItem;
         public Item InnerItem

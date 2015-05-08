@@ -1,10 +1,10 @@
-﻿using ScheduledPublishing.Models;
+﻿using System.Collections.Generic;
+using System.Linq;
+using ScheduledPublishing.Models;
 using ScheduledPublishing.Utils;
 using Sitecore.Data.Items;
 using Sitecore.Diagnostics;
 using Sitecore.Pipelines.GetContentEditorWarnings;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace ScheduledPublishing.Pipelines.ContentEditorWarnings
 {

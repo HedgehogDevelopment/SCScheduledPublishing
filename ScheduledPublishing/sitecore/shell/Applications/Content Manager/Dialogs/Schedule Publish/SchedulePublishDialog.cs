@@ -23,7 +23,7 @@ using Sitecore.Web.UI.Pages;
 using Sitecore.Web.UI.Sheer;
 using Sitecore.Web.UI.WebControls;
 using Control = Sitecore.Web.UI.HtmlControls.Control;
-using Literal = Sitecore.Web.UI.HtmlControls.Literal;
+using ItemList = Sitecore.Collections.ItemList;
 
 namespace ScheduledPublishing.sitecore.shell.Applications.Content_Manager.Dialogs.Schedule_Publish
 {
@@ -216,7 +216,7 @@ namespace ScheduledPublishing.sitecore.shell.Applications.Content_Manager.Dialog
         /// </summary>
         private void BuildPublishingTargets()
         {
-            Sitecore.Collections.ItemList publishingTargets = PublishManager.GetPublishingTargets(_database);
+            ItemList publishingTargets = PublishManager.GetPublishingTargets(_database);
             if (publishingTargets == null)
             {
                 Log.Warn("Scheduled Publish: " + "No publish targets found", this);

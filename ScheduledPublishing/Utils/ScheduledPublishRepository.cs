@@ -1,19 +1,19 @@
-﻿using Sitecore.Data.Items;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using ScheduledPublishing.Models;
 using Sitecore;
+using Sitecore.Configuration;
 using Sitecore.Data;
+using Sitecore.Data.Items;
 using Sitecore.Diagnostics;
 using Sitecore.SecurityModel;
-using Sitecore.Shell.Framework.Commands;
 
 namespace ScheduledPublishing.Utils
 {
     public static class ScheduledPublishRepository
     {
-        private static readonly Database _database = Constants.ScheduledTasksContextDatabase;
+        private static readonly Database _database = Constants.SCHEDULED_TASK_CONTEXT_DATABASE;
 
         public static IEnumerable<PublishSchedule> AllSchedules
         {
@@ -185,7 +185,7 @@ namespace ScheduledPublishing.Utils
             {
                 using (new SecurityDisabler())
                 {
-                    if (Sitecore.Configuration.Settings.RecycleBinActive)
+                    if (Settings.RecycleBinActive)
                     {
                         item.Recycle();
                     }
