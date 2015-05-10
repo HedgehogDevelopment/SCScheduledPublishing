@@ -22,6 +22,7 @@ namespace ScheduledPublishing.Models
         public static readonly ID PublishChildrenId = ID.Parse("{7E70DC6C-21E1-48C2-8AEC-ACA6A4B8BCB2}");
         public static readonly ID PublishModeId = ID.Parse("{F313EF5C-AC40-46DB-9AA1-52C70D590338}");
         public static readonly ID IsPublishedId = ID.Parse("{EEAC5DF6-19B2-425B-84F4-466D44213108}");
+        public static readonly ID PublishRelatedItemsId = ID.Parse("{D1DE06E3-0A92-4DCE-8787-FA6DF424E3F5}");
 
         public PublishSchedule()
         {
@@ -33,6 +34,7 @@ namespace ScheduledPublishing.Models
             SchedulerEmail = item[SchedulerEmailId];
             Unpublish = "1" == item[UnpublishId];
             PublishChildren = "1" == item[PublishChildrenId];
+            PublishRelatedItems = "1" == item[PublishRelatedItemsId];
             PublishMode = ParseMode(item[PublishModeId]);
             IsPublished = "1" == item[IsPublishedId];
 
@@ -76,6 +78,8 @@ namespace ScheduledPublishing.Models
         public bool Unpublish { get; set; }
 
         public bool PublishChildren { get; set; }
+
+        public bool PublishRelatedItems { get; set; }
 
         public DateTime PublishDate { get; set; }
 

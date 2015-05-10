@@ -99,7 +99,8 @@ namespace ScheduledPublishing.Utils
                     publishSchedule.TargetDatabases.ToArray(),
                     publishSchedule.TargetLanguages.ToArray(),
                     publishSchedule.PublishChildren,
-                    publishSchedule.PublishMode == PublishMode.Smart);
+                    publishSchedule.PublishMode == PublishMode.Smart,
+                    publishSchedule.PublishRelatedItems);
 
                 if (publishSchedule.Unpublish)
                 {

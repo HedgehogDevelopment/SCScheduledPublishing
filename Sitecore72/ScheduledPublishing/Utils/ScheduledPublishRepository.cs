@@ -94,6 +94,7 @@ namespace ScheduledPublishing.Utils
                     }
                     publishOptionsItem[PublishSchedule.PublishModeId] = publishSchedule.PublishMode.ToString();
                     publishOptionsItem[PublishSchedule.PublishChildrenId] = publishSchedule.PublishChildren ? "1" : string.Empty;
+                    publishOptionsItem[PublishSchedule.PublishRelatedItemsId] = publishSchedule.PublishRelatedItems ? "1" : string.Empty;
                     publishOptionsItem[PublishSchedule.TargetLanguagesId] = 
                         string.Join("|", publishSchedule.TargetLanguages.Select(x => x.Name));
                     publishOptionsItem[PublishSchedule.SourceDatabaseId] = publishSchedule.SourceDatabase.Name;
@@ -146,6 +147,7 @@ namespace ScheduledPublishing.Utils
                     }
                     publishSchedule.InnerItem[PublishSchedule.PublishModeId] = publishSchedule.PublishMode.ToString();
                     publishSchedule.InnerItem[PublishSchedule.PublishChildrenId] = publishSchedule.PublishChildren ? "1" : string.Empty;
+                    publishSchedule.InnerItem[PublishSchedule.PublishRelatedItemsId] = publishSchedule.PublishRelatedItems ? "1" : string.Empty;
                     publishSchedule.InnerItem[PublishSchedule.TargetLanguagesId] = string.Join("|",
                         publishSchedule.TargetLanguages.Select(x => x.Name));
                     publishSchedule.InnerItem[PublishSchedule.SourceDatabaseId] = publishSchedule.SourceDatabase.Name;

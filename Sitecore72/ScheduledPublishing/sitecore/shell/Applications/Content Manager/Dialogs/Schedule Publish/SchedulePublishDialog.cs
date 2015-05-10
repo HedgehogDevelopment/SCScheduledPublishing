@@ -43,6 +43,7 @@ namespace ScheduledPublishing.sitecore.shell.Applications.Content_Manager.Dialog
         protected Literal ServerTime;
         protected Literal PublishTimeLit;
         protected Checkbox PublishChildren;
+        protected Checkbox PublishRelatedItems;
         protected Radiobutton SmartPublish;
         protected Radiobutton Republish;
         protected DateTimePicker PublishDateTimePicker;
@@ -195,6 +196,7 @@ namespace ScheduledPublishing.sitecore.shell.Applications.Content_Manager.Dialog
                 Unpublish = Unpublish,
                 PublishMode = SmartPublish.Checked ? PublishMode.Smart : PublishMode.Full,
                 PublishChildren = PublishChildren.Checked,
+                PublishRelatedItems = PublishRelatedItems.Checked,
                 SchedulerEmail = Context.User.Profile.Email,
                 IsPublished = false
             };
