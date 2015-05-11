@@ -236,6 +236,10 @@ namespace ScheduledPublishing.sitecore.shell.Applications.Content_Manager.Dialog
                 targetInput.ID = id;
                 targetInput.Attributes["type"] = "checkbox";
                 targetInput.Disabled = !target.Access.CanWrite();
+                if (publishingTargets.Count == 1)
+                {
+                    targetInput.Attributes["checked"] = "checked";
+                }
                 PublishingTargets.Controls.Add(targetInput);
 
                 HtmlGenericControl targetLabel = new HtmlGenericControl("label");
@@ -272,6 +276,10 @@ namespace ScheduledPublishing.sitecore.shell.Applications.Content_Manager.Dialog
                 langInput.ID = id;
                 langInput.Attributes["type"] = "checkbox";
                 langInput.Attributes["value"] = language.Name;
+                if (languages.Count == 1)
+                {
+                    langInput.Attributes["checked"] = "checked";
+                }
                 Languages.Controls.Add(langInput);
 
                 HtmlGenericControl langLabel = new HtmlGenericControl("label");
