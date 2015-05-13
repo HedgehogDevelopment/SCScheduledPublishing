@@ -4,9 +4,9 @@ namespace ScheduledPublish.Utils
 {
     public static class Constants
     {
-        public static string PUBLISH_TEXT = "publish";
-        public static string UNPUBLISH_TEXT = "unpublish";
-        public static string WEBSITE_PUBLISH_TEXT = "website";
+        public const string PUBLISH_TEXT = "publish";
+        public const string UNPUBLISH_TEXT = "unpublish";
+        public const string WEBSITE_PUBLISH_TEXT = "website";
         public const string SCHEDULE_UNPUBLISH_SETTINGS_TITLE = "Scheduled Unpublish Settings";
         public const string SCHEDULE_UNPUBLISH_LANGUAGES_TITLE = "Scheduled Unpublish Languages";
         public const string SCHEDULE_UNPUBLISH_TARGETS_TITLE = "Scheduled Unpublish Targets";

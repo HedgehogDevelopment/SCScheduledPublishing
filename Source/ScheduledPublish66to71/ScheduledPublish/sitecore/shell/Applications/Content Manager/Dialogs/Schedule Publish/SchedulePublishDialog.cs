@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Web.UI;
-using System.Web.UI.HtmlControls;
-using ScheduledPublish.Models;
+﻿using ScheduledPublish.Models;
 using ScheduledPublish.Repos;
 using ScheduledPublish.Validation;
 using Sitecore;
@@ -22,6 +16,12 @@ using Sitecore.Web.UI.HtmlControls;
 using Sitecore.Web.UI.Pages;
 using Sitecore.Web.UI.Sheer;
 using Sitecore.Web.UI.WebControls;
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
+using System.Web.UI;
+using System.Web.UI.HtmlControls;
 using Constants = ScheduledPublish.Utils.Constants;
 using Control = Sitecore.Web.UI.HtmlControls.Control;
 using ItemList = Sitecore.Collections.ItemList;
@@ -50,6 +50,7 @@ namespace ScheduledPublish.sitecore.shell.Applications.Content_Manager.Dialogs.S
 
         private readonly Database _database = Context.ContentDatabase;
         private readonly CultureInfo _culture = Context.Culture;
+        private ScheduledPublishRepo scheduledPublishRepo;
 
         private Item _innerItem;
         private Item InnerItem
@@ -150,11 +151,14 @@ namespace ScheduledPublish.sitecore.shell.Applications.Content_Manager.Dialogs.S
         {
             Assert.ArgumentNotNull(e, "e");
 
+            scheduledPublishRepo = new ScheduledPublishRepo();
+
             if (!Context.ClientPage.IsEvent)
             {
                 if (Unpublish)
                 {
                     PublishModePanel.Visible = false;
+                    ScheduleLanguages.Visible = false;
                     BuildUnpublishTitles();
                 }
 
@@ -200,7 +204,7 @@ namespace ScheduledPublish.sitecore.shell.Applications.Content_Manager.Dialogs.S
                 return;
             }
 
-            ScheduledPublishRepo.CreatePublishSchedule(publishSchedule);
+            scheduledPublishRepo.CreatePublishSchedule(publishSchedule);
 
             base.OnOK(sender, args);
         }
@@ -325,8 +329,7 @@ namespace ScheduledPublish.sitecore.shell.Applications.Content_Manager.Dialogs.S
         /// </summary>
         private void BuildExistingSchedules()
         {
-            IEnumerable<PublishSchedule> existingSchedules =
-                ScheduledPublishRepo.GetSchedules(InnerItem.ID).ToList();
+            IEnumerable<PublishSchedule> existingSchedules = scheduledPublishRepo.GetSchedules(InnerItem.ID).ToList();
 
             if (existingSchedules.Any())
             {

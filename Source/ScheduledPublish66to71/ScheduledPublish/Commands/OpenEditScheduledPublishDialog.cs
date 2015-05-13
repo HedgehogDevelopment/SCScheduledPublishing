@@ -1,9 +1,9 @@
-﻿using System.Collections.Specialized;
-using Sitecore;
+﻿using Sitecore;
 using Sitecore.Diagnostics;
 using Sitecore.Shell.Framework.Commands;
 using Sitecore.Text;
 using Sitecore.Web.UI.Sheer;
+using System.Collections.Specialized;
 
 namespace ScheduledPublish.Commands
 {

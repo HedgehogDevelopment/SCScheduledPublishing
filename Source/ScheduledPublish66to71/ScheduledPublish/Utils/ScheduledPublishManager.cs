@@ -1,10 +1,11 @@
-﻿using System;
-using System.Linq;
-using System.Text;
-using ScheduledPublish.Models;
+﻿using ScheduledPublish.Models;
 using Sitecore;
 using Sitecore.Diagnostics;
+using Sitecore.Jobs;
 using Sitecore.Publishing;
+using System;
+using System.Linq;
+using System.Text;
 
 namespace ScheduledPublish.Utils
 {
@@ -30,7 +31,7 @@ namespace ScheduledPublish.Utils
             else if (PublishManager.WaitFor(handle))
             {
                 PublishStatus status = PublishManager.GetStatus(handle);
-
+                
                 if (status == null)
                 {
                     sbMessage.AppendLine("The scheduled publishing process was unexpectedly interrupted.");
@@ -43,7 +44,7 @@ namespace ScheduledPublish.Utils
                         sbMessage.AppendLine("Final Status: Fail.");
                         sbMessage.AppendLine("Please, check log files for more information.");
                     }
-                    else if (status.IsDone)
+                    else if (status.IsDone || status.State == JobState.Finished)
                     {
                         sbMessage.AppendLine("Final Status: Success.");
                         isSuccessful = true;

@@ -1,10 +1,10 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using ScheduledPublish.Models;
+﻿using ScheduledPublish.Models;
 using ScheduledPublish.Repos;
 using Sitecore.Data.Items;
 using Sitecore.Diagnostics;
 using Sitecore.Pipelines.GetContentEditorWarnings;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace ScheduledPublish.Pipelines.ContentEditorWarnings
 {
@@ -15,8 +15,9 @@ namespace ScheduledPublish.Pipelines.ContentEditorWarnings
             Item item = args.Item;
             Assert.IsNotNull(item, "item");
             
-            IEnumerable<PublishSchedule> schedulesForCurrentItem =
-                ScheduledPublishRepo.GetSchedules(item.ID);
+            ScheduledPublishRepo scheduledPublishRepo = new ScheduledPublishRepo();
+
+            IEnumerable<PublishSchedule> schedulesForCurrentItem = scheduledPublishRepo.GetSchedules(item.ID);
 
             if (schedulesForCurrentItem.Any())
             {

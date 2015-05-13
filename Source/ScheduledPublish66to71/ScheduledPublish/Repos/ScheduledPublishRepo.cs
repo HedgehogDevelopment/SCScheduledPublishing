@@ -1,22 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using ScheduledPublish.Models;
+﻿using ScheduledPublish.Models;
 using Sitecore;
 using Sitecore.Configuration;
 using Sitecore.Data;
 using Sitecore.Data.Items;
 using Sitecore.Diagnostics;
 using Sitecore.SecurityModel;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using Constants = ScheduledPublish.Utils.Constants;
 
 namespace ScheduledPublish.Repos
 {
-    public static class ScheduledPublishRepo
+    public class ScheduledPublishRepo
     {
         private static readonly Database _database = Constants.SCHEDULED_TASK_CONTEXT_DATABASE;
 
-        public static IEnumerable<PublishSchedule> AllSchedules
+        public IEnumerable<PublishSchedule> AllSchedules
         {
             get
             {
@@ -27,16 +27,16 @@ namespace ScheduledPublish.Repos
             }
         }
 
-        public static IEnumerable<PublishSchedule> AllUnpublishedSchedules
+        public IEnumerable<PublishSchedule> AllUnpublishedSchedules
         {
             get 
             { 
-                return AllSchedules.Where(x => !x.IsPublished)
+                return AllSchedules.Where(x => x.ItemToPublish != null && !x.IsPublished)
                 .OrderBy(x => x.PublishDate); 
             }
         }
 
-        private static Item RootFolder
+        private Item RootFolder
         {
             get
             {
@@ -46,7 +46,7 @@ namespace ScheduledPublish.Repos
             }
         }
 
-        public static IEnumerable<PublishSchedule> GetSchedules(ID itemId)
+        public IEnumerable<PublishSchedule> GetSchedules(ID itemId)
         {
             if (ID.IsNullOrEmpty(itemId))
             {
@@ -59,7 +59,7 @@ namespace ScheduledPublish.Repos
                     && !x.IsPublished);
         }
 
-        public static IEnumerable<PublishSchedule> GetUnpublishedSchedules(DateTime fromDate, DateTime toDate)
+        public IEnumerable<PublishSchedule> GetUnpublishedSchedules(DateTime fromDate, DateTime toDate)
         {
             if (fromDate > toDate)
             {
@@ -67,12 +67,13 @@ namespace ScheduledPublish.Repos
             }
 
             return AllSchedules
-                .Where(x => !x.IsPublished
+                .Where(x => x.ItemToPublish != null
+                       && !x.IsPublished
                        && x.PublishDate >= fromDate
                        && x.PublishDate <= toDate);
         }
 
-        public static void CreatePublishSchedule(PublishSchedule publishSchedule)
+        public void CreatePublishSchedule(PublishSchedule publishSchedule)
         {
             string action = publishSchedule.Unpublish ? Constants.UNPUBLISH_TEXT : Constants.PUBLISH_TEXT;
 
@@ -123,7 +124,7 @@ namespace ScheduledPublish.Repos
             }
         }
 
-        public static void UpdatePublishSchedule(PublishSchedule publishSchedule)
+        public void UpdatePublishSchedule(PublishSchedule publishSchedule)
         {
             if (publishSchedule.InnerItem == null)
             {
@@ -185,7 +186,7 @@ namespace ScheduledPublish.Repos
             }
         }
 
-        public static void DeleteItem(Item item)
+        public void DeleteItem(Item item)
         {
             if (item == null)
             {
@@ -215,7 +216,7 @@ namespace ScheduledPublish.Repos
             }
         }
 
-        public static void CleanBucket()
+        public void CleanBucket()
         {
             DateTime currentTime = DateTime.Now;
             DateTime oneDayEarlier = currentTime.AddDays(-1);
@@ -259,7 +260,7 @@ namespace ScheduledPublish.Repos
             }
         }
 
-        private static Item GetOrCreateFolder(DateTime date)
+        private Item GetOrCreateFolder(DateTime date)
         {
             string yearName = date.Year.ToString();
             string monthName = date.Month.ToString();
@@ -282,7 +283,7 @@ namespace ScheduledPublish.Repos
             return hourFolder;
         }
 
-        private static Item GetDateFolder(DateTime date, BucketFolderType folderType)
+        private Item GetDateFolder(DateTime date, BucketFolderType folderType)
         {
             string rootPath = RootFolder.Paths.FullPath;
             string yearName = date.Year.ToString();
@@ -319,7 +320,7 @@ namespace ScheduledPublish.Repos
             return _database.GetItem(itemPath);
         }
 
-        private static string BuildPublishScheduleName(Item item)
+        private string BuildPublishScheduleName(Item item)
         {
             Guid guid = item != null
                 ? item.ID.Guid
