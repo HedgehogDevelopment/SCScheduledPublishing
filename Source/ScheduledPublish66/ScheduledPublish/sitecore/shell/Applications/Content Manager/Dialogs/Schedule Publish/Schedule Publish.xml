@@ -5,12 +5,12 @@
       <CodeBeside Type="ScheduledPublish.sitecore.shell.Applications.Content_Manager.Dialogs.Schedule_Publish.SchedulePublishDialog, ScheduledPublish"/>
       <GridPanel Width="100%" Height="100%" Fixed="true">
         <Groupbox Header="Help" Margin="0px 0px 16px 0px">
-          <Border Padding="4px">
+          <Border>
             <Literal Text="Idea. We can add link to documentation here"/>
           </Border>
         </Groupbox>
         <Groupbox Header="Existing Schedules" Margin="0px 0px 16px 0px">
-          <GridPanel ID="ExistingSchedulesTable" Height="100%" Width="100%" Columns="4" Padding="4px" >
+          <GridPanel ID="ExistingSchedulesTable" Height="100%" Width="100%" Columns="4">
             <Border GridPanel.NoWrap="true" Margin="0px 0px 5px 0px">
               <Literal Text="Time" />
             </Border>
@@ -24,10 +24,10 @@
               <Literal Text="Version" />
             </Border>
           </GridPanel>
-          <Border ID="ExistingSchedulesDiv" Padding="4px" Width="100%" />
+          <Border ID="ExistingSchedulesDiv" Width="100%" />
         </Groupbox>
         <Groupbox ID="ScheduleSettings" Header="Scheduled Publish Settings" Margin="0px 0px 16px 0px">
-          <Border Padding="4">
+          <Border>
             <Border GridPanel.NoWrap="true" Margin="6px 0px 15px 0px">
               <Literal ID="ServerTime" />
             </Border>
@@ -45,10 +45,10 @@
           </Border>
         </Groupbox>
         <Groupbox ID="ScheduleLanguages" Header="Scheduled Publish Language" Margin="0px 0px 16px 0px">
-          <Border Padding="4" ID="Languages"/>
+          <Border ID="Languages"/>
         </Groupbox>
         <Groupbox ID="ScheduleTargets" Header="Scheduled Publish Targets" Margin="0px 0px 16px 0px">
-          <Border Padding="4" ID="PublishingTargets"/>
+          <Border ID="PublishingTargets"/>
         </Groupbox>
       </GridPanel>
     </FormDialog>

@@ -4,10 +4,10 @@
     <FormDialog Icon="Network/32x32/earth_time.png" Header="Edit Publish Schedules" Text="Configure existing publish schedules.">
       <CodeBeside Type="ScheduledPublish.sitecore.shell.Applications.Content_Manager.Dialogs.Edit_Scheduled_Publish.EditScheduledPublishDialog, ScheduledPublish"/>
       <GridPanel Width="100%" Height="90%" Fixed="true">
-        <Border Padding="4px" Margin="5px 0px 16px 0px">
+        <Border Padding="4px" Margin="5px 0px 30px 0px">
           <Literal Text="Modify existing publish schedules. This affects every version in every language."/>
         </Border>
-        <Scrollbox ID="AllSchedules" GridPanel.Height="100%" Padding="4px" Margin="0px 0px 5px 0px">
+        <Scrollbox ID="AllSchedules" GridPanel.Height="100%" Margin="0px 0px 5px 0px">
           <Border Padding="4px" Margin="5px 0px 5px 0px">
             <Literal ID="ServerTime" />
           </Border>
