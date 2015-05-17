@@ -76,7 +76,7 @@
     <Compile Include="Validation\ScheduledPublishValidator.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="App_Config\Include\ZZ_SchedulePublishControl.config" />
+    <Content Include="App_Config\Include\ZZ_ScheduledPublishControl.config" />
     <Content Include="sitecore\shell\Applications\Content Manager\Dialogs\Edit Scheduled Publish\Edit Scheduled Publish.xml" />
     <Content Include="sitecore\shell\Applications\Content Manager\Dialogs\Schedule Publish\Schedule Publish.xml" />
   </ItemGroup>
