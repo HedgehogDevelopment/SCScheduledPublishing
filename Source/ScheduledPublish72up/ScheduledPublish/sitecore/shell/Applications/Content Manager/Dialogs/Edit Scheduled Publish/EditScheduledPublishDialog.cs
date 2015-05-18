@@ -26,9 +26,12 @@ namespace ScheduledPublish.sitecore.shell.Applications.Content_Manager.Dialogs.E
 
         private readonly Database _database = Context.ContentDatabase;
         private readonly CultureInfo _culture = Context.Culture;
+        private ScheduledPublishRepo scheduledPublishRepo;
 
         protected override void OnLoad(EventArgs e)
         {
+            scheduledPublishRepo = new ScheduledPublishRepo();
+
             if (!Context.ClientPage.IsEvent)
             {
                 ServerTime.Text = Constants.CURREN_TIME_ON_SERVER_TEXT + DateTime.Now.ToString(_culture);
@@ -57,7 +60,7 @@ namespace ScheduledPublish.sitecore.shell.Applications.Content_Manager.Dialogs.E
             sbHeader.Append("</tr>");
             AllSchedules.Controls.Add(new LiteralControl(sbHeader.ToString()));
 
-            IEnumerable<PublishSchedule> allSchedules = ScheduledPublishRepo.AllUnpublishedSchedules;
+            IEnumerable<PublishSchedule> allSchedules = scheduledPublishRepo.AllUnpublishedSchedules;
             foreach (var schedule in allSchedules)
             {
                 if (schedule.InnerItem != null)
@@ -135,7 +138,7 @@ namespace ScheduledPublish.sitecore.shell.Applications.Content_Manager.Dialogs.E
                             return;
                         }
 
-                        ScheduledPublishRepo.UpdatePublishSchedule(publishSchedule);
+                        scheduledPublishRepo.UpdatePublishSchedule(publishSchedule);
                     }
                 }
                 else if (key != null && key.StartsWith("del_", StringComparison.InvariantCulture))
@@ -149,7 +152,7 @@ namespace ScheduledPublish.sitecore.shell.Applications.Content_Manager.Dialogs.E
                     if (doDelete)
                     {
                         Item publishOption = _database.GetItem(new ID(id));
-                        ScheduledPublishRepo.DeleteItem(publishOption);
+                        scheduledPublishRepo.DeleteItem(publishOption);
                     }
                 }
             }

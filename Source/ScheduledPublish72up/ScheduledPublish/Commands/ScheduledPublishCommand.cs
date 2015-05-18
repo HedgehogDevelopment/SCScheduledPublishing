@@ -20,46 +20,33 @@ namespace ScheduledPublish.Commands
     /// </summary>
     public class ScheduledPublishCommand
     {
+        private ScheduledPublishRepo scheduledPublishRepo;
+
         public void Run(Item[] items, CommandItem command, ScheduleItem schedule)
         {
             Log.Info("Scheduled Publish: started", this);
 
+            scheduledPublishRepo = new ScheduledPublishRepo();
+
             Stopwatch commandStopwatch = new Stopwatch();
             commandStopwatch.Start();
-            Stopwatch publishStopwatch = new Stopwatch();
-            Stopwatch alertStopwatch = new Stopwatch();
-            Stopwatch bucketStopwatch = new Stopwatch();
 
-            publishStopwatch.Start();
             DateTime publishToDate = DateTime.Now;
             DateTime publishFromDate = publishToDate.AddHours(-1);
             PublishSchedules(publishFromDate, publishToDate);
-            publishStopwatch.Stop();
 
-            Log.Info("Scheduled Publish: Publishing Stopwatch " + publishStopwatch.ElapsedMilliseconds, this);
-            Log.Info("Scheduled Publish: Total after Published Schedules " + commandStopwatch.ElapsedMilliseconds, this);
-
-            alertStopwatch.Start();
             DateTime alertToDate = publishFromDate.AddHours(-1).AddSeconds(-1);
             DateTime alertFromDate = publishFromDate.AddHours(-2);
             AlertForFailedSchedules(alertFromDate, alertToDate);
-            alertStopwatch.Stop();
 
-            Log.Info("Scheduled Publish: Alert Failed Schedules Stopwatch " + alertStopwatch.ElapsedMilliseconds, this);
-            Log.Info("Scheduled Publish: Total after Alerted Failed Schedules " + commandStopwatch.ElapsedMilliseconds, this);
+            scheduledPublishRepo.CleanBucket();
 
-            bucketStopwatch.Start();
-            ScheduledPublishRepo.CleanBucket();
-            bucketStopwatch.Stop();
-
-            Log.Info("Scheduled Publish: Cleaning Buckets Stopwatch " + bucketStopwatch.ElapsedMilliseconds, this);
-            Log.Info("Scheduled Publish: Total after Cleaned Buckets " + commandStopwatch.ElapsedMilliseconds, this);
             Log.Info("Scheduled Publish: Total Run " + commandStopwatch.ElapsedMilliseconds, this);
         }
 
         private void PublishSchedules(DateTime fromDate, DateTime toDate)
         {
-            IEnumerable<PublishSchedule> duePublishSchedules = ScheduledPublishRepo.GetUnpublishedSchedules(fromDate, toDate);
+            IEnumerable<PublishSchedule> duePublishSchedules = scheduledPublishRepo.GetUnpublishedSchedules(fromDate, toDate);
             if (duePublishSchedules == null)
             {
                 Log.Info(string.Format("Scheduled Publish: No publish schedules from {0} to {1}",
@@ -92,9 +79,9 @@ namespace ScheduledPublish.Commands
             }
         }
 
-        private static void AlertForFailedSchedules(DateTime fromDate, DateTime toDate)
+        private void AlertForFailedSchedules(DateTime fromDate, DateTime toDate)
         {
-            IEnumerable<PublishSchedule> failedSchedules = ScheduledPublishRepo.GetUnpublishedSchedules(fromDate, toDate);
+            IEnumerable<PublishSchedule> failedSchedules = scheduledPublishRepo.GetUnpublishedSchedules(fromDate, toDate);
             if (failedSchedules == null)
             {
                 return;
@@ -137,7 +124,7 @@ namespace ScheduledPublish.Commands
             }
         }
 
-        private static void MarkAsPublished(PublishSchedule publishSchedule)
+        private void MarkAsPublished(PublishSchedule publishSchedule)
         {
             if (publishSchedule == null)
             {
@@ -146,7 +133,7 @@ namespace ScheduledPublish.Commands
 
             publishSchedule.IsPublished = true;
 
-            ScheduledPublishRepo.UpdatePublishSchedule(publishSchedule);
+            scheduledPublishRepo.UpdatePublishSchedule(publishSchedule);
         }
     }
 }

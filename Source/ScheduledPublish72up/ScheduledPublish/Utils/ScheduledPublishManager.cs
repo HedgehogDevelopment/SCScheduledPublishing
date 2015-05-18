@@ -4,6 +4,7 @@ using System.Text;
 using ScheduledPublish.Models;
 using Sitecore;
 using Sitecore.Diagnostics;
+using Sitecore.Jobs;
 using Sitecore.Publishing;
 
 namespace ScheduledPublish.Utils
@@ -43,7 +44,7 @@ namespace ScheduledPublish.Utils
                         sbMessage.AppendLine("Final Status: Fail.");
                         sbMessage.AppendLine("Please, check log files for more information.");
                     }
-                    else if (status.IsDone)
+                    else if (status.IsDone || status.State == JobState.Finished)
                     {
                         sbMessage.AppendLine("Final Status: Success.");
                         isSuccessful = true;

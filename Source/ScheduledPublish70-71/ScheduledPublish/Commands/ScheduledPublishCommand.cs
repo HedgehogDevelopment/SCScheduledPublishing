@@ -21,6 +21,7 @@ namespace ScheduledPublish.Commands
     public class ScheduledPublishCommand
     {
         private ScheduledPublishRepo scheduledPublishRepo;
+
         public void Run(Item[] items, CommandItem command, ScheduleItem schedule)
         {
             Log.Info("Scheduled Publish: started", this);

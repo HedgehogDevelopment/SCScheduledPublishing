@@ -51,6 +51,7 @@ namespace ScheduledPublish.sitecore.shell.Applications.Content_Manager.Dialogs.S
 
         private readonly Database _database = Context.ContentDatabase;
         private readonly CultureInfo _culture = Context.Culture;
+        private ScheduledPublishRepo scheduledPublishRepo;
 
         private Item _innerItem;
         private Item InnerItem
@@ -151,11 +152,14 @@ namespace ScheduledPublish.sitecore.shell.Applications.Content_Manager.Dialogs.S
         {
             Assert.ArgumentNotNull(e, "e");
 
+            scheduledPublishRepo = new ScheduledPublishRepo();
+
             if (!Context.ClientPage.IsEvent)
             {
                 if (Unpublish)
                 {
                     PublishModePanel.Visible = false;
+                    ScheduleLanguages.Visible = false;
                     BuildUnpublishTitles();
                 }
 
@@ -202,7 +206,7 @@ namespace ScheduledPublish.sitecore.shell.Applications.Content_Manager.Dialogs.S
                 return;
             }
 
-            ScheduledPublishRepo.CreatePublishSchedule(publishSchedule);
+            scheduledPublishRepo.CreatePublishSchedule(publishSchedule);
 
             base.OnOK(sender, args);
         }
@@ -327,8 +331,7 @@ namespace ScheduledPublish.sitecore.shell.Applications.Content_Manager.Dialogs.S
         /// </summary>
         private void BuildExistingSchedules()
         {
-            IEnumerable<PublishSchedule> existingSchedules =
-                ScheduledPublishRepo.GetSchedules(InnerItem.ID).ToList();
+            IEnumerable<PublishSchedule> existingSchedules = scheduledPublishRepo.GetSchedules(InnerItem.ID).ToList();
 
             if (existingSchedules.Any())
             {

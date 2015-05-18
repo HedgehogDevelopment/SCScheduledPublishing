@@ -14,9 +14,10 @@ namespace ScheduledPublish.Pipelines.ContentEditorWarnings
         {
             Item item = args.Item;
             Assert.IsNotNull(item, "item");
-            
-            IEnumerable<PublishSchedule> schedulesForCurrentItem =
-                ScheduledPublishRepo.GetSchedules(item.ID);
+
+            ScheduledPublishRepo scheduledPublishRepo = new ScheduledPublishRepo();
+
+            IEnumerable<PublishSchedule> schedulesForCurrentItem = scheduledPublishRepo.GetSchedules(item.ID);
 
             if (schedulesForCurrentItem.Any())
             {
