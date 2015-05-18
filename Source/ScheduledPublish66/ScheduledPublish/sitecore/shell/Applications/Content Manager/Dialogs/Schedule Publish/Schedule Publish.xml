@@ -41,8 +41,6 @@
               <Radiobutton ID="Republish" Name="PublishMode" Header="Republish - Publish Everything." Value="Republish"/>
               <br />
               <Checkbox ID="PublishChildren" Header="Publish Subitems"/>
-              <br />
-              <Checkbox ID="PublishRelatedItems" Header="Publish Related Items"/>
             </Border>
           </Border>
         </Groupbox>
