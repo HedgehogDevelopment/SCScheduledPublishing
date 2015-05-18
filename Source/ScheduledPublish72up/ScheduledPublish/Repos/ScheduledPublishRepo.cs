@@ -12,10 +12,16 @@ using Constants = ScheduledPublish.Utils.Constants;
 
 namespace ScheduledPublish.Repos
 {
+    /// <summary>
+    /// Handles publish schedules operations.
+    /// </summary>
     public class ScheduledPublishRepo
     {
         private static readonly Database _database = Constants.SCHEDULED_TASK_CONTEXT_DATABASE;
 
+        /// <summary>
+        /// List of all schedules.
+        /// </summary>
         public IEnumerable<PublishSchedule> AllSchedules
         {
             get
@@ -27,6 +33,9 @@ namespace ScheduledPublish.Repos
             }
         }
 
+        /// <summary>
+        /// List of valid unpublished schedules.
+        /// </summary>
         public IEnumerable<PublishSchedule> AllUnpublishedSchedules
         {
             get 
@@ -36,6 +45,9 @@ namespace ScheduledPublish.Repos
             }
         }
 
+        /// <summary>
+        /// Root folder of the Scheudled Publish Module.
+        /// </summary>
         private Item RootFolder
         {
             get
@@ -46,6 +58,11 @@ namespace ScheduledPublish.Repos
             }
         }
 
+        /// <summary>
+        /// All valid schedules on an item.
+        /// </summary>
+        /// <param name="itemId">The id of the item to browse schedules for.</param>
+        /// <returns>All valid publish schedules on the item.</returns>
         public IEnumerable<PublishSchedule> GetSchedules(ID itemId)
         {
             if (ID.IsNullOrEmpty(itemId))
@@ -59,6 +76,12 @@ namespace ScheduledPublish.Repos
                     && !x.IsPublished);
         }
 
+        /// <summary>
+        /// List of valid unpublished schedules in a period of time.
+        /// </summary>
+        /// <param name="fromDate">From <see cref="T:System.Datetime"/> date.</param>
+        /// <param name="toDate">To <see cref="T:System.Datetime"/> date.</param>
+        /// <returns>List of valid unpublished schedules in this period of time.</returns>
         public IEnumerable<PublishSchedule> GetUnpublishedSchedules(DateTime fromDate, DateTime toDate)
         {
             if (fromDate > toDate)
@@ -72,6 +95,10 @@ namespace ScheduledPublish.Repos
                        && x.PublishDate <= toDate);
         }
 
+        /// <summary>
+        /// Creates a <see cref="T:ScheduledPublish.Models.PublishSchedule"/> publish schedule item in Sitecore.
+        /// </summary>
+        /// <param name="publishSchedule">A <see cref="T:ScheduledPublish.Models.PublishSchedule"/> publish schedule to create an item for.</param>
         public void CreatePublishSchedule(PublishSchedule publishSchedule)
         {
             string action = publishSchedule.Unpublish ? Constants.UNPUBLISH_TEXT : Constants.PUBLISH_TEXT;
@@ -124,6 +151,10 @@ namespace ScheduledPublish.Repos
             }
         }
 
+        /// <summary>
+        /// Modifies an existing <see cref="T:ScheduledPublish.Models.PublishSchedule"/> publish schedule item in Sitecore.
+        /// </summary>
+        /// <param name="publishSchedule">A <see cref="T:ScheduledPublish.Models.PublishSchedule"/> publish schedule according to which to modify the Sitecore item.</param>
         public void UpdatePublishSchedule(PublishSchedule publishSchedule)
         {
             if (publishSchedule.InnerItem == null)
@@ -187,6 +218,10 @@ namespace ScheduledPublish.Repos
             }
         }
 
+        /// <summary>
+        /// Moves to recycle bin or deletes a Sitecore item.
+        /// </summary>
+        /// <param name="item">Sitecore item to delete.</param>
         public void DeleteItem(Item item)
         {
             if (item == null)

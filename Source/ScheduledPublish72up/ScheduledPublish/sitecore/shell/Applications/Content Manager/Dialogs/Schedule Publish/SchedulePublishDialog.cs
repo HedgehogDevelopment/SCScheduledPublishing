@@ -53,6 +53,9 @@ namespace ScheduledPublish.sitecore.shell.Applications.Content_Manager.Dialogs.S
         private readonly CultureInfo _culture = Context.Culture;
         private ScheduledPublishRepo scheduledPublishRepo;
 
+        /// <summary>
+        /// Current selected item
+        /// </summary>
         private Item _innerItem;
         private Item InnerItem
         {
@@ -68,6 +71,9 @@ namespace ScheduledPublish.sitecore.shell.Applications.Content_Manager.Dialogs.S
             }
         }
 
+        /// <summary>
+        /// Selected publish date
+        /// </summary>
         private DateTime _selectedPublishDate;
         private DateTime SelectedPublishDate
         {
@@ -84,6 +90,9 @@ namespace ScheduledPublish.sitecore.shell.Applications.Content_Manager.Dialogs.S
             }
         }
 
+        /// <summary>
+        /// Selected publishing targets
+        /// </summary>
         private IEnumerable<Database> _selectedTargets;
         private IEnumerable<Database> SelectedTargets
         {
@@ -111,6 +120,9 @@ namespace ScheduledPublish.sitecore.shell.Applications.Content_Manager.Dialogs.S
             }
         }
 
+        /// <summary>
+        /// Selected languages to publish 
+        /// </summary>
         private IEnumerable<Language> _selectedLanguages;
         private IEnumerable<Language> SelectedLanguages
         {
@@ -137,6 +149,9 @@ namespace ScheduledPublish.sitecore.shell.Applications.Content_Manager.Dialogs.S
             }
         }
 
+        /// <summary>
+        /// If true, the action is unpublishing from selected database(s)
+        /// </summary>
         private static bool Unpublish
         {
             get
@@ -148,6 +163,10 @@ namespace ScheduledPublish.sitecore.shell.Applications.Content_Manager.Dialogs.S
             }
         }
 
+        /// <summary>
+        /// Raises the load event
+        /// </summary>
+        /// <param name="e">The <see cref="T:System.EventArgs"/> instance containing the event data.</param>
         protected override void OnLoad(EventArgs e)
         {
             Assert.ArgumentNotNull(e, "e");
@@ -175,10 +194,10 @@ namespace ScheduledPublish.sitecore.shell.Applications.Content_Manager.Dialogs.S
         }
 
         /// <summary>
-        /// Create a task for publishing the selected item
+        /// Handles a click on the OK button. Creates a task for publishing the selected item.
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="args"></param>
+        /// <param name="sender">The sender.</param>
+        /// <param name="args">The arguments.</param>
         protected override void OnOK(object sender, EventArgs args)
         {
             Assert.ArgumentNotNull(sender, "sender");
@@ -291,6 +310,11 @@ namespace ScheduledPublish.sitecore.shell.Applications.Content_Manager.Dialogs.S
             }
         }
 
+        /// <summary>
+        /// Checks if the user has write permissions for the selected language.
+        /// </summary>
+        /// <param name="language">The language to check permissons on.</param>
+        /// <returns>True if the user has write permissons for the language.</returns>
         private bool CanWriteLanguage(Language language)
         {
             if (language == null)
@@ -327,7 +351,7 @@ namespace ScheduledPublish.sitecore.shell.Applications.Content_Manager.Dialogs.S
         }
 
         /// <summary>
-        /// Displays a list of all already scheduled publishings' date and time for this item, ordered from most recent to furthest in time
+        /// Displays a list of all already scheduled publishes for this item, ordered from most recent to furthest in time.
         /// </summary>
         private void BuildExistingSchedules()
         {
@@ -387,6 +411,9 @@ namespace ScheduledPublish.sitecore.shell.Applications.Content_Manager.Dialogs.S
             }
         }
 
+        /// <summary>
+        /// Sets appropriate titles for the different sections in the Schedule Publish dialog.
+        /// </summary>
         private void BuildUnpublishTitles()
         {
             ScheduleSettings.Header = Constants.SCHEDULE_UNPUBLISH_SETTINGS_TITLE;

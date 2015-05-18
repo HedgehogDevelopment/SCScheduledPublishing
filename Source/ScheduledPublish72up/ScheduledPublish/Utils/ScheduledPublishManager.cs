@@ -9,8 +9,16 @@ using Sitecore.Publishing;
 
 namespace ScheduledPublish.Utils
 {
+    /// <summary>
+    /// Handles publish-related actions.
+    /// </summary>
     public static class ScheduledPublishManager
     {
+        /// <summary>
+        /// Handles the publish action.
+        /// </summary>
+        /// <param name="publishSchedule"></param>
+        /// <returns>A <see cref="T:Sitecore.Handle"/> publish handle.</returns>
         public static Handle Publish(PublishSchedule publishSchedule)
         {
             return publishSchedule.ItemToPublish != null
@@ -18,6 +26,11 @@ namespace ScheduledPublish.Utils
                 : PublishWebsite(publishSchedule);
         }
 
+        /// <summary>
+        /// Gets a report on the handle.
+        /// </summary>
+        /// <param name="handle">Handle.</param>
+        /// <returns>A <see cref="T:ScheduledPublish.Models.ScheduledPublishReport"/> report on the handle result.</returns>
         public static ScheduledPublishReport GetScheduledPublishReport(Handle handle)
         {
             bool isSuccessful = false;
@@ -75,6 +88,11 @@ namespace ScheduledPublish.Utils
             return report;
         }
 
+        /// <summary>
+        /// Handles item publish.
+        /// </summary>
+        /// <param name="publishSchedule">A <see cref="ScheduledPublish.Models.PublishSchedule"/> schedule to publish.</param>
+        /// <returns>A <see cref="T:Sitecore.Handle"/> publish handle.</returns>
         private static Handle PublishItem(PublishSchedule publishSchedule)
         {
             if (publishSchedule.ItemToPublish == null)
@@ -123,6 +141,11 @@ namespace ScheduledPublish.Utils
             return handle;
         }
 
+        /// <summary>
+        /// Handles website publish.
+        /// </summary>
+        /// <param name="publishSchedule">A <see cref="ScheduledPublish.Models.PublishSchedule"/> schedule to publish.</param>
+        /// <returns>A <see cref="T:Sitecore.Handle"/> publish handle.</returns>
         private static Handle PublishWebsite(PublishSchedule publishSchedule)
         {
             Handle handle = null;

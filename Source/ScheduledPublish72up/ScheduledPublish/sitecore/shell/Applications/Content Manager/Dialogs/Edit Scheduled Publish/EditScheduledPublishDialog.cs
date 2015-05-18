@@ -28,6 +28,10 @@ namespace ScheduledPublish.sitecore.shell.Applications.Content_Manager.Dialogs.E
         private readonly CultureInfo _culture = Context.Culture;
         private ScheduledPublishRepo scheduledPublishRepo;
 
+        /// <summary>
+        /// Raises the load event
+        /// </summary>
+        /// <param name="e">The <see cref="T:System.EventArgs"/> instance containing the event data.</param>
         protected override void OnLoad(EventArgs e)
         {
             scheduledPublishRepo = new ScheduledPublishRepo();
@@ -42,7 +46,7 @@ namespace ScheduledPublish.sitecore.shell.Applications.Content_Manager.Dialogs.E
         }
 
         /// <summary>
-        /// Displays all current publishing schedules ordered by date and time
+        /// Displays all current publish schedules ordered by date and time.
         /// </summary>
         private void RenderAllSchedules()
         {
@@ -104,10 +108,10 @@ namespace ScheduledPublish.sitecore.shell.Applications.Content_Manager.Dialogs.E
         }
 
         /// <summary>
-        /// Save the new publishing schedules
+        /// Handles a click on the OK button. Save the new publishing schedules
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="args"></param>
+        /// <param name="sender">The sender.</param>
+        /// <param name="args">The arguments.</param>
         protected override void OnOK(object sender, EventArgs args)
         {
             Assert.ArgumentNotNull(sender, "sender");
