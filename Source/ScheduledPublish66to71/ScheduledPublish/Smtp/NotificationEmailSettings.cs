@@ -5,6 +5,9 @@ using Sitecore.Data.Items;
 
 namespace ScheduledPublish.Smtp
 {
+    /// <summary>
+    /// Parses user-defined email settings from Sitecore into an object.
+    /// </summary>
     public static class NotificationEmailSettings
     {
         private static readonly Database _database = Constants.SCHEDULED_TASK_CONTEXT_DATABASE;

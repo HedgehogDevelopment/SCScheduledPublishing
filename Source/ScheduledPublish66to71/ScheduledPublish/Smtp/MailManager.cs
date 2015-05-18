@@ -9,8 +9,17 @@ using System.Net.Mail;
 
 namespace ScheduledPublish.Smtp
 {
+    /// <summary>
+    /// Handles email notifications
+    /// </summary>
     public static class MailManager
     {
+        /// <summary>
+        /// Composes and sends an email according to user-defined preferences.
+        /// </summary>
+        /// <param name="report">Report to append to email body.</param>
+        /// <param name="item">Item to send information on.</param>
+        /// <param name="sendTo">Receiver's email address.</param>
         public static void SendEmail(string report, Item item, string sendTo)
         {
             MailMessage message = ComposeEmail(report, item, sendTo);
@@ -38,6 +47,13 @@ namespace ScheduledPublish.Smtp
             }
         }
 
+        /// <summary>
+        /// Composes email using content-managed text and placeholders.
+        /// </summary>
+        /// <param name="report">Report to append to email body.</param>
+        /// <param name="item">Item to send information on.</param>
+        /// <param name="sendTo">Receiver's email address.</param>
+        /// <returns>An <see cref="T:System.Net.Mail.MailMessage"/> email message ready to send.</returns>
         private static MailMessage ComposeEmail(string report, Item item, string sendTo)
         {
             NotificationEmail mail = new NotificationEmail();
@@ -70,6 +86,10 @@ namespace ScheduledPublish.Smtp
             return mailMessage;
         }
 
+        /// <summary>
+        /// Creates an SMTP instance and sends email through it.
+        /// </summary>
+        /// <param name="mailMessage">An <see cref="T:System.Net.Mail.MailMessage"/> email message ready to send.</param>
         private static void SendMailMessage(MailMessage mailMessage)
         {
             SmtpClient client = new SmtpClient(NotificationEmailSettings.MailServer, NotificationEmailSettings.Port);
