@@ -5,6 +5,7 @@ The module supports Sitecore versions: 6.6(.Net Framework 4.0), 7.0, 7.1, 7.2, 7
 
 
 Source projects:
+
 "ScheduledPublish66" - Source code for Sitecore 6.6
 "ScheduledPublish70-71" - Source code for Sitecore 7.0 and 7.1 
 "ScheduledPublish72up" - Source code for Sitecore 7.2, 7.5 and 8.0
