@@ -43,7 +43,7 @@
   <ItemGroup>
     <Reference Include="Sitecore.Kernel, Version=7.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Lib\Sitecore.Kernel.dll</HintPath>
+      <HintPath>..\..\..\Lib\Sitecore7.0\Sitecore.Kernel.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data.DataSetExtensions" />

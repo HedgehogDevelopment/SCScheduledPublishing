@@ -1,4 +1,5 @@
-﻿using ScheduledPublish.Models;
+﻿using System.Threading;
+using ScheduledPublish.Models;
 using Sitecore;
 using Sitecore.Diagnostics;
 using Sitecore.Jobs;
@@ -41,8 +42,13 @@ namespace ScheduledPublish.Utils
                 sbMessage.AppendLine("Final Status: Fail.");
                 sbMessage.AppendLine("Please, check log files for more information.");
             }
-            else if (PublishManager.WaitFor(handle))
+            else //if (PublishManager.WaitFor(handle))
             {
+                while (!PublishManager.GetStatus(handle).IsDone)
+                {
+                    Thread.Sleep(200);
+                }
+
                 PublishStatus status = PublishManager.GetStatus(handle);
                 
                 if (status == null)
