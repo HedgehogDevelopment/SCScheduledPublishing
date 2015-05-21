@@ -72,10 +72,8 @@ namespace ScheduledPublish.Commands
             {
                 Handle handle = ScheduledPublishManager.Publish(schedule);
                 ScheduledPublishReport report = ScheduledPublishManager.GetScheduledPublishReport(handle);
-                Log.Info("BEFORE REPORT CHECK " + report.IsSuccessful, this);
                 if (report.IsSuccessful)
                 {
-                    Log.Info("MARK AS PUBLISHED HERE PLEASE", this);
                     MarkAsPublished(schedule);
                 }
 

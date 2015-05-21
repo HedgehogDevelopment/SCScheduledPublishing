@@ -7,6 +7,7 @@ using System;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using Sitecore.SecurityModel;
 
 namespace ScheduledPublish.Utils
 {
@@ -44,16 +45,6 @@ namespace ScheduledPublish.Utils
             }
             else
             {
-                //Temp StopWatch for tests
-                Stopwatch waitStatus = new Stopwatch();
-                waitStatus.Start();
-                while (!PublishManager.GetStatus(handle).IsDone)
-                {
-                    Thread.Sleep(200);
-                }
-                waitStatus.Stop();
-                Log.Info("Scheduled Publish: Waiting status " + waitStatus.ElapsedMilliseconds, new object());
-
                 PublishStatus status = PublishManager.GetStatus(handle);
                 
                 if (status == null)
@@ -118,10 +109,13 @@ namespace ScheduledPublish.Utils
             {
                 if (publishSchedule.Unpublish)
                 {
-                    publishSchedule.ItemToPublish.Editing.BeginEdit();
-                    publishSchedule.ItemToPublish.Publishing.NeverPublish= true;
-                    publishSchedule.ItemToPublish.Editing.AcceptChanges();
-                    publishSchedule.ItemToPublish.Editing.EndEdit();
+                    using (new SecurityDisabler())
+                    {
+                        publishSchedule.ItemToPublish.Editing.BeginEdit();
+                        publishSchedule.ItemToPublish.Publishing.NeverPublish = true;
+                        publishSchedule.ItemToPublish.Editing.AcceptChanges();
+                        publishSchedule.ItemToPublish.Editing.EndEdit();
+                    }
                 }
 
                 handle = PublishManager.PublishItem(
@@ -131,12 +125,26 @@ namespace ScheduledPublish.Utils
                     publishSchedule.PublishChildren,
                     publishSchedule.PublishMode == PublishMode.Smart);
 
+                //Temp StopWatch for tests
+                Stopwatch waitStatus = new Stopwatch();
+                waitStatus.Start();
+                
+                while (!PublishManager.GetStatus(handle).IsDone)
+                {
+                    Thread.Sleep(200);
+                }
+                waitStatus.Stop();
+                Log.Info("Scheduled Publish: Waiting status " + waitStatus.ElapsedMilliseconds, new object());
+
                 if (publishSchedule.Unpublish)
                 {
-                    publishSchedule.ItemToPublish.Editing.BeginEdit();
-                    publishSchedule.ItemToPublish.Publishing.NeverPublish = false;
-                    publishSchedule.ItemToPublish.Editing.AcceptChanges();
-                    publishSchedule.ItemToPublish.Editing.EndEdit();
+                    using (new SecurityDisabler())
+                    {
+                        publishSchedule.ItemToPublish.Editing.BeginEdit();
+                        publishSchedule.ItemToPublish.Publishing.NeverPublish = false;
+                        publishSchedule.ItemToPublish.Editing.AcceptChanges();
+                        publishSchedule.ItemToPublish.Editing.EndEdit();
+                    }
                 }
             }
             catch (Exception ex)
