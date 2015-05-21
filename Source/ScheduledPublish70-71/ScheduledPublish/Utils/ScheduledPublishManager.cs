@@ -2,9 +2,9 @@
 using ScheduledPublish.Models;
 using Sitecore;
 using Sitecore.Diagnostics;
-using Sitecore.Jobs;
 using Sitecore.Publishing;
 using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 
@@ -42,12 +42,17 @@ namespace ScheduledPublish.Utils
                 sbMessage.AppendLine("Final Status: Fail.");
                 sbMessage.AppendLine("Please, check log files for more information.");
             }
-            else //if (PublishManager.WaitFor(handle))
+            else
             {
+                //Temp StopWatch for tests
+                Stopwatch waitStatus = new Stopwatch();
+                waitStatus.Start();
                 while (!PublishManager.GetStatus(handle).IsDone)
                 {
                     Thread.Sleep(200);
                 }
+                waitStatus.Stop();
+                Log.Info("Scheduled Publish: Waiting status " + waitStatus.ElapsedMilliseconds, new object());
 
                 PublishStatus status = PublishManager.GetStatus(handle);
                 
@@ -63,7 +68,7 @@ namespace ScheduledPublish.Utils
                         sbMessage.AppendLine("Final Status: Fail.");
                         sbMessage.AppendLine("Please, check log files for more information.");
                     }
-                    else if (status.IsDone || status.State == JobState.Finished)
+                    else if (status.IsDone)
                     {
                         sbMessage.AppendLine("Final Status: Success.");
                         isSuccessful = true;

@@ -16,12 +16,18 @@ using Constants = ScheduledPublish.Utils.Constants;
 namespace ScheduledPublish.Commands
 {
     /// <summary>
-    /// Publishes the item(s) passed
+    /// Publishes scheduled items
     /// </summary>
     public class ScheduledPublishCommand
     {
         private ScheduledPublishRepo scheduledPublishRepo;
 
+        /// <summary>
+        /// Start point of the command
+        /// </summary>
+        /// <param name="items">Passed items</param>
+        /// <param name="command">Passed command</param>
+        /// <param name="schedule">Passed schedule item</param>
         public void Run(Item[] items, CommandItem command, ScheduleItem schedule)
         {
             Log.Info("Scheduled Publish: started", this);
@@ -31,19 +37,26 @@ namespace ScheduledPublish.Commands
             Stopwatch commandStopwatch = new Stopwatch();
             commandStopwatch.Start();
 
+            //Publish all scheduled for the last hour
             DateTime publishToDate = DateTime.Now;
             DateTime publishFromDate = publishToDate.AddHours(-1);
             PublishSchedules(publishFromDate, publishToDate);
-            
+
+            //Alerts for failed schedules 2 hours ago
             DateTime alertToDate = publishFromDate.AddHours(-1).AddSeconds(-1);
             DateTime alertFromDate = publishFromDate.AddHours(-2);
             AlertForFailedSchedules(alertFromDate, alertToDate);
 
             scheduledPublishRepo.CleanBucket();
-
+            commandStopwatch.Stop();
             Log.Info("Scheduled Publish: Total Run " + commandStopwatch.ElapsedMilliseconds, this);
         }
 
+        /// <summary>
+        /// Publishes all scheduled items for time period
+        /// </summary>
+        /// <param name="fromDate">Start of the period</param>
+        /// <param name="toDate">End of the period</param>
         private void PublishSchedules(DateTime fromDate, DateTime toDate)
         {
             IEnumerable<PublishSchedule> duePublishSchedules = scheduledPublishRepo.GetUnpublishedSchedules(fromDate, toDate);
@@ -80,6 +93,11 @@ namespace ScheduledPublish.Commands
             }
         }
 
+        /// <summary>
+        /// Alerts for all failed schedules for time period
+        /// </summary>
+        /// <param name="fromDate">Start of the period</param>
+        /// <param name="toDate">End of the period</param>
         private void AlertForFailedSchedules(DateTime fromDate, DateTime toDate)
         {
             IEnumerable<PublishSchedule> failedSchedules = scheduledPublishRepo.GetUnpublishedSchedules(fromDate, toDate);
@@ -125,6 +143,10 @@ namespace ScheduledPublish.Commands
             }
         }
 
+        /// <summary>
+        /// Sets 'IsPublished' field of already published schedule to 'true'
+        /// </summary>
+        /// <param name="publishSchedule">Publish Schedule</param>
         private void MarkAsPublished(PublishSchedule publishSchedule)
         {
             if (publishSchedule == null)

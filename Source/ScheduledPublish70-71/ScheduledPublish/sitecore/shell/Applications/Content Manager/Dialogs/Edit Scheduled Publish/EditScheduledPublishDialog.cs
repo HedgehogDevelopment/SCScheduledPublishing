@@ -19,6 +19,9 @@ using Literal = Sitecore.Web.UI.HtmlControls.Literal;
 
 namespace ScheduledPublish.sitecore.shell.Applications.Content_Manager.Dialogs.Edit_Scheduled_Publish
 {
+    /// <summary>
+    /// Edit Schedule Publish Dialog code-beside
+    /// </summary>
     public class EditScheduledPublishDialog : DialogForm
     {
         protected Scrollbox AllSchedules;
@@ -26,7 +29,7 @@ namespace ScheduledPublish.sitecore.shell.Applications.Content_Manager.Dialogs.E
 
         private readonly Database _database = Context.ContentDatabase;
         private readonly CultureInfo _culture = Context.Culture;
-        private ScheduledPublishRepo scheduledPublishRepo;
+        private ScheduledPublishRepo _scheduledPublishRepo;
 
         /// <summary>
         /// Raises the load event
@@ -34,7 +37,7 @@ namespace ScheduledPublish.sitecore.shell.Applications.Content_Manager.Dialogs.E
         /// <param name="e">The <see cref="T:System.EventArgs"/> instance containing the event data.</param>
         protected override void OnLoad(EventArgs e)
         {
-            scheduledPublishRepo = new ScheduledPublishRepo();
+            _scheduledPublishRepo = new ScheduledPublishRepo();
 
             if (!Context.ClientPage.IsEvent)
             {
@@ -65,7 +68,7 @@ namespace ScheduledPublish.sitecore.shell.Applications.Content_Manager.Dialogs.E
             AllSchedules.Controls.Add(new LiteralControl(sbHeader.ToString()));
 
             
-            IEnumerable<PublishSchedule> allSchedules = scheduledPublishRepo.AllUnpublishedSchedules;
+            IEnumerable<PublishSchedule> allSchedules = _scheduledPublishRepo.AllUnpublishedSchedules;
             foreach (var schedule in allSchedules)
             {
                 if (schedule.InnerItem != null)
@@ -143,7 +146,7 @@ namespace ScheduledPublish.sitecore.shell.Applications.Content_Manager.Dialogs.E
                             return;
                         }
 
-                        scheduledPublishRepo.UpdatePublishSchedule(publishSchedule);
+                        _scheduledPublishRepo.UpdatePublishSchedule(publishSchedule);
                     }
                 }
                 else if (key != null && key.StartsWith("del_", StringComparison.InvariantCulture))
@@ -157,7 +160,7 @@ namespace ScheduledPublish.sitecore.shell.Applications.Content_Manager.Dialogs.E
                     if (doDelete)
                     {
                         Item publishOption = _database.GetItem(new ID(id));
-                        scheduledPublishRepo.DeleteItem(publishOption);
+                        _scheduledPublishRepo.DeleteItem(publishOption);
                     }
                 }
             }

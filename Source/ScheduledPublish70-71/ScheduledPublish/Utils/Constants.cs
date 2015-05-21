@@ -2,6 +2,9 @@
 
 namespace ScheduledPublish.Utils
 {
+    /// <summary>
+    /// Contains all global constants
+    /// </summary>
     public static class Constants
     {
         public const string PUBLISH_TEXT = "publish";
