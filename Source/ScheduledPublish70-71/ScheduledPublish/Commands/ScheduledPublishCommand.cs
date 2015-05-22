@@ -20,7 +20,7 @@ namespace ScheduledPublish.Commands
     /// </summary>
     public class ScheduledPublishCommand
     {
-        private ScheduledPublishRepo scheduledPublishRepo;
+        private ScheduledPublishRepo _scheduledPublishRepo;
 
         /// <summary>
         /// Start point of the command
@@ -32,7 +32,7 @@ namespace ScheduledPublish.Commands
         {
             Log.Info("Scheduled Publish: started", this);
 
-            scheduledPublishRepo = new ScheduledPublishRepo();
+            _scheduledPublishRepo = new ScheduledPublishRepo();
 
             Stopwatch commandStopwatch = new Stopwatch();
             commandStopwatch.Start();
@@ -47,7 +47,7 @@ namespace ScheduledPublish.Commands
             DateTime alertFromDate = publishFromDate.AddHours(-2);
             AlertForFailedSchedules(alertFromDate, alertToDate);
 
-            scheduledPublishRepo.CleanBucket();
+            _scheduledPublishRepo.CleanBucket();
             commandStopwatch.Stop();
             Log.Info("Scheduled Publish: Total Run " + commandStopwatch.ElapsedMilliseconds, this);
         }
@@ -59,7 +59,7 @@ namespace ScheduledPublish.Commands
         /// <param name="toDate">End of the period</param>
         private void PublishSchedules(DateTime fromDate, DateTime toDate)
         {
-            IEnumerable<PublishSchedule> duePublishSchedules = scheduledPublishRepo.GetUnpublishedSchedules(fromDate, toDate);
+            IEnumerable<PublishSchedule> duePublishSchedules = _scheduledPublishRepo.GetUnpublishedSchedules(fromDate, toDate);
             if (duePublishSchedules == null)
             {
                 Log.Info(string.Format("Scheduled Publish: No publish schedules from {0} to {1}",
@@ -83,9 +83,9 @@ namespace ScheduledPublish.Commands
                     {
                         MailManager.SendEmail(report.Message, schedule.ItemToPublish, schedule.SchedulerEmail);
                     }
-                    catch (Exception)
+                    catch (Exception ex)
                     {
-                        Log.Error("Scheduled Publish: Sending publish email confirmation failed, continuing... ", schedule);
+                        Log.Error(string.Format("{0} {1}","Scheduled Publish: Sending publish email confirmation failed.", ex), schedule);
                     }
                 }
             }
@@ -98,7 +98,7 @@ namespace ScheduledPublish.Commands
         /// <param name="toDate">End of the period</param>
         private void AlertForFailedSchedules(DateTime fromDate, DateTime toDate)
         {
-            IEnumerable<PublishSchedule> failedSchedules = scheduledPublishRepo.GetUnpublishedSchedules(fromDate, toDate);
+            IEnumerable<PublishSchedule> failedSchedules = _scheduledPublishRepo.GetUnpublishedSchedules(fromDate, toDate);
             if (failedSchedules == null)
             {
                 return;
@@ -131,9 +131,9 @@ namespace ScheduledPublish.Commands
                     {
                         MailManager.SendEmail(message, schedule.ItemToPublish, schedule.SchedulerEmail);
                     }
-                    catch (Exception)
+                    catch (Exception ex)
                     {
-                        Log.Error("Scheduled Publish: Sending failed publish email notification failed, continuing... ", schedule);
+                        Log.Error(string.Format("{0} {1}", "Scheduled Publish: Sending publish email confirmation failed.", ex), schedule);
                     }
                 }
 
@@ -154,7 +154,7 @@ namespace ScheduledPublish.Commands
 
             publishSchedule.IsPublished = true;
 
-            scheduledPublishRepo.UpdatePublishSchedule(publishSchedule);
+            _scheduledPublishRepo.UpdatePublishSchedule(publishSchedule);
         }
     }
 }
