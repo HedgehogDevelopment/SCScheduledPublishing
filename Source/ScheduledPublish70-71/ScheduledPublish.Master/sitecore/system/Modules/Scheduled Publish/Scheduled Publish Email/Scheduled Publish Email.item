@@ -12,7 +12,7 @@ templatekey: ScheduledPublishEmail
 ----version----
 language: en
 version: 1
-revision: 4efebb78-b3ec-42e9-9d8e-1e014544e276
+revision: 134216bf-b590-473a-9e6b-8dcb48451b13
 
 ----field----
 field: {A35E5B44-1CD0-49C4-B210-DB4106685CE4}
@@ -25,23 +25,28 @@ content-length: 0
 field: {4A6046AA-2B94-47B2-9A27-3B83F0601822}
 name: EmailFrom
 key: emailfrom
-content-length: 0
+content-length: 32
 
-
+sc-scheduledpublish@no-reply.com
 ----field----
 field: {20DEB7CE-6AD1-459F-B1A4-F6AE88B2C62A}
 name: EmailSubject
 key: emailsubject
-content-length: 0
+content-length: 35
 
-
+Sitecore Scheduled Publish - [item]
 ----field----
 field: {39A13A96-8BF0-4334-B366-16C0ACCC2B60}
 name: EmailMessage
 key: emailmessage
-content-length: 0
+content-length: 181
 
-
+<p><strong>Item path:</strong> [path]</p>
+<p><strong>Version:</strong> [version]</p>
+<p><strong>Date, Time:</strong> [date], [time]</p>
+<br />
+<br />
+<p><strong>Report:</strong></p>
 ----field----
 field: {52807595-0F8F-4B20-8D2A-CB71D28C6103}
 name: __Owner
@@ -69,14 +74,14 @@ name: __Revision
 key: __revision
 content-length: 36
 
-4efebb78-b3ec-42e9-9d8e-1e014544e276
+134216bf-b590-473a-9e6b-8dcb48451b13
 ----field----
 field: {D9CF14B1-FA16-4BA6-9288-E8A174D4D522}
 name: __Updated
 key: __updated
 content-length: 34
 
-20150512T014100:635669916602540981
+20150605T125226:635691055468193800
 ----field----
 field: {BADD9CF9-53E0-4D0C-BCC0-2D784C282F6A}
 name: __Updated by

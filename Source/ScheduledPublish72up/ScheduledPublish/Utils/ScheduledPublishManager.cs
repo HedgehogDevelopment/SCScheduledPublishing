@@ -1,11 +1,12 @@
-﻿using System;
-using System.Linq;
-using System.Text;
+﻿using System.Threading;
 using ScheduledPublish.Models;
 using Sitecore;
 using Sitecore.Diagnostics;
-using Sitecore.Jobs;
 using Sitecore.Publishing;
+using System;
+using System.Linq;
+using System.Text;
+using Sitecore.SecurityModel;
 
 namespace ScheduledPublish.Utils
 {
@@ -38,42 +39,41 @@ namespace ScheduledPublish.Utils
 
             if (handle == null)
             {
-                sbMessage.AppendLine("Final Status: Fail.");
-                sbMessage.AppendLine("Please, check log files for more information.");
+                sbMessage.Append("Final Status: Fail.<br/>");
+                sbMessage.Append("Please, check log files for more information.<br/>");
             }
-            else if (PublishManager.WaitFor(handle))
+            else
             {
                 PublishStatus status = PublishManager.GetStatus(handle);
-
+                
                 if (status == null)
                 {
-                    sbMessage.AppendLine("The scheduled publishing process was unexpectedly interrupted.");
-                    sbMessage.AppendLine("Please, check log files for more information.");
+                    sbMessage.Append("The scheduled publishing process was unexpectedly interrupted.<br/>");
+                    sbMessage.Append("Please, check log files for more information.<br/>");
                 }
                 else
                 {
                     if (status.Failed)
                     {
-                        sbMessage.AppendLine("Final Status: Fail.");
-                        sbMessage.AppendLine("Please, check log files for more information.");
+                        sbMessage.Append("Final Status: Fail.<br/>");
+                        sbMessage.Append("Please, check log files for more information.<br/>");
                     }
-                    else if (status.IsDone || status.State == JobState.Finished)
+                    else if (status.IsDone)
                     {
-                        sbMessage.AppendLine("Final Status: Success.");
+                        sbMessage.Append("Final Status: Success.<br/>");
                         isSuccessful = true;
                     }
 
-                    sbMessage.AppendFormat("Items processed: {0}.", status.Processed);
-                    sbMessage.AppendLine();
-                    sbMessage.AppendLine();
+                    sbMessage.AppendFormat("Items processed: {0}.<br/><br/>", status.Processed);
 
                     if (status.Messages != null)
                     {
-                        sbMessage.AppendLine("Detailed Information:");
+                        sbMessage.Append("Detailed Information:<br/>");
 
                         foreach (var message in status.Messages)
                         {
-                            sbMessage.AppendLine(message);
+                            sbMessage.Append(message);
+                            sbMessage.Append("<br/>");
                         }
                     }
                 }
@@ -107,10 +107,13 @@ namespace ScheduledPublish.Utils
             {
                 if (publishSchedule.Unpublish)
                 {
-                    publishSchedule.ItemToPublish.Editing.BeginEdit();
-                    publishSchedule.ItemToPublish.Publishing.NeverPublish= true;
-                    publishSchedule.ItemToPublish.Editing.AcceptChanges();
-                    publishSchedule.ItemToPublish.Editing.EndEdit();
+                    using (new SecurityDisabler())
+                    {
+                        publishSchedule.ItemToPublish.Editing.BeginEdit();
+                        publishSchedule.ItemToPublish.Publishing.NeverPublish = true;
+                        publishSchedule.ItemToPublish.Editing.AcceptChanges();
+                        publishSchedule.ItemToPublish.Editing.EndEdit();
+                    }
                 }
 
                 handle = PublishManager.PublishItem(
@@ -121,12 +124,17 @@ namespace ScheduledPublish.Utils
                     publishSchedule.PublishMode == PublishMode.Smart,
                     publishSchedule.PublishRelatedItems);
 
+                WaitPublish(handle);
+
                 if (publishSchedule.Unpublish)
                 {
-                    publishSchedule.ItemToPublish.Editing.BeginEdit();
-                    publishSchedule.ItemToPublish.Publishing.NeverPublish = false;
-                    publishSchedule.ItemToPublish.Editing.AcceptChanges();
-                    publishSchedule.ItemToPublish.Editing.EndEdit();
+                    using (new SecurityDisabler())
+                    {
+                        publishSchedule.ItemToPublish.Editing.BeginEdit();
+                        publishSchedule.ItemToPublish.Publishing.NeverPublish = false;
+                        publishSchedule.ItemToPublish.Editing.AcceptChanges();
+                        publishSchedule.ItemToPublish.Editing.EndEdit();
+                    }
                 }
             }
             catch (Exception ex)
@@ -184,6 +192,8 @@ namespace ScheduledPublish.Utils
                             break;
                         }
                 }
+
+                WaitPublish(handle);
             }
             catch (Exception ex)
             {
@@ -194,6 +204,23 @@ namespace ScheduledPublish.Utils
             }
 
             return handle;
+        }
+
+        /// <summary>
+        /// Waits publish to finish to we know the final status
+        /// </summary>
+        /// <param name="handle"></param>
+        private static void WaitPublish(Handle handle)
+        {
+            if (handle == null)
+            {
+                return;
+            }
+
+            while (!PublishManager.GetStatus(handle).IsDone)
+            {
+                Thread.Sleep(200);
+            }
         }
     }
 }

@@ -2,6 +2,9 @@
 
 namespace ScheduledPublish.Models
 {
+    /// <summary>
+    /// Handles validation status and errors of schedules
+    /// </summary>
     public class ValidationResult
     {
         public bool IsValid { get; set; }

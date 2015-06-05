@@ -1,13 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using ScheduledPublish.Models;
+﻿using ScheduledPublish.Models;
 using Sitecore;
 using Sitecore.Configuration;
 using Sitecore.Data;
 using Sitecore.Data.Items;
 using Sitecore.Diagnostics;
 using Sitecore.SecurityModel;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using Constants = ScheduledPublish.Utils.Constants;
 
 namespace ScheduledPublish.Repos
@@ -40,7 +40,7 @@ namespace ScheduledPublish.Repos
         {
             get 
             { 
-                return AllSchedules.Where(x => !x.IsPublished)
+                return AllSchedules.Where(x => x.ItemToPublish != null && !x.IsPublished)
                 .OrderBy(x => x.PublishDate); 
             }
         }
@@ -90,7 +90,8 @@ namespace ScheduledPublish.Repos
             }
 
             return AllSchedules
-                .Where(x => !x.IsPublished
+                .Where(x => x.ItemToPublish != null
+                       && !x.IsPublished
                        && x.PublishDate >= fromDate
                        && x.PublishDate <= toDate);
         }
@@ -252,6 +253,9 @@ namespace ScheduledPublish.Repos
             }
         }
 
+        /// <summary>
+        /// Deletes all schedules and bucket folders 
+        /// </summary>
         public void CleanBucket()
         {
             DateTime currentTime = DateTime.Now;
@@ -296,6 +300,11 @@ namespace ScheduledPublish.Repos
             }
         }
 
+        /// <summary>
+        /// Gets or create folder in schedules bucket
+        /// </summary>
+        /// <param name="date">Date which is used for parsing the folder path</param>
+        /// <returns>Created folder</returns>
         private Item GetOrCreateFolder(DateTime date)
         {
             string yearName = date.Year.ToString();
@@ -319,6 +328,12 @@ namespace ScheduledPublish.Repos
             return hourFolder;
         }
 
+        /// <summary>
+        /// Gets date folder corresponding to the path created from the passed date
+        /// </summary>
+        /// <param name="date"></param>
+        /// <param name="folderType">Date which is used for parsing the folder path</param>
+        /// <returns>Found folder</returns>
         private Item GetDateFolder(DateTime date, BucketFolderType folderType)
         {
             string rootPath = RootFolder.Paths.FullPath;
@@ -356,6 +371,11 @@ namespace ScheduledPublish.Repos
             return _database.GetItem(itemPath);
         }
 
+        /// <summary>
+        /// Builds the name of the schedule in sitecore
+        /// </summary>
+        /// <param name="item"></param>
+        /// <returns></returns>
         private string BuildPublishScheduleName(Item item)
         {
             Guid guid = item != null

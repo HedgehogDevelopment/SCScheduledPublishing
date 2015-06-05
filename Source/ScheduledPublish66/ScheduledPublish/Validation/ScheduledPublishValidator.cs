@@ -6,6 +6,9 @@ using Sitecore.Publishing;
 
 namespace ScheduledPublish.Validation
 {
+    /// <summary>
+    /// Validator for the user's input while creating schedules
+    /// </summary>
     public static class ScheduledPublishValidator
     {
         public static ValidationResult Validate(PublishSchedule publishSchedule)
@@ -61,11 +64,22 @@ namespace ScheduledPublish.Validation
             return result;
         }
 
+        /// <summary>
+        /// Is schedules date in the future
+        /// </summary>
+        /// <param name="date"></param>
+        /// <returns></returns>
         private static bool IsFutureDate(DateTime date)
         {
             return DateTime.Compare(date, DateTime.Now) > 0;
         }
 
+        /// <summary>
+        /// Is passed item valid for publish in passed DateTime
+        /// </summary>
+        /// <param name="item">Item for check</param>
+        /// <param name="date">DateTime</param>
+        /// <returns></returns>
         private static bool IsPublishableItem(Item item, DateTime date)
         {
             //We should also check ancestors because if any ancestor is marked for unpublish

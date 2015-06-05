@@ -12,8 +12,22 @@ templatekey: ScheduledPublishEmail
 ----version----
 language: en
 version: 1
-revision: 2e9090d7-9795-44f2-a0e7-99a6c8bf416d
+revision: e5f3db3c-2fed-4b9c-a7ad-c5dcfc94d668
 
+----field----
+field: {4A6046AA-2B94-47B2-9A27-3B83F0601822}
+name: EmailFrom
+key: emailfrom
+content-length: 32
+
+sc-scheduledpublish@no-reply.com
+----field----
+field: {20DEB7CE-6AD1-459F-B1A4-F6AE88B2C62A}
+name: EmailSubject
+key: emailsubject
+content-length: 35
+
+Sitecore Scheduled Publish - [item]
 ----field----
 field: {39A13A96-8BF0-4334-B366-16C0ACCC2B60}
 name: EmailMessage
@@ -54,14 +68,14 @@ name: __Revision
 key: __revision
 content-length: 36
 
-2e9090d7-9795-44f2-a0e7-99a6c8bf416d
+e5f3db3c-2fed-4b9c-a7ad-c5dcfc94d668
 ----field----
 field: {D9CF14B1-FA16-4BA6-9288-E8A174D4D522}
 name: __Updated
 key: __updated
-content-length: 34
+content-length: 35
 
-20150428T133322:635658248023058455
+20150605T085013:635690910137773372Z
 ----field----
 field: {BADD9CF9-53E0-4D0C-BCC0-2D784C282F6A}
 name: __Updated by

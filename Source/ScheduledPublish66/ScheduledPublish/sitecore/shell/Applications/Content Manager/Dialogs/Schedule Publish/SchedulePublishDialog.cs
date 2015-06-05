@@ -29,7 +29,7 @@ using ItemList = Sitecore.Collections.ItemList;
 namespace ScheduledPublish.sitecore.shell.Applications.Content_Manager.Dialogs.Schedule_Publish
 {
     /// <summary>
-    /// Schedule Publishing code-beside
+    /// Schedule Publish Dialog code-beside
     /// </summary>
     public class SchedulePublishDialog : DialogForm
     {
@@ -50,7 +50,7 @@ namespace ScheduledPublish.sitecore.shell.Applications.Content_Manager.Dialogs.S
 
         private readonly Database _database = Context.ContentDatabase;
         private readonly CultureInfo _culture = Context.Culture;
-        private ScheduledPublishRepo scheduledPublishRepo;
+        private ScheduledPublishRepo _scheduledPublishRepo;
 
         /// <summary>
         /// Current selected item
@@ -170,7 +170,7 @@ namespace ScheduledPublish.sitecore.shell.Applications.Content_Manager.Dialogs.S
         {
             Assert.ArgumentNotNull(e, "e");
 
-            scheduledPublishRepo = new ScheduledPublishRepo();
+            _scheduledPublishRepo = new ScheduledPublishRepo();
 
             if (!Context.ClientPage.IsEvent)
             {
@@ -223,7 +223,7 @@ namespace ScheduledPublish.sitecore.shell.Applications.Content_Manager.Dialogs.S
                 return;
             }
 
-            scheduledPublishRepo.CreatePublishSchedule(publishSchedule);
+            _scheduledPublishRepo.CreatePublishSchedule(publishSchedule);
 
             base.OnOK(sender, args);
         }
@@ -353,7 +353,7 @@ namespace ScheduledPublish.sitecore.shell.Applications.Content_Manager.Dialogs.S
         /// </summary>
         private void BuildExistingSchedules()
         {
-            IEnumerable<PublishSchedule> existingSchedules = scheduledPublishRepo.GetSchedules(InnerItem.ID).ToList();
+            IEnumerable<PublishSchedule> existingSchedules = _scheduledPublishRepo.GetSchedules(InnerItem.ID).ToList();
 
             if (existingSchedules.Any())
             {

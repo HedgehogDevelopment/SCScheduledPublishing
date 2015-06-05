@@ -12,7 +12,7 @@ templatekey: ScheduledPublishEmailSettings
 ----version----
 language: en
 version: 1
-revision: 771ab246-7c2e-4bdc-a139-ee483650c009
+revision: efcea8b0-cdc6-4343-af57-a216c3507fd8
 
 ----field----
 field: {5729E93E-6E14-4AD8-BB76-7803302C95C3}
@@ -25,16 +25,16 @@ content-length: 0
 field: {214F19D5-72A8-4332-9375-85E599A2A451}
 name: MailServer
 key: mailserver
-content-length: 0
+content-length: 9
 
-
+localhost
 ----field----
 field: {A08B5C87-8DD1-48BC-93BE-6001210791BD}
 name: MailServerPort
 key: mailserverport
-content-length: 0
+content-length: 2
 
-
+25
 ----field----
 field: {510D71A5-358A-4336-8F2E-A55A33B53F29}
 name: MailServerUsername
@@ -62,14 +62,14 @@ name: __Revision
 key: __revision
 content-length: 36
 
-771ab246-7c2e-4bdc-a139-ee483650c009
+efcea8b0-cdc6-4343-af57-a216c3507fd8
 ----field----
 field: {D9CF14B1-FA16-4BA6-9288-E8A174D4D522}
 name: __Updated
 key: __updated
-content-length: 34
+content-length: 35
 
-20150511T172311:635669617918146884
+20150605T081707:635690890273146787Z
 ----field----
 field: {BADD9CF9-53E0-4D0C-BCC0-2D784C282F6A}
 name: __Updated by

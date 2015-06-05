@@ -251,6 +251,9 @@ namespace ScheduledPublish.Repos
             }
         }
 
+        /// <summary>
+        /// Deletes all schedules and bucket folders 
+        /// </summary>
         public void CleanBucket()
         {
             DateTime currentTime = DateTime.Now;
@@ -295,6 +298,11 @@ namespace ScheduledPublish.Repos
             }
         }
 
+        /// <summary>
+        /// Gets or create folder in schedules bucket
+        /// </summary>
+        /// <param name="date">Date which is used for parsing the folder path</param>
+        /// <returns>Created folder</returns>
         private Item GetOrCreateFolder(DateTime date)
         {
             string yearName = date.Year.ToString();
@@ -318,6 +326,12 @@ namespace ScheduledPublish.Repos
             return hourFolder;
         }
 
+        /// <summary>
+        /// Gets date folder corresponding to the path created from the passed date
+        /// </summary>
+        /// <param name="date"></param>
+        /// <param name="folderType">Date which is used for parsing the folder path</param>
+        /// <returns>Found folder</returns>
         private Item GetDateFolder(DateTime date, BucketFolderType folderType)
         {
             string rootPath = RootFolder.Paths.FullPath;
@@ -355,6 +369,11 @@ namespace ScheduledPublish.Repos
             return _database.GetItem(itemPath);
         }
 
+        /// <summary>
+        /// Builds the name of the schedule in sitecore
+        /// </summary>
+        /// <param name="item"></param>
+        /// <returns></returns>
         private string BuildPublishScheduleName(Item item)
         {
             Guid guid = item != null

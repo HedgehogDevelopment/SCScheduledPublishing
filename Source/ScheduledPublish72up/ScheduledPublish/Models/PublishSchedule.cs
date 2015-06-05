@@ -10,6 +10,9 @@ using Sitecore.Publishing;
 
 namespace ScheduledPublish.Models
 {
+    /// <summary>
+    /// Parses Schedule item from Sitecore into an object.
+    /// </summary>
     public class PublishSchedule
     {
         public static readonly ID SchedulerEmailId = ID.Parse("{0BBED214-85E7-4773-AB6A-9608CAC921FE}");
@@ -69,30 +72,71 @@ namespace ScheduledPublish.Models
             }
         }
 
+        /// <summary>
+        /// Sitecore item corresponding to the schedule
+        /// </summary>
         public Item InnerItem { get; private set; } 
 
+        /// <summary>
+        /// User's email who scheduled the publish
+        /// </summary>
         public string SchedulerEmail { get; set; }
 
+        /// <summary>
+        /// Item which is selected for publish
+        /// </summary>
         public Item ItemToPublish { get; set; }
 
+        /// <summary>
+        /// Is scheduled unpublish
+        /// </summary>
         public bool Unpublish { get; set; }
 
+        /// <summary>
+        /// Publish all children
+        /// </summary>
         public bool PublishChildren { get; set; }
 
+        /// <summary>
+        /// Publish all related items
+        /// </summary>
         public bool PublishRelatedItems { get; set; }
 
+        /// <summary>
+        /// Scheduled publish date
+        /// </summary>
         public DateTime PublishDate { get; set; }
 
+        /// <summary>
+        /// Source database for publish
+        /// </summary>
         public Database SourceDatabase { get; set; }
 
+        /// <summary>
+        /// Target databases for publish
+        /// </summary>
         public IEnumerable<Database> TargetDatabases { get; set; }
 
+        /// <summary>
+        /// Target languages for publish
+        /// </summary>
         public IEnumerable<Language> TargetLanguages { get; set; }
 
+        /// <summary>
+        /// Smart, Incremental, Full
+        /// </summary>
         public PublishMode PublishMode { get; set; }
 
+        /// <summary>
+        /// Is already published
+        /// </summary>
         public bool IsPublished { get; set; }
 
+        /// <summary>
+        /// Parses mode from string to enum
+        /// </summary>
+        /// <param name="mode">Mode string</param>
+        /// <returns>Mode enum</returns>
         private static PublishMode ParseMode(string mode)
         {
             switch (mode.ToLowerInvariant())

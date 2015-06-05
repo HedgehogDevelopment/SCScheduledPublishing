@@ -7,6 +7,9 @@ using System.Collections.Specialized;
 
 namespace ScheduledPublish.Commands
 {
+    /// <summary>
+    /// Opens the Edit Scheduled Publish Dialog.
+    /// </summary>
     public class OpenEditScheduledPublishDialog : Command
     {
         public override void Execute(CommandContext context)

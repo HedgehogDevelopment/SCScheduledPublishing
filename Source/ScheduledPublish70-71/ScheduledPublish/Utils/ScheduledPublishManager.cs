@@ -4,7 +4,6 @@ using Sitecore;
 using Sitecore.Diagnostics;
 using Sitecore.Publishing;
 using System;
-using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using Sitecore.SecurityModel;
@@ -217,15 +216,10 @@ namespace ScheduledPublish.Utils
                 return;
             }
 
-            //Temp StopWatch for tests
-            Stopwatch waitStatus = new Stopwatch();
-            waitStatus.Start();
             while (!PublishManager.GetStatus(handle).IsDone)
             {
                 Thread.Sleep(200);
             }
-            waitStatus.Stop();
-            Log.Info("Scheduled Publish: Waiting status " + waitStatus.ElapsedMilliseconds, new object());
         }
     }
 }

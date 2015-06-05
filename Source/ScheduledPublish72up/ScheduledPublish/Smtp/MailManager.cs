@@ -1,11 +1,11 @@
-﻿using System;
-using System.Linq;
-using System.Net;
-using System.Net.Mail;
-using ScheduledPublish.Models;
+﻿using ScheduledPublish.Models;
 using Sitecore;
 using Sitecore.Data.Items;
 using Sitecore.Diagnostics;
+using System;
+using System.Linq;
+using System.Net;
+using System.Net.Mail;
 
 namespace ScheduledPublish.Smtp
 {
@@ -36,9 +36,9 @@ namespace ScheduledPublish.Smtp
                 {
                     MainUtil.SendMail(message);
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
-                    Log.Error("Scheduled Publish: Sending publish email through web.config settings failed, continuing... ", message);
+                    Log.Error(string.Format("{0} {1}", "Scheduled Publish: Sending publish email through web.config settings failed.", ex), message);
                 }
             }
             else
@@ -100,9 +100,9 @@ namespace ScheduledPublish.Smtp
             {
                 client.Send(mailMessage);
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                Log.Error("Scheduled Publish: Sending email failed: " + e, mailMessage);
+                Log.Error("Scheduled Publish: Sending email failed: " + ex, mailMessage);
             }
         }
     }

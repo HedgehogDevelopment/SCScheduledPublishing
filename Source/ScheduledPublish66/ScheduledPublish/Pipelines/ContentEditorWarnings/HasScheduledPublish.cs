@@ -8,6 +8,10 @@ using System.Linq;
 
 namespace ScheduledPublish.Pipelines.ContentEditorWarnings
 {
+    /// <summary>
+    /// Checks if current item has created publish schedules 
+    /// and shows yellow worning in content editor 
+    /// </summary>
     public class HasScheduledPublish
     {
         public void Process(GetContentEditorWarningsArgs args)
