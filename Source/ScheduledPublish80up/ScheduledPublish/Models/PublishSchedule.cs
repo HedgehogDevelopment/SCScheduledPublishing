@@ -62,7 +62,7 @@ namespace ScheduledPublish.Models
             string dateString = item[PublishDateId];
             if (!string.IsNullOrWhiteSpace(dateString))
             {
-                PublishDate = DateUtil.IsoDateToDateTime(dateString, DateTime.MinValue);
+                PublishDate = DateUtil.ToServerTime(DateUtil.IsoDateToDateTime(dateString, DateTime.MinValue));
             }
 
             string languages = item[TargetLanguagesId];

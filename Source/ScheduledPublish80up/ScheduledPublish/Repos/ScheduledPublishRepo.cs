@@ -128,7 +128,7 @@ namespace ScheduledPublish.Repos
                         string.Join("|", publishSchedule.TargetLanguages.Select(x => x.Name));
                     publishOptionsItem[PublishSchedule.SourceDatabaseId] = publishSchedule.SourceDatabase.Name;
                     publishOptionsItem[PublishSchedule.TargetDatabasesId] = string.Join("|", publishSchedule.TargetDatabases.Select(x => x.Name));
-                    publishOptionsItem[PublishSchedule.PublishDateId] = DateUtil.ToIsoDate(publishSchedule.PublishDate);
+                    publishOptionsItem[PublishSchedule.PublishDateId] = DateUtil.ToIsoDate(DateUtil.ToUniversalTime(publishSchedule.PublishDate));
 
                     publishOptionsItem.Editing.AcceptChanges();
                     publishOptionsItem.Editing.EndEdit();
@@ -187,9 +187,8 @@ namespace ScheduledPublish.Repos
                     publishSchedule.InnerItem[PublishSchedule.TargetDatabasesId] = string.Join("|", publishSchedule.TargetDatabases.Select(x => x.Name));
                     publishSchedule.InnerItem[PublishSchedule.IsPublishedId] = publishSchedule.IsPublished ? "1" : string.Empty;
 
-                    DateTime oldPublishDate =
-                        DateUtil.IsoDateToDateTime(publishSchedule.InnerItem[PublishSchedule.PublishDateId]);
-                    publishSchedule.InnerItem[PublishSchedule.PublishDateId] = DateUtil.ToIsoDate(publishSchedule.PublishDate);
+                    DateTime oldPublishDate = DateUtil.IsoDateToDateTime(publishSchedule.InnerItem[PublishSchedule.PublishDateId]);
+                    publishSchedule.InnerItem[PublishSchedule.PublishDateId] = DateUtil.ToIsoDate(DateUtil.ToUniversalTime(publishSchedule.PublishDate));
 
                     publishSchedule.InnerItem.Editing.AcceptChanges();
                     publishSchedule.InnerItem.Editing.EndEdit();
