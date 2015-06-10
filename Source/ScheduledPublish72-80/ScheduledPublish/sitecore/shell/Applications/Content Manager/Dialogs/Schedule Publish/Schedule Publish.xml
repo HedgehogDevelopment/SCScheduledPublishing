@@ -4,11 +4,6 @@
     <FormDialog ID="ScheduleFormDialog" Icon="Network/32x32/earth_time.png" Header="Scheduled Publish" Text="Configure when the current item is scheduled for publish.">
       <CodeBeside Type="ScheduledPublish.sitecore.shell.Applications.Content_Manager.Dialogs.Schedule_Publish.SchedulePublishDialog, ScheduledPublish"/>
       <GridPanel Width="100%" Height="100%" Fixed="true">
-        <Groupbox Header="Help" Margin="0px 0px 16px 0px">
-          <Border>
-            <Literal Text="Idea. We can add link to documentation here"/>
-          </Border>
-        </Groupbox>
         <Groupbox Header="Existing Schedules" Margin="0px 0px 16px 0px">
           <GridPanel ID="ExistingSchedulesTable" Height="100%" Width="100%" Columns="4">
             <Border GridPanel.NoWrap="true" Margin="0px 0px 5px 0px">
