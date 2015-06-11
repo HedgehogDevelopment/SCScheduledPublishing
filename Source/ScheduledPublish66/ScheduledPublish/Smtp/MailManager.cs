@@ -26,7 +26,7 @@ namespace ScheduledPublish.Smtp
 
             if (message == null)
             {
-                Log.Error("Scheduled Publish: No receiver for publishing email. " + DateTime.Now, new object());
+                Log.Info("Scheduled Publish: No receiver for publishing email. " + DateTime.Now, new object());
                 return;
             }
 
@@ -57,14 +57,39 @@ namespace ScheduledPublish.Smtp
         private static MailMessage ComposeEmail(string report, Item item, string sendTo)
         {
             NotificationEmail mail = new NotificationEmail();
-            string emailTo = sendTo;
-            if (string.IsNullOrWhiteSpace(emailTo))
+
+            string to = string.Empty;
+            string bcc = string.Empty;
+
+            if (!string.IsNullOrEmpty(sendTo))
             {
-                if (string.IsNullOrWhiteSpace(mail.EmailTo))
+                to = sendTo;
+            }
+
+            if (!string.IsNullOrWhiteSpace(mail.EmailTo))
+            {
+                if (string.IsNullOrEmpty(to))
                 {
-                    return null;
+                    var index = mail.EmailTo.IndexOf(',');
+                    if (index == -1)
+                    {
+                        to = mail.EmailTo.Trim();
+                    }
+                    else
+                    {
+                        to = mail.EmailTo.Substring(0, index);
+                        bcc = mail.EmailTo.Substring(index + 1).Trim();
+                    }
                 }
-                emailTo = mail.EmailTo.Split(',').First();
+                else
+                {
+                    bcc = mail.EmailTo;
+                }
+            }
+
+            if (string.IsNullOrWhiteSpace(to))
+            {
+                return null;
             }
 
             string body = mail.Body.Replace("[item]", item.DisplayName)
@@ -74,14 +99,19 @@ namespace ScheduledPublish.Smtp
                 .Replace("[version]", item.Version.ToString())
                 .Replace("[id]", item.ID.ToString());
 
-            MailMessage mailMessage = new MailMessage(mail.EmailFrom, emailTo)
+            MailMessage mailMessage = new MailMessage
             {
+                From = new MailAddress(mail.EmailFrom),
+                To = { to },
                 Subject = mail.Subject.Replace("[item]", item.DisplayName),
                 Body = body + Environment.NewLine + report,
                 IsBodyHtml = true,
             };
 
-            mailMessage.To.Add(mail.EmailTo);
+            if (!string.IsNullOrEmpty(bcc))
+            {
+                mailMessage.Bcc.Add(bcc);
+            }
 
             return mailMessage;
         }

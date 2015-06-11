@@ -3,7 +3,6 @@ using Sitecore;
 using Sitecore.Data.Items;
 using Sitecore.Diagnostics;
 using System;
-using System.Linq;
 using System.Net;
 using System.Net.Mail;
 
@@ -26,7 +25,7 @@ namespace ScheduledPublish.Smtp
 
             if (message == null)
             {
-                Log.Error("Scheduled Publish: No receiver for publishing email. " + DateTime.Now, new object());
+                Log.Info("Scheduled Publish: No receiver for publishing email. " + DateTime.Now, new object());
                 return;
             }
 
@@ -94,8 +93,8 @@ namespace ScheduledPublish.Smtp
 
             string body = mail.Body.Replace("[item]", item.DisplayName)
                 .Replace("[path]", item.Paths.FullPath)
-                .Replace("[date]", DateUtil.ToServerTime(DateTime.UtcNow).ToShortDateString())
-                .Replace("[time]", DateUtil.ToServerTime(DateTime.UtcNow).ToShortTimeString())
+                .Replace("[date]", DateTime.Now.ToShortDateString())
+                .Replace("[time]", DateTime.Now.ToShortTimeString())
                 .Replace("[version]", item.Version.ToString())
                 .Replace("[id]", item.ID.ToString());
 
