@@ -11,6 +11,7 @@ using Sitecore.Web.UI.Sheer;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Text;
 using System.Web.UI;
 using System.Web.UI.WebControls;
@@ -67,9 +68,10 @@ namespace ScheduledPublish.sitecore.shell.Applications.Content_Manager.Dialogs.E
             sbHeader.Append("</tr>");
             AllSchedules.Controls.Add(new LiteralControl(sbHeader.ToString()));
 
-            
-            IEnumerable<PublishSchedule> allSchedules = _scheduledPublishRepo.AllUnpublishedSchedules;
-            foreach (var schedule in allSchedules)
+            IEnumerable<PublishSchedule> accessibleSchedules = _scheduledPublishRepo.AllUnpublishedSchedules
+                .Where(x => x.ItemToPublish.Security.CanWrite(Context.User));
+
+            foreach (var schedule in accessibleSchedules)
             {
                 if (schedule.InnerItem != null)
                 {

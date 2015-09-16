@@ -23,10 +23,17 @@ key: click
 content-length: 34
 
 custom:schedulePublish(id=$Target)
+----field----
+field: {DEC8D2D5-E3CF-48B6-A653-8E69E2716641}
+name: __Security
+key: __security
+content-length: 53
+
+ar|sitecore\Sitecore Client Publishing|pe|+item:read|
 ----version----
 language: en
 version: 1
-revision: f4698614-bb36-4cc2-be71-b7354b2daf26
+revision: 09f2667c-43aa-4087-99a8-14fbc69d7508
 
 ----field----
 field: {4DF6DA21-E745-444C-956E-1D4A96AB8821}
@@ -69,14 +76,14 @@ name: __Revision
 key: __revision
 content-length: 36
 
-f4698614-bb36-4cc2-be71-b7354b2daf26
+09f2667c-43aa-4087-99a8-14fbc69d7508
 ----field----
 field: {D9CF14B1-FA16-4BA6-9288-E8A174D4D522}
 name: __Updated
 key: __updated
-content-length: 34
+content-length: 35
 
-20150507T003423:635665556634547017
+20150722T124608:635731659683196072Z
 ----field----
 field: {BADD9CF9-53E0-4D0C-BCC0-2D784C282F6A}
 name: __Updated by

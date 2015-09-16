@@ -214,7 +214,7 @@ namespace ScheduledPublish.sitecore.shell.Applications.Content_Manager.Dialogs.S
                 PublishMode = SmartPublish.Checked ? PublishMode.Smart : PublishMode.Full,
                 PublishChildren = PublishChildren.Checked,
                 PublishRelatedItems = PublishRelatedItems.Checked,
-                SchedulerEmail = Context.User.Profile.Email,
+                SchedulerUsername = Context.User.Name,
                 IsPublished = false
             };
 
