@@ -81,7 +81,7 @@ namespace ScheduledPublish.Commands
                 {
                     try
                     {
-                        MailManager.SendEmail(report.Message, schedule.ItemToPublish, schedule.SchedulerEmail);
+                        MailManager.SendEmail(report.Message, schedule.ItemToPublish, schedule.SchedulerUsername);
                     }
                     catch (Exception ex)
                     {
@@ -129,7 +129,7 @@ namespace ScheduledPublish.Commands
                 {
                     try
                     {
-                        MailManager.SendEmail(message, schedule.ItemToPublish, schedule.SchedulerEmail);
+                        MailManager.SendEmail(message, schedule.ItemToPublish, schedule.SchedulerUsername);
                     }
                     catch (Exception ex)
                     {

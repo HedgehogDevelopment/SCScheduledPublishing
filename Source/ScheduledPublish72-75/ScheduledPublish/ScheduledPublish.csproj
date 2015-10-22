@@ -41,28 +41,46 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Sitecore.Client">
+      <HintPath>..\Lib\Sitecore.Client.dll</HintPath>
+    </Reference>
     <Reference Include="Sitecore.Kernel">
       <HintPath>..\Lib\Sitecore.Kernel.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Data" />
     <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Web" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Web.ApplicationServices" />
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Commands\OpenEditScheduledPublishDialog.cs" />
     <Compile Include="Commands\OpenScheduledPublishDialog.cs" />
     <Compile Include="Commands\ScheduledPublishCommand.cs" />
+    <Compile Include="CustomFields\IRolesField.cs" />
+    <Compile Include="CustomFields\RolesField.cs" />
+    <Compile Include="CustomFields\RolesMultilist.cs" />
+    <Compile Include="Extensions\ItemExtensions.cs" />
+    <Compile Include="sitecore\admin\custom\MailTester.aspx.cs">
+      <DependentUpon>MailTester.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="sitecore\admin\custom\MailTester.aspx.designer.cs">
+      <DependentUpon>MailTester.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Models\BucketFolderType.cs" />
     <Compile Include="Models\NotificationEmail.cs" />
     <Compile Include="Models\PublishSchedule.cs" />
     <Compile Include="Models\ScheduledPublishReport.cs" />
+    <Compile Include="Models\ScheduledPublishSection.cs" />
     <Compile Include="Models\ScheduledPublishSettings.cs" />
+    <Compile Include="Models\SectionsEmailSettings.cs" />
     <Compile Include="Models\ValidationResult.cs" />
     <Compile Include="Pipelines\ContentEditorWarnings\HasScheduledPublish.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -76,7 +94,10 @@
     <Compile Include="Validation\ScheduledPublishValidator.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="App_Config\Include\ZZ_ScheduledPublishControl.config" />
+    <Content Include="App_Config\Include\ScheduledPublish\ZZ_ScheduledPublishControl.config">
+      <SubType>Designer</SubType>
+    </Content>
+    <None Include="sitecore\admin\custom\MailTester.aspx" />
     <Content Include="sitecore\shell\Applications\Content Manager\Dialogs\Edit Scheduled Publish\Edit Scheduled Publish.xml" />
     <Content Include="sitecore\shell\Applications\Content Manager\Dialogs\Schedule Publish\Schedule Publish.xml" />
   </ItemGroup>

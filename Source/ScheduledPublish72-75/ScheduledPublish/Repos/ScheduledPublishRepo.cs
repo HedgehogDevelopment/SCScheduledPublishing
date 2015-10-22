@@ -26,10 +26,12 @@ namespace ScheduledPublish.Repos
         {
             get
             {
-                return RootFolder.Axes.GetDescendants()
-                .Where(x => x.TemplateID == Constants.PUBLISH_SCHEDULE_TEMPLATE_ID)
-                .Select(x => new PublishSchedule(x))
-                .OrderBy(x => x.PublishDate);
+                return RootFolder == null 
+                    ? Enumerable.Empty<PublishSchedule>()
+                    : RootFolder.Axes.GetDescendants()
+                        .Where(x => x.TemplateID == Constants.PUBLISH_SCHEDULE_TEMPLATE_ID)
+                        .Select(x => new PublishSchedule(x))
+                        .OrderBy(x => x.PublishDate);
             }
         }
 
@@ -53,7 +55,12 @@ namespace ScheduledPublish.Repos
             get
             {
                 Item rootItem = _database.GetItem("{7D8B2A62-A35A-4DA1-B7B6-89C11758C2E6}");
-                Error.AssertItemFound(rootItem);
+                
+                if (rootItem == null)
+                {
+                    Log.Error("Cannot find SchduledPublish root item!", this);
+                }
+
                 return rootItem;
             }
         }
@@ -115,7 +122,7 @@ namespace ScheduledPublish.Repos
 
                     publishOptionsItem.Editing.BeginEdit();
 
-                    publishOptionsItem[PublishSchedule.SchedulerEmailId] = publishSchedule.SchedulerEmail;
+                    publishOptionsItem[PublishSchedule.SchedulerUsernameId] = publishSchedule.SchedulerUsername;
                     publishOptionsItem[PublishSchedule.UnpublishId] = publishSchedule.Unpublish ? "1" : string.Empty;
                     if (publishSchedule.ItemToPublish != null)
                     {
@@ -172,7 +179,7 @@ namespace ScheduledPublish.Repos
                 {
                     publishSchedule.InnerItem.Editing.BeginEdit();
 
-                    publishSchedule.InnerItem[PublishSchedule.SchedulerEmailId] = publishSchedule.SchedulerEmail;
+                    publishSchedule.InnerItem[PublishSchedule.SchedulerUsernameId] = publishSchedule.SchedulerUsername;
                     publishSchedule.InnerItem[PublishSchedule.UnpublishId] = publishSchedule.Unpublish ? "1" : string.Empty;
                     if (publishSchedule.ItemToPublish != null)
                     {
@@ -258,6 +265,12 @@ namespace ScheduledPublish.Repos
         /// </summary>
         public void CleanBucket()
         {
+            if (RootFolder == null)
+            {
+                Log.Error("Running CleanBucket failed, because the module's root item is missing from Sitecore!", this);
+                return;
+            }
+
             DateTime currentTime = DateTime.Now;
             DateTime oneDayEarlier = currentTime.AddDays(-1);
 

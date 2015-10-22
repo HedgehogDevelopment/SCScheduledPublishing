@@ -1,10 +1,10 @@
 ----item----
 version: 1
-id: {39A13A96-8BF0-4334-B366-16C0ACCC2B60}
+id: {0BBED214-85E7-4773-AB6A-9608CAC921FE}
 database: master
-path: /sitecore/templates/Scheduled Publish/ScheduledPublishEmail/Notification Email/EmailMessage
-parent: {D9012DCB-71D0-4A2E-94E1-083D66508092}
-name: EmailMessage
+path: /sitecore/templates/Scheduled Publish/PublishSchedule/Publish Schedule/CreatedBy
+parent: {089776BB-E159-4F2E-AEFD-F1CDE718536B}
+name: CreatedBy
 master: {00000000-0000-0000-0000-000000000000}
 template: {455A3E98-A627-4B40-8035-E683A0331AC7}
 templatekey: Template field
@@ -13,49 +13,42 @@ templatekey: Template field
 field: {AB162CC0-DC80-4ABF-8871-998EE5D7BA32}
 name: Type
 key: type
-content-length: 9
+content-length: 16
 
-Rich Text
+Single-Line Text
+----field----
+field: {39C4902E-9960-4469-AEEF-E878E9C8218F}
+name: __Hidden
+key: __hidden
+content-length: 0
+
+
+----field----
+field: {9C6106EA-7A5A-48E2-8CAD-F0F693B1E2D4}
+name: __Read Only
+key: __read only
+content-length: 0
+
+
 ----field----
 field: {BA3F86A2-4A1C-4D78-B63D-91C2779C1B5E}
 name: __Sortorder
 key: __sortorder
 content-length: 3
 
-400
+100
 ----version----
 language: en
 version: 1
-revision: b8e1366a-3ec7-49c7-81df-378dfc8c0e35
+revision: 3a79ed3e-47d9-43d3-a9f0-8cd891c5ca83
 
 ----field----
 field: {19A69332-A23E-4E70-8D16-B2640CB24CC8}
 name: Title
 key: title
-content-length: 7
+content-length: 10
 
-Message
-----field----
-field: {577F1689-7DE4-4AD2-A15F-7FDC1759285F}
-name: __Long description
-key: __long description
-content-length: 337
-
-[id] - The id of the published item
-[item] - The name of the published item
-[path] - The full path of the published item
-[version] - The version of the published item
-[date] - The date the item is published
-[time] - The time the item is published
-[publisher] - The full name or username of the person who scheduled the publishing
-
-----field----
-field: {9541E67D-CE8C-4225-803D-33F7F29F09EF}
-name: __Short description
-key: __short description
-content-length: 57
-
-Mouseover this to see a list of available expandable tags
+Created By
 ----field----
 field: {52807595-0F8F-4B20-8D2A-CB71D28C6103}
 name: __Owner
@@ -67,9 +60,9 @@ sitecore\admin
 field: {25BED78C-4957-4165-998A-CA1B52F67497}
 name: __Created
 key: __created
-content-length: 15
+content-length: 16
 
-20150427T104400
+20150402T093700Z
 ----field----
 field: {5DD74568-4D4B-44C1-B513-0AF5F4CDA34F}
 name: __Created by
@@ -83,14 +76,14 @@ name: __Revision
 key: __revision
 content-length: 36
 
-b8e1366a-3ec7-49c7-81df-378dfc8c0e35
+3a79ed3e-47d9-43d3-a9f0-8cd891c5ca83
 ----field----
 field: {D9CF14B1-FA16-4BA6-9288-E8A174D4D522}
 name: __Updated
 key: __updated
 content-length: 35
 
-20150722T101827:635731571078477606Z
+20150721T102234:635730709540777730Z
 ----field----
 field: {BADD9CF9-53E0-4D0C-BCC0-2D784C282F6A}
 name: __Updated by

@@ -7,6 +7,7 @@ using Sitecore.Data.Items;
 using Sitecore.Data.Managers;
 using Sitecore.Globalization;
 using Sitecore.Publishing;
+using Sitecore.Security.Accounts;
 
 namespace ScheduledPublish.Models
 {
@@ -15,7 +16,7 @@ namespace ScheduledPublish.Models
     /// </summary>
     public class PublishSchedule
     {
-        public static readonly ID SchedulerEmailId = ID.Parse("{0BBED214-85E7-4773-AB6A-9608CAC921FE}");
+        public static readonly ID SchedulerUsernameId = ID.Parse("{0BBED214-85E7-4773-AB6A-9608CAC921FE}");
         public static readonly ID ItemToPublishId = ID.Parse("{8B07571D-D616-4373-8DB0-D77672911D16}");
         public static readonly ID SourceDatabaseId = ID.Parse("{61632EB9-8A59-4AAB-B790-91AF3DA7B9F4}");
         public static readonly ID TargetDatabasesId = ID.Parse("{193B7E69-8C83-422F-80B2-F7B48C42775E}");
@@ -34,12 +35,21 @@ namespace ScheduledPublish.Models
         public PublishSchedule(Item item)
         {
             InnerItem = item;
-            SchedulerEmail = item[SchedulerEmailId];
+            SchedulerUsername = item[SchedulerUsernameId];
             Unpublish = "1" == item[UnpublishId];
             PublishChildren = "1" == item[PublishChildrenId];
             PublishRelatedItems = "1" == item[PublishRelatedItemsId];
             PublishMode = ParseMode(item[PublishModeId]);
             IsPublished = "1" == item[IsPublishedId];
+
+            if (!string.IsNullOrWhiteSpace(SchedulerUsername))
+            {
+                User user = User.FromName(SchedulerUsername, false);
+                if (user != null && user.Profile != null)
+                {
+                    SchedulerEmail = user.Profile.Email;
+                }
+            }
 
             string sourceDatabaseName = item[SourceDatabaseId];
             if (!string.IsNullOrWhiteSpace(sourceDatabaseName))
@@ -75,7 +85,12 @@ namespace ScheduledPublish.Models
         /// <summary>
         /// Sitecore item corresponding to the schedule
         /// </summary>
-        public Item InnerItem { get; private set; } 
+        public Item InnerItem { get; private set; }
+
+        /// <summary>
+        /// Username of the person who scheduled the publish
+        /// </summary>
+        public string SchedulerUsername { get; set; }
 
         /// <summary>
         /// User's email who scheduled the publish
