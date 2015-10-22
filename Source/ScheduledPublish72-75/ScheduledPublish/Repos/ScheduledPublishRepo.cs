@@ -54,7 +54,7 @@ namespace ScheduledPublish.Repos
         {
             get
             {
-                Item rootItem = _database.GetItem("{7D8B2A62-A35A-4DA1-B7B6-89C11758C2E6}");
+                Item rootItem = _database.GetItem(Constants.PUBLISH_SCHEDULES_ROOT_ID);
                 
                 if (rootItem == null)
                 {

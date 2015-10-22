@@ -68,7 +68,7 @@ namespace ScheduledPublish.Smtp
             if (!string.IsNullOrWhiteSpace(username))
             {
                 var author = User.FromName(username, false);
-                if (author.Profile != null)
+                if (author.Profile != null && !string.IsNullOrWhiteSpace(author.Profile.Email))
                 {
                     to = author.Profile.Email;
                     publishedBy = !string.IsNullOrWhiteSpace(author.Profile.FullName)
@@ -101,18 +101,31 @@ namespace ScheduledPublish.Smtp
             if (SectionsEmailSettings.Enabled)
             {
                 string emailList = GetEmailsForSection(item);
-                bcc = !string.IsNullOrEmpty(emailList) ? string.Format("{0}, {1}", bcc, emailList) : bcc;
+                if (!string.IsNullOrEmpty(emailList))
+                {
+                    if (!string.IsNullOrWhiteSpace(bcc))
+                    {
+                        bcc = string.Format("{0}, {1}", bcc, emailList);
+                    }
+                    else
+                    {
+                        bcc = emailList;
+                    }
+                }
                 to = string.IsNullOrWhiteSpace(to) && bcc.Length > 0
-                    ? bcc.Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries)[0]
-                    : to;
+                        ? bcc.Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries)[0]
+                        : to;
             }
 
-            var uniqueBccAddresses = bcc
-                .Replace(to, "")
-                .Split(new[] { ", " }, StringSplitOptions.RemoveEmptyEntries)
-                .Distinct();
-            
-            bcc = string.Join(", ", uniqueBccAddresses);
+            if (bcc.Contains(","))
+            {
+                var uniqueBccAddresses = bcc
+                    .Replace(to, "")
+                    .Split(new[] {", "}, StringSplitOptions.RemoveEmptyEntries)
+                    .Distinct();
+
+                bcc = string.Join(", ", uniqueBccAddresses);
+            }
 
             if (string.IsNullOrWhiteSpace(to))
             {
@@ -146,7 +159,7 @@ namespace ScheduledPublish.Smtp
                 IsBodyHtml = true,
             };
 
-            if (!string.IsNullOrEmpty(bcc))
+            if (!string.IsNullOrEmpty(bcc) && bcc.Contains(","))
             {
                 mailMessage.Bcc.Add(bcc);
             }

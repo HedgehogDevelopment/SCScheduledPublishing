@@ -62,9 +62,13 @@ namespace ScheduledPublish.sitecore.shell.Applications.Content_Manager.Dialogs.E
             sbHeader.Append("<col />");
             sbHeader.Append("<col />");
             sbHeader.Append("<col />");
+            sbHeader.Append("<col />");
+            sbHeader.Append("<col />");
             sbHeader.Append("<tr style=\"background:#e9e9e9\">");
             sbHeader.Append("<td nowrap=\"nowrap\"><b>" + "Item" + "</b></td>");
             sbHeader.Append("<td nowrap=\"nowrap\"><b>" + "Action" + "</b></td>");
+            sbHeader.Append("<td nowrap=\"nowrap\"><b>" + "Subitems" + "</b></td>");
+            sbHeader.Append("<td nowrap=\"nowrap\"><b>" + "Mode" + "</b></td>");
             sbHeader.Append("<td nowrap=\"nowrap\"><b>" + "Date" + "</b></td>");
             sbHeader.Append("<td nowrap=\"nowrap\"><b>" + "Delete" + "</b></td>");
             sbHeader.Append("</tr>");
@@ -89,6 +93,16 @@ namespace ScheduledPublish.sitecore.shell.Applications.Content_Manager.Dialogs.E
                     sbItem.Append("<td style='border-left:1px solid #F0F1F2;'>");
                     string isUnpublishing = schedule.Unpublish ? "Unpublish" : "Publish";
                     sbItem.Append(isUnpublishing);
+                    sbItem.Append("</td><td style='border-left:1px solid #F0F1F2; text-align: center;'>");
+
+                    // Subitems
+                    string includeSubitems = schedule.PublishChildren ? "Yes" : "No";
+                    sbItem.Append(includeSubitems);
+                    sbItem.Append("</td><td style='border-left:1px solid #F0F1F2;'>");
+
+                    // Publish mode
+                    string publishMode = schedule.PublishMode.ToString();
+                    sbItem.Append(publishMode);
                     sbItem.Append("</td><td style='border-left:1px solid #F0F1F2;'>");
 
                     // Current scheudled publish date and time

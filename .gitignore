@@ -19,3 +19,5 @@ BuiltFiles_*.txt
 
 # Sitecore
 Lib/Sitecore/Sitecore.Kernel.xml
+Lib/Sitecore*.dll
+

@@ -14,32 +14,32 @@ namespace ScheduledPublish.Smtp
 
         public static Item InnerItem
         {
-            get { return _database.GetItem(ID.Parse("{F6E2C93B-635C-4657-92E8-3B1F02C51D34}")); }
+            get { return _database.GetItem(Constants.PUBLISH_EMAIL_SETTINGS); }
         }
 
         public static bool UseWebConfig
         {
-            get { return InnerItem[ID.Parse("{5729E93E-6E14-4AD8-BB76-7803302C95C3}")] == "1"; }
+            get { return InnerItem[Constants.PUBLISH_EMAIL_SETTINGS_USE_WEBCONFIG] == "1"; }
         }
         
         public static string MailServer
         {
-            get { return InnerItem[ID.Parse("{214F19D5-72A8-4332-9375-85E599A2A451}")]; }
+            get { return InnerItem[Constants.PUBLISH_EMAIL_SETTINGS_MAILSERVER]; }
         }
 
         public static Int32 Port
         {
-            get { return Convert.ToInt32(InnerItem[ID.Parse("{A08B5C87-8DD1-48BC-93BE-6001210791BD}")]); }
+            get { return Convert.ToInt32(InnerItem[Constants.PUBLISH_EMAIL_SETTINGS_MAILSERVERPORT]); }
         }
 
         public static string Username
         {
-            get { return InnerItem[ID.Parse("{510D71A5-358A-4336-8F2E-A55A33B53F29}")]; }
+            get { return InnerItem[Constants.PUBLISH_EMAIL_SETTINGS_MAILSERVERUSERNAME]; }
         }
 
         public static string Password
         {
-            get { return InnerItem[ID.Parse("{494BDDC5-A953-4BE8-A735-E5BC29BDCA8C}")]; }
+            get { return InnerItem[Constants.PUBLISH_EMAIL_SETTINGS_MAILSERVERPASSWORD]; }
         }
     }
 }

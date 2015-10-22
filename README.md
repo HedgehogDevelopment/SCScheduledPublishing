@@ -16,6 +16,6 @@ Setup:
 1. Clone the project.
 2. Copy "Sitecore.Kernel.dll" from your website root into corresponding "Lib" folder depending on the Sitecore version.
 3. Configure "Build" section of "Core" and "Master" TDS projects.
-4. Sync TDS with Sitecore adding missing items into Sitecore
+4. Right-click the solution and select "Deploy Solution". This will build the code and deploy both the code and TDS items to your Sitecore site.
 
 
