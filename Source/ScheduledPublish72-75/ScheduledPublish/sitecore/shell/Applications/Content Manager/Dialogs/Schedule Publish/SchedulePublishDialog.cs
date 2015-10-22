@@ -203,30 +203,37 @@ namespace ScheduledPublish.sitecore.shell.Applications.Content_Manager.Dialogs.S
             Assert.ArgumentNotNull(sender, "sender");
             Assert.ArgumentNotNull(args, "args");
 
-            PublishSchedule publishSchedule = new PublishSchedule
+            using (new LanguageSwitcher(LanguageManager.DefaultLanguage))
             {
-                ItemToPublish = InnerItem,
-                PublishDate = SelectedPublishDate,
-                SourceDatabase = _database,
-                TargetDatabases = SelectedTargets,
-                TargetLanguages = SelectedLanguages,
-                Unpublish = Unpublish,
-                PublishMode = SmartPublish.Checked ? PublishMode.Smart : PublishMode.Full,
-                PublishChildren = PublishChildren.Checked,
-                PublishRelatedItems = PublishRelatedItems.Checked,
-                SchedulerEmail = Context.User.Profile.Email,
-                IsPublished = false
-            };
+                PublishSchedule publishSchedule = new PublishSchedule
+                {
+                    ItemToPublish = InnerItem,
+                    PublishDate = SelectedPublishDate,
+                    SourceDatabase = _database,
+                    TargetDatabases = SelectedTargets,
+                    TargetLanguages = SelectedLanguages,
+                    Unpublish = Unpublish,
+                    PublishMode = SmartPublish.Checked ? PublishMode.Smart : PublishMode.Full,
+                    PublishChildren = PublishChildren.Checked,
+                    PublishRelatedItems = PublishRelatedItems.Checked,
+                    SchedulerEmail = Context.User.Profile.Email,
+                    IsPublished = false
+                };
 
-            ValidationResult validationResult = ScheduledPublishValidator.Validate(publishSchedule);
-            if (!validationResult.IsValid)
-            {
-                SheerResponse.Alert(string.Join(Environment.NewLine, validationResult.ValidationErrors));
-                return;
+                if (Unpublish)
+                {
+                    publishSchedule.TargetLanguages = LanguageManager.GetLanguages(_database);
+                }
+
+                ValidationResult validationResult = ScheduledPublishValidator.Validate(publishSchedule);
+                if (!validationResult.IsValid)
+                {
+                    SheerResponse.Alert(string.Join(Environment.NewLine, validationResult.ValidationErrors));
+                    return;
+                }
+
+                _scheduledPublishRepo.CreatePublishSchedule(publishSchedule);
             }
-
-            _scheduledPublishRepo.CreatePublishSchedule(publishSchedule);
-
             base.OnOK(sender, args);
         }
 
