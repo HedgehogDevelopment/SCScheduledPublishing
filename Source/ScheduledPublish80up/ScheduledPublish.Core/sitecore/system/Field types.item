@@ -1,40 +1,47 @@
 ----item----
 version: 1
-id: {4E222A0A-E3EF-4FEB-90D0-08B1B7EA0621}
+id: {76E6D8C7-1F93-4712-872B-DA3C96B808F2}
 database: core
-path: /sitecore/content/Applications/Content Editor/Ribbons/Chunks/Scheduled Publish
-parent: {66738F84-31A9-43C9-9FCF-1515A849D6C5}
-name: Scheduled Publish
+path: /sitecore/system/Field types
+parent: {13D6D6C6-C50B-4BBD-B331-2B04F1A58F21}
+name: Field types
 master: {00000000-0000-0000-0000-000000000000}
-template: {8F3D8F9B-2D76-4ACE-803F-35415D2B230A}
-templatekey: Chunk
+template: {239F9CF4-E5A0-44E0-B342-0F32CD4C6D8B}
+templatekey: Node
 
 ----field----
-field: {8BB9A5E3-CAE8-49C6-B830-258A51D970C9}
-name: ID
-key: id
-content-length: 21
+field: {A0CB3965-8884-4C7A-8815-B6B2E5CED162}
+name: __Editors
+key: __editors
+content-length: 38
 
-ScheduledPublishChunk
+{A0C460F4-DBAE-4A5A-8F3A-C4ADFCDACEEA}
 ----field----
-field: {DEC8D2D5-E3CF-48B6-A653-8E69E2716641}
-name: __Security
-key: __security
-content-length: 53
+field: {06D5295C-ED2F-4A54-9BF2-26228D113318}
+name: __Icon
+key: __icon
+content-length: 32
 
-ar|sitecore\Sitecore Client Publishing|pe|+item:read|
+Applications/16x16/form_blue.png
+----field----
+field: {9C6106EA-7A5A-48E2-8CAD-F0F693B1E2D4}
+name: __Read Only
+key: __read only
+content-length: 0
+
+
+----field----
+field: {1172F251-DAD4-4EFB-A329-0C63500E4F1E}
+name: __Masters
+key: __masters
+content-length: 38
+
+{30235F43-6242-4107-87AB-5267E34EDF0C}
 ----version----
 language: en
 version: 1
-revision: 70c32d47-61f3-430a-a020-25ffa4fa64e6
+revision: 3da9eb46-64fb-4f6f-82db-d2d4dc85038c
 
-----field----
-field: {C95D21BD-66C3-444B-A37F-D346CBAF2B55}
-name: Header
-key: header
-content-length: 16
-
-Schedule Publish
 ----field----
 field: {52807595-0F8F-4B20-8D2A-CB71D28C6103}
 name: __Owner
@@ -48,7 +55,7 @@ name: __Created
 key: __created
 content-length: 15
 
-20150320T173704
+20070416T123648
 ----field----
 field: {5DD74568-4D4B-44C1-B513-0AF5F4CDA34F}
 name: __Created by
@@ -62,14 +69,14 @@ name: __Revision
 key: __revision
 content-length: 36
 
-70c32d47-61f3-430a-a020-25ffa4fa64e6
+3da9eb46-64fb-4f6f-82db-d2d4dc85038c
 ----field----
 field: {D9CF14B1-FA16-4BA6-9288-E8A174D4D522}
 name: __Updated
 key: __updated
-content-length: 35
+content-length: 15
 
-20150722T124600:635731659605072205Z
+20071024T110316
 ----field----
 field: {BADD9CF9-53E0-4D0C-BCC0-2D784C282F6A}
 name: __Updated by

@@ -58,11 +58,17 @@
     <Compile Include="Commands\OpenEditScheduledPublishDialog.cs" />
     <Compile Include="Commands\OpenScheduledPublishDialog.cs" />
     <Compile Include="Commands\ScheduledPublishCommand.cs" />
+    <Compile Include="CustomFields\IRolesField.cs" />
+    <Compile Include="CustomFields\RolesField.cs" />
+    <Compile Include="CustomFields\RolesMultilist.cs" />
+    <Compile Include="Extensions\ItemExtensions.cs" />
     <Compile Include="Models\BucketFolderType.cs" />
     <Compile Include="Models\NotificationEmail.cs" />
     <Compile Include="Models\PublishSchedule.cs" />
     <Compile Include="Models\ScheduledPublishReport.cs" />
+    <Compile Include="Models\ScheduledPublishSection.cs" />
     <Compile Include="Models\ScheduledPublishSettings.cs" />
+    <Compile Include="Models\SectionsEmailSettings.cs" />
     <Compile Include="Models\ValidationResult.cs" />
     <Compile Include="Pipelines\ContentEditorWarnings\HasScheduledPublish.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -79,6 +85,9 @@
     <Content Include="App_Config\Include\ZZ_ScheduledPublishControl.config" />
     <Content Include="sitecore\shell\Applications\Content Manager\Dialogs\Edit Scheduled Publish\Edit Scheduled Publish.xml" />
     <Content Include="sitecore\shell\Applications\Content Manager\Dialogs\Schedule Publish\Schedule Publish.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Properties\PublishProfiles\80test.pubxml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

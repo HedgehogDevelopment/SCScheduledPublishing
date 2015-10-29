@@ -38,6 +38,11 @@ namespace ScheduledPublish.Validation
                 result.IsValid = false;
             }
 
+            if (publishSchedule.Unpublish)
+            {
+                return result;
+            }
+
             if (publishSchedule.TargetLanguages == null || !publishSchedule.TargetLanguages.Any())
             {
                 result.ValidationErrors.Add("Please select at least one publish language.");
@@ -48,11 +53,6 @@ namespace ScheduledPublish.Validation
             {
                 result.ValidationErrors.Add("Unknow publish mode.");
                 result.IsValid = false;
-            }
-
-            if (publishSchedule.Unpublish)
-            {
-                return result;
             }
 
             if (!IsPublishableItem(publishSchedule.ItemToPublish, publishSchedule.PublishDate))
@@ -85,9 +85,7 @@ namespace ScheduledPublish.Validation
             //We should also check ancestors because if any ancestor is marked for unpublish
             //our item will be also unpublished instead of published
             //IsValid added for workflow state and DateTime range (Valid From/Valid To)
-            if (item != null 
-                && item.Publishing.IsPublishable(date, true)
-                && item.Versions.GetVersions().Any(x => x.Publishing.IsValid(date, true)))
+            if (item != null && item.Publishing.IsPublishable(date, true))
             {
                 return true;
             }
