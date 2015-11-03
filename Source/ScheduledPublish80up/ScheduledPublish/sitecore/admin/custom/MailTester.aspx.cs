@@ -1,17 +1,16 @@
 ﻿using System;
 using System.Net.Mail;
 using System.Text;
+using System.Web.UI;
 using Sitecore.Data.Items;
-using Sitecore.sitecore.admin;
 using ScheduledPublish.Smtp;
 
 namespace ScheduledPublish.sitecore.admin.custom
 {
-    public partial class MailTester : AdminPage
+    public partial class MailTester : Page
     {
         protected override void OnInit(EventArgs e)
         {
-            CheckSecurity(true);
             Sitecore.Context.Database = Sitecore.Configuration.Factory.GetDatabase("master");
             base.OnInit(e);
         }

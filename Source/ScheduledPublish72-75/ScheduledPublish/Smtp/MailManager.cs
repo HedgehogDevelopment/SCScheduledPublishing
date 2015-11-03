@@ -55,9 +55,9 @@ namespace ScheduledPublish.Smtp
         /// </summary>
         /// <param name="report">Report to append to email body.</param>
         /// <param name="item">Item to send information on.</param>
-        /// <param name="sendTo">Receiver's email address.</param>
+        /// <param name="username">Receiver.</param>
         /// <returns>An <see cref="T:System.Net.Mail.MailMessage"/> email message ready to send.</returns>
-        public static MailMessage ComposeEmail(string report, Item item, string username)
+        private static MailMessage ComposeEmail(string report, Item item, string username)
         {
             NotificationEmail mail = new NotificationEmail();
 
@@ -159,7 +159,7 @@ namespace ScheduledPublish.Smtp
                 IsBodyHtml = true,
             };
 
-            if (!string.IsNullOrEmpty(bcc) && bcc.Contains(","))
+            if (!string.IsNullOrEmpty(bcc))
             {
                 mailMessage.Bcc.Add(bcc);
             }
