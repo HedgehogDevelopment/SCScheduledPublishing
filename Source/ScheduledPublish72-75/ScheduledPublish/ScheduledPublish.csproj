@@ -44,7 +44,8 @@
     <Reference Include="Sitecore.Client">
       <HintPath>..\Lib\Sitecore.Client.dll</HintPath>
     </Reference>
-    <Reference Include="Sitecore.Kernel">
+    <Reference Include="Sitecore.Kernel, Version=7.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Lib\Sitecore.Kernel.dll</HintPath>
     </Reference>
     <Reference Include="System" />
@@ -68,13 +69,6 @@
     <Compile Include="CustomFields\RolesField.cs" />
     <Compile Include="CustomFields\RolesMultilist.cs" />
     <Compile Include="Extensions\ItemExtensions.cs" />
-    <Compile Include="sitecore\admin\custom\MailTester.aspx.cs">
-      <DependentUpon>MailTester.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="sitecore\admin\custom\MailTester.aspx.designer.cs">
-      <DependentUpon>MailTester.aspx</DependentUpon>
-    </Compile>
     <Compile Include="Models\BucketFolderType.cs" />
     <Compile Include="Models\NotificationEmail.cs" />
     <Compile Include="Models\PublishSchedule.cs" />
@@ -99,7 +93,6 @@
       <SubType>Designer</SubType>
     </Content>
     <None Include="Properties\PublishProfiles\72test.pubxml" />
-    <None Include="sitecore\admin\custom\MailTester.aspx" />
     <Content Include="sitecore\shell\Applications\Content Manager\Dialogs\Edit Scheduled Publish\Edit Scheduled Publish.xml" />
     <Content Include="sitecore\shell\Applications\Content Manager\Dialogs\Schedule Publish\Schedule Publish.xml" />
   </ItemGroup>
