@@ -22,9 +22,11 @@ using System.Globalization;
 using System.Linq;
 using System.Web.UI;
 using System.Web.UI.HtmlControls;
+using ScheduledPublish.Recurrence.Implementation;
 using Constants = ScheduledPublish.Utils.Constants;
 using Control = Sitecore.Web.UI.HtmlControls.Control;
 using ItemList = Sitecore.Collections.ItemList;
+using Action = Sitecore.Web.UI.HtmlControls.Action;
 
 namespace ScheduledPublish.sitecore.shell.Applications.Content_Manager.Dialogs.Schedule_Publish
 {
@@ -38,6 +40,7 @@ namespace ScheduledPublish.sitecore.shell.Applications.Content_Manager.Dialogs.S
         protected Groupbox ScheduleTargets;
         protected Border ExistingSchedulesDiv;
         protected GridPanel ExistingSchedulesTable;
+        protected GridPanel GridRecurrence;
         protected Border Languages;
         protected Border PublishModePanel;
         protected Border PublishingTargets;
@@ -46,8 +49,14 @@ namespace ScheduledPublish.sitecore.shell.Applications.Content_Manager.Dialogs.S
         protected Checkbox PublishChildren;
         protected Checkbox PublishRelatedItems;
         protected Radiobutton SmartPublish;
-        protected Radiobutton Republish;
+        protected Radiobutton Hourly;
+        protected Radiobutton Daily;
+        protected Radiobutton Weekly;
+        protected Radiobutton Monthly;
         protected DateTimePicker PublishDateTimePicker;
+        protected Border BorderRecurrenceSettings;
+        protected Action VisibleAction;
+        protected Edit HoursToNextPublish;
 
         private readonly Database _database = Context.ContentDatabase;
         private readonly CultureInfo _culture = Context.Culture;
@@ -149,6 +158,45 @@ namespace ScheduledPublish.sitecore.shell.Applications.Content_Manager.Dialogs.S
             }
         }
 
+        private RecurrenceType RecurrenceType
+        {
+            get
+            {
+                string reccurenceType = string.Empty;
+
+                if (Hourly.Checked)
+                {
+                    reccurenceType = Hourly.Value;
+                }
+                else if (Daily.Checked)
+                {
+                    reccurenceType = Daily.Value;
+                }
+                else if (Weekly.Checked)
+                {
+                    reccurenceType = Weekly.Value;
+                }
+                else if (Monthly.Checked)
+                {
+                    reccurenceType = Monthly.Value;
+                }
+
+                RecurrenceType castedType;
+                return Enum.TryParse<RecurrenceType>(reccurenceType, true, out castedType)
+                    ? castedType
+                    : RecurrenceType.None;
+            }
+        }
+
+        private int HoursToNextPublishValue
+        {
+            get
+            {
+                int value;
+                int.TryParse(HoursToNextPublish.Value, out value);
+                return value;
+            }
+        }
         /// <summary>
         /// If true, the action is unpublishing from selected database(s)
         /// </summary>
@@ -188,6 +236,9 @@ namespace ScheduledPublish.sitecore.shell.Applications.Content_Manager.Dialogs.S
 
                 ServerTime.Text = Constants.CURREN_TIME_ON_SERVER_TEXT + DateTime.Now.ToString(_culture);
                 SmartPublish.Checked = true;
+
+                GridRecurrence.SetExtensibleProperty(BorderRecurrenceSettings, "Row.Style", "display:none");
+                VisibleAction.Checked = false;
             }
 
             base.OnLoad(e);
@@ -205,6 +256,7 @@ namespace ScheduledPublish.sitecore.shell.Applications.Content_Manager.Dialogs.S
 
             using (new LanguageSwitcher(LanguageManager.DefaultLanguage))
             {
+
                 PublishSchedule publishSchedule = new PublishSchedule
                 {
                     ItemToPublish = InnerItem,
@@ -217,6 +269,8 @@ namespace ScheduledPublish.sitecore.shell.Applications.Content_Manager.Dialogs.S
                     PublishChildren = PublishChildren.Checked,
                     PublishRelatedItems = PublishRelatedItems.Checked,
                     SchedulerUsername = Context.User.Name,
+                    RecurrenceType = RecurrenceType,
+                    HoursToNextPublish = HoursToNextPublishValue,
                     IsPublished = false
                 };
 
@@ -234,8 +288,23 @@ namespace ScheduledPublish.sitecore.shell.Applications.Content_Manager.Dialogs.S
 
                 _scheduledPublishRepo.CreatePublishSchedule(publishSchedule);
             }
+
             base.OnOK(sender, args);
         }
+
+        /// <summary>
+        /// Show / hide the Recurrence section
+        /// </summary>
+        protected void ToggleRecurrence()
+        {
+            bool visible = VisibleAction.Checked;
+
+            Context.ClientPage.ClientResponse.SetStyle("BorderRecurrenceSettingsRow", "display", visible ? "none" : "");
+
+            // Remember to persist the current visibility status, both in the viewstate
+            VisibleAction.Checked = !visible;
+        }
+
 
         /// <summary>
         /// Renders available publishing targets.

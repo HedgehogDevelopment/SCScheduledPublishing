@@ -28,8 +28,40 @@
             </Border>
             <Border GridPanel.NoWrap="true" Margin="0px 0px 15px 0px">
               <Literal ID="PublishTimeLit" Text="Publish Time:"/>
-              <DateTimePicker ID="PublishDateTimePicker" Width="100%" GridPanel.Width="100%"/>
+              <table>
+                <tr>
+                  <td>
+                    <DateTimePicker ID="PublishDateTimePicker"/>
+                  </td>
+                  <td>
+                    <Button Header="Recurrence" Click="ToggleRecurrence" Margin="10px" />
+                  </td>
+                </tr>
+              </table>
             </Border>
+            <GridPanel ID="GridRecurrence" Height="100%" Width="100%" Margin="0px 0px 15px 0px">
+              <Action ID="VisibleAction" />
+              <Border ID="BorderRecurrenceSettings" GridPanel.Row.ID="BorderRecurrenceSettingsRow">
+                <table>
+                  <tr>
+                    <td>
+                      <Radiobutton ID="Hourly" Value="Hourly" Header="Every" Name="RecurrenceSettings" />
+                    </td>
+                    <td>
+                       <Edit ID="HoursToNextPublish"  Width="52px" Margin="0px 5px 0px 5px" />
+                    </td>
+                    <td>
+                      hour(s)
+                    </td>
+                  </tr>
+                </table>
+                <Radiobutton ID="Daily" Value="Daily" Header="Daily" Name="RecurrenceSettings" />
+                <br />
+                <Radiobutton ID="Weekly" Value="Weekly" Header="Weekly" Name="RecurrenceSettings" />
+                <br />
+                <Radiobutton ID="Monthly" Value="Monthly" Header="Monthly" Name="RecurrenceSettings" />
+              </Border>
+            </GridPanel>
             <Border ID="PublishModePanel">
               <Radiobutton ID="SmartPublish" Name="PublishMode" Header="Smart publish - Publish Differences Between Source and Target Database." Value="SmartPublish" />
               <br/>

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using ScheduledPublish.Recurrence.Abstraction;
+using ScheduledPublish.Recurrence.Implementation;
 using Sitecore;
 using Sitecore.Data;
 using Sitecore.Data.Items;
@@ -14,7 +16,7 @@ namespace ScheduledPublish.Models
     /// <summary>
     /// Parses Schedule item from Sitecore into an object.
     /// </summary>
-    public class PublishSchedule
+    public class PublishSchedule : IRecurrentPublish
     {
         public static readonly ID SchedulerUsernameId = ID.Parse("{0BBED214-85E7-4773-AB6A-9608CAC921FE}");
         public static readonly ID ItemToPublishId = ID.Parse("{8B07571D-D616-4373-8DB0-D77672911D16}");
@@ -27,6 +29,8 @@ namespace ScheduledPublish.Models
         public static readonly ID PublishModeId = ID.Parse("{F313EF5C-AC40-46DB-9AA1-52C70D590338}");
         public static readonly ID IsPublishedId = ID.Parse("{EEAC5DF6-19B2-425B-84F4-466D44213108}");
         public static readonly ID PublishRelatedItemsId = ID.Parse("{D1DE06E3-0A92-4DCE-8787-FA6DF424E3F5}");
+        public static readonly ID RecurrenceTypeId = ID.Parse("{41255D0C-B40E-4218-87DC-C8EBF349A4FE}");
+        public static readonly ID HoursToNextPublishId = ID.Parse("{CE68EA41-A925-494C-BE41-14C6C5BCB671}");
 
         public PublishSchedule()
         {
@@ -40,6 +44,7 @@ namespace ScheduledPublish.Models
             PublishChildren = "1" == item[PublishChildrenId];
             PublishRelatedItems = "1" == item[PublishRelatedItemsId];
             PublishMode = ParseMode(item[PublishModeId]);
+            RecurrenceType = ParseRecurrenceType(item[RecurrenceTypeId]);
             IsPublished = "1" == item[IsPublishedId];
 
             if (!string.IsNullOrWhiteSpace(SchedulerUsername))
@@ -79,6 +84,12 @@ namespace ScheduledPublish.Models
             if (!string.IsNullOrWhiteSpace(languages))
             {
                 TargetLanguages = languages.Split('|').Select(LanguageManager.GetLanguage).Where(l => l != null);
+            }
+
+            int hoursToNextPublish;
+            if (int.TryParse(item[HoursToNextPublishId], out hoursToNextPublish))
+            {
+                HoursToNextPublish = hoursToNextPublish;
             }
         }
 
@@ -123,6 +134,16 @@ namespace ScheduledPublish.Models
         public DateTime PublishDate { get; set; }
 
         /// <summary>
+        /// Hourly, Daily, Weekly, Monhtly
+        /// </summary>
+        public RecurrenceType RecurrenceType { get; set; }
+
+        /// <summary>
+        /// After how many hours will the next publish be
+        /// </summary>
+        public int HoursToNextPublish { get; set; }
+
+        /// <summary>
         /// Source database for publish
         /// </summary>
         public Database SourceDatabase { get; set; }
@@ -165,6 +186,14 @@ namespace ScheduledPublish.Models
                 default:
                     return PublishMode.Unknown;
             }
+        }
+
+        private static RecurrenceType ParseRecurrenceType(string type)
+        {
+            RecurrenceType castedType;
+            return Enum.TryParse<RecurrenceType>(type, true, out castedType) 
+                ? castedType 
+                : RecurrenceType.None;
         }
     }
 }

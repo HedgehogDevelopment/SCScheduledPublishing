@@ -11,6 +11,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using ScheduledPublish.Recurrence.Abstraction;
+using ScheduledPublish.Recurrence.Implementation;
 using Constants = ScheduledPublish.Utils.Constants;
 
 namespace ScheduledPublish.Commands
@@ -42,6 +44,8 @@ namespace ScheduledPublish.Commands
             DateTime publishFromDate = publishToDate.AddHours(-1);
             PublishSchedules(publishFromDate, publishToDate);
 
+            ManageNextReccurentSchedules(publishFromDate, publishToDate);
+
             //Alerts for failed schedules 2 hours ago
             DateTime alertToDate = publishFromDate.AddHours(-1).AddSeconds(-1);
             DateTime alertFromDate = publishFromDate.AddHours(-2);
@@ -60,13 +64,6 @@ namespace ScheduledPublish.Commands
         private void PublishSchedules(DateTime fromDate, DateTime toDate)
         {
             IEnumerable<PublishSchedule> duePublishSchedules = _scheduledPublishRepo.GetUnpublishedSchedules(fromDate, toDate);
-            if (duePublishSchedules == null)
-            {
-                Log.Info(string.Format("Scheduled Publish: No publish schedules from {0} to {1}",
-                    fromDate.ToString(Context.Culture),
-                    toDate.ToString(Context.Culture)), this);
-                return;
-            }
 
             foreach (var schedule in duePublishSchedules)
             {
@@ -85,9 +82,23 @@ namespace ScheduledPublish.Commands
                     }
                     catch (Exception ex)
                     {
-                        Log.Error(string.Format("{0} {1}","Scheduled Publish: Sending publish email confirmation failed.", ex), schedule);
+                        Log.Error(string.Format("{0} {1}", "Scheduled Publish: Sending publish email confirmation failed.", ex), schedule);
                     }
                 }
+            }
+        }
+
+        private void ManageNextReccurentSchedules(DateTime fromDate, DateTime toDate)
+        {
+            IRecurrenceScheduler recurrenceScheduler = new RecurrenceScheduler();
+
+            IEnumerable<PublishSchedule> dueReccurentSchedules = _scheduledPublishRepo.GetRecurrentSchedules(fromDate, toDate);
+
+            foreach (var schedule in dueReccurentSchedules)
+            {
+                recurrenceScheduler.ScheduleNextRecurrence(schedule);
+                schedule.IsPublished = false;
+                _scheduledPublishRepo.UpdatePublishSchedule(schedule);
             }
         }
 

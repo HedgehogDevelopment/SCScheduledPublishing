@@ -20,6 +20,7 @@
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
     <TargetFrameworkProfile />
+    <UseGlobalApplicationHostFile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -66,6 +67,8 @@
     <Compile Include="CustomFields\RolesField.cs" />
     <Compile Include="CustomFields\RolesMultilist.cs" />
     <Compile Include="Extensions\ItemExtensions.cs" />
+    <Compile Include="Recurrence\Abstraction\IRecurrenceScheduler.cs" />
+    <Compile Include="Recurrence\Abstraction\IRecurrentPublish.cs" />
     <Compile Include="Models\BucketFolderType.cs" />
     <Compile Include="Models\NotificationEmail.cs" />
     <Compile Include="Models\PublishSchedule.cs" />
@@ -76,6 +79,8 @@
     <Compile Include="Models\ValidationResult.cs" />
     <Compile Include="Pipelines\ContentEditorWarnings\HasScheduledPublish.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Recurrence\Implementation\RecurrenceScheduler.cs" />
+    <Compile Include="Recurrence\Implementation\RecurrenceType.cs" />
     <Compile Include="Repos\ScheduledPublishRepo.cs" />
     <Compile Include="sitecore\shell\Applications\Content Manager\Dialogs\Edit Scheduled Publish\EditScheduledPublishDialog.cs" />
     <Compile Include="sitecore\shell\Applications\Content Manager\Dialogs\Schedule Publish\SchedulePublishDialog.cs" />
