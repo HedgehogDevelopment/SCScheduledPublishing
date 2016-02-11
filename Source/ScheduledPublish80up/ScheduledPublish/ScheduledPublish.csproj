@@ -87,6 +87,7 @@
     <Compile Include="Smtp\MailManager.cs" />
     <Compile Include="Smtp\NotificationEmailSettings.cs" />
     <Compile Include="Utils\Constants.cs" />
+    <Compile Include="Utils\DialogsHelper.cs" />
     <Compile Include="Utils\ScheduledPublishManager.cs" />
     <Compile Include="Validation\ScheduledPublishValidator.cs" />
   </ItemGroup>

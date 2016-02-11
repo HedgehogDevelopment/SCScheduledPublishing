@@ -6,6 +6,6 @@
         Hourly,
         Daily,
         Weekly,
-        Monthly
+        Monthly       
     }
 }

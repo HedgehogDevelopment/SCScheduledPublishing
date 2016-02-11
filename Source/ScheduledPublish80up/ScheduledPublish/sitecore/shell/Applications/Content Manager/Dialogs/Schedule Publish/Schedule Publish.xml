@@ -5,21 +5,7 @@
       <CodeBeside Type="ScheduledPublish.sitecore.shell.Applications.Content_Manager.Dialogs.Schedule_Publish.SchedulePublishDialog, ScheduledPublish"/>
       <GridPanel Width="100%" Height="100%" Fixed="true">
         <Groupbox Header="Existing Schedules" Margin="0px 0px 16px 0px">
-          <GridPanel ID="ExistingSchedulesTable" Height="100%" Width="100%" Columns="4">
-            <Border GridPanel.NoWrap="true" Margin="0px 0px 5px 0px">
-              <Literal Text="Time" />
-            </Border>
-            <Border GridPanel.NoWrap="true" Margin="0px 0px 5px 0px">
-              <Literal Text="Action" />
-            </Border>
-            <Border GridPanel.NoWrap="true" Margin="0px 0px 5px 0px">
-              <Literal Text="Languages" />
-            </Border>
-            <Border GridPanel.NoWrap="true" Margin="0px 0px 5px 0px">
-              <Literal Text="Version" />
-            </Border>
-          </GridPanel>
-          <Border ID="ExistingSchedulesDiv" Width="100%" />
+          <Border ID="ExistingSchedules" Width="100%" />
         </Groupbox>
         <Groupbox ID="ScheduleSettings" Header="Scheduled Publish Settings" Margin="0px 0px 16px 0px">
           <Border>
@@ -34,7 +20,7 @@
                     <DateTimePicker ID="PublishDateTimePicker"/>
                   </td>
                   <td>
-                    <Button Header="Recurrence" Click="ToggleRecurrence" Margin="10px" />
+                    <Button ID="RecurrenceButton" Header="Recurrence" Click="ToggleRecurrence" Margin="10px" />
                   </td>
                 </tr>
               </table>
