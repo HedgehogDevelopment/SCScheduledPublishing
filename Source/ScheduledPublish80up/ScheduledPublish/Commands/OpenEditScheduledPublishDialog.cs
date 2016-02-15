@@ -1,4 +1,5 @@
-﻿using Sitecore;
+﻿using System;
+using Sitecore;
 using Sitecore.Diagnostics;
 using Sitecore.Shell.Framework.Commands;
 using Sitecore.Text;
@@ -10,6 +11,7 @@ namespace ScheduledPublish.Commands
     /// <summary>
     /// Opens the Edit Scheduled Publish Dialog.
     /// </summary>
+    [Serializable]
     public class OpenEditScheduledPublishDialog : Command
     {
         public override void Execute(CommandContext context)
