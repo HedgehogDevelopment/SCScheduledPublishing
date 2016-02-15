@@ -67,6 +67,7 @@
     <Compile Include="CustomFields\RolesField.cs" />
     <Compile Include="CustomFields\RolesMultilist.cs" />
     <Compile Include="Extensions\ItemExtensions.cs" />
+    <Compile Include="Gutter\ScheduledPublishGutterRenderer.cs" />
     <Compile Include="Recurrence\Abstraction\IRecurrenceScheduler.cs" />
     <Compile Include="Recurrence\Abstraction\IRecurrentPublish.cs" />
     <Compile Include="Models\BucketFolderType.cs" />
