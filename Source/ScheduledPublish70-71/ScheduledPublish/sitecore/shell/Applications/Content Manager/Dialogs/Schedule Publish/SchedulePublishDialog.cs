@@ -370,10 +370,13 @@ namespace ScheduledPublish.sitecore.shell.Applications.Content_Manager.Dialogs.S
                     actionLit.Text = action;
                     ExistingSchedulesTable.Controls.Add(actionLit);
 
-                    string languages = string.Join(",", schedule.TargetLanguages.Select(x => x.Name)).TrimEnd(',');
+                    string languages = schedule.TargetLanguages != null ?
+                            string.Join(",", schedule.TargetLanguages.Select(x => x.Name)).TrimEnd(',') :
+                            Constants.NOT_APPLICABLE;
                     Literal languagesLit = new Literal();
                     languagesLit.Text = languages;
                     ExistingSchedulesTable.Controls.Add(languagesLit);
+
 
                     Literal versionLit = new Literal();
                     string version;

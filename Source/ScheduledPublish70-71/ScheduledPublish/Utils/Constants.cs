@@ -17,6 +17,7 @@ namespace ScheduledPublish.Utils
         public const string CURREN_TIME_ON_SERVER_TEXT = "Current time on server: ";
         public const string NO_VALID_VERSION_TEXT = "no valid version";
         public const string NO_EXISTING_SCHEDULES_TEXT = "This item has not been scheduled for publishing yet.";
+        public const string NOT_APPLICABLE = "N/A";
 
         public static readonly ID PUBLISH_SCHEDULE_TEMPLATE_ID = ID.Parse("{9F110258-0139-4FC9-AED8-5610C13DADF3}");
         public static readonly ID FOLDER_TEMPLATE_ID = ID.Parse("{A87A00B1-E6DB-45AB-8B54-636FEC3B5523}");

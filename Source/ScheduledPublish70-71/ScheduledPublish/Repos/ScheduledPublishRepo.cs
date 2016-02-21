@@ -179,8 +179,10 @@ namespace ScheduledPublish.Repos
                     }
                     publishSchedule.InnerItem[PublishSchedule.PublishModeId] = publishSchedule.PublishMode.ToString();
                     publishSchedule.InnerItem[PublishSchedule.PublishChildrenId] = publishSchedule.PublishChildren ? "1" : string.Empty;
-                    publishSchedule.InnerItem[PublishSchedule.TargetLanguagesId] = string.Join("|",
-                        publishSchedule.TargetLanguages.Select(x => x.Name));
+                    publishSchedule.InnerItem[PublishSchedule.TargetLanguagesId] = 
+                        publishSchedule.TargetLanguages != null ?
+                        string.Join("|", publishSchedule.TargetLanguages.Select(x => x.Name)) :
+                        string.Empty;
                     publishSchedule.InnerItem[PublishSchedule.SourceDatabaseId] = publishSchedule.SourceDatabase.Name;
                     publishSchedule.InnerItem[PublishSchedule.TargetDatabasesId] = string.Join("|", publishSchedule.TargetDatabases.Select(x => x.Name));
                     publishSchedule.InnerItem[PublishSchedule.IsPublishedId] = publishSchedule.IsPublished ? "1" : string.Empty;
