@@ -45,7 +45,7 @@ namespace ScheduledPublish.Utils
             else
             {
                 PublishStatus status = PublishManager.GetStatus(handle);
-                
+
                 if (status == null)
                 {
                     sbMessage.Append("The scheduled publishing process was unexpectedly interrupted.<br/>");
@@ -81,7 +81,7 @@ namespace ScheduledPublish.Utils
 
             ScheduledPublishReport report = new ScheduledPublishReport
             {
-                IsSuccessful = isSuccessful, 
+                IsSuccessful = isSuccessful,
                 Message = sbMessage.ToString()
             };
 
@@ -119,7 +119,9 @@ namespace ScheduledPublish.Utils
                 handle = PublishManager.PublishItem(
                     publishSchedule.ItemToPublish,
                     publishSchedule.TargetDatabases.ToArray(),
-                    publishSchedule.TargetLanguages.ToArray(),
+                    publishSchedule.TargetLanguages != null ?
+                        publishSchedule.TargetLanguages.ToArray() :
+                        publishSchedule.ItemToPublish.Languages.ToArray(),
                     publishSchedule.PublishChildren,
                     publishSchedule.PublishMode == PublishMode.Smart);
 

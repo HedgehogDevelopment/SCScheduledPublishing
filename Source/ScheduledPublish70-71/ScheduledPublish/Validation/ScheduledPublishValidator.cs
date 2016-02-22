@@ -37,13 +37,7 @@ namespace ScheduledPublish.Validation
                 result.ValidationErrors.Add("Please select at least one publish target.");
                 result.IsValid = false;
             }
-
-            if (publishSchedule.TargetLanguages == null || !publishSchedule.TargetLanguages.Any())
-            {
-                result.ValidationErrors.Add("Please select at least one publish language.");
-                result.IsValid = false;
-            }
-
+            
             if (publishSchedule.PublishMode == PublishMode.Unknown)
             {
                 result.ValidationErrors.Add("Unknow publish mode.");
@@ -53,6 +47,12 @@ namespace ScheduledPublish.Validation
             if (publishSchedule.Unpublish)
             {
                 return result;
+            }
+
+            if (publishSchedule.TargetLanguages == null || !publishSchedule.TargetLanguages.Any())
+            {
+                result.ValidationErrors.Add("Please select at least one publish language.");
+                result.IsValid = false;
             }
 
             if (!IsPublishableItem(publishSchedule.ItemToPublish, publishSchedule.PublishDate))
