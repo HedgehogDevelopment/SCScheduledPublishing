@@ -21,7 +21,7 @@ namespace ScheduledPublish.Smtp
         {
             get { return InnerItem[Constants.PUBLISH_EMAIL_SETTINGS_USE_WEBCONFIG] == "1"; }
         }
-        
+
         public static string MailServer
         {
             get { return InnerItem[Constants.PUBLISH_EMAIL_SETTINGS_MAILSERVER]; }

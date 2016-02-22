@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using ScheduledPublish.Models;
+using ScheduledPublish.Recurrence.Implementation;
 using Sitecore.Data.Items;
 using Sitecore.Publishing;
 
@@ -28,13 +29,13 @@ namespace ScheduledPublish.Validation
 
             if (!IsFutureDate(publishSchedule.PublishDate))
             {
-                result.ValidationErrors.Add("Please select future date.");
+                result.ValidationErrors.Add("Please, select future date.");
                 result.IsValid = false;
             }
 
             if (publishSchedule.TargetDatabases == null || !publishSchedule.TargetDatabases.Any())
             {
-                result.ValidationErrors.Add("Please select at least one publish target.");
+                result.ValidationErrors.Add("Please, select at least one publish target.");
                 result.IsValid = false;
             }
 
@@ -45,19 +46,25 @@ namespace ScheduledPublish.Validation
 
             if (publishSchedule.TargetLanguages == null || !publishSchedule.TargetLanguages.Any())
             {
-                result.ValidationErrors.Add("Please select at least one publish language.");
+                result.ValidationErrors.Add("Please, select at least one publish language.");
                 result.IsValid = false;
             }
 
             if (publishSchedule.PublishMode == PublishMode.Unknown)
             {
-                result.ValidationErrors.Add("Unknow publish mode.");
+                result.ValidationErrors.Add("Unknown publish mode.");
                 result.IsValid = false;
             }
 
             if (!IsPublishableItem(publishSchedule.ItemToPublish, publishSchedule.PublishDate))
             {
                 result.ValidationErrors.Add("Item is not publishable at that time.");
+                result.IsValid = false;
+            }
+
+            if (publishSchedule.RecurrenceType == RecurrenceType.Hourly && publishSchedule.HoursToNextPublish == 0)
+            {
+                result.ValidationErrors.Add("Please, enter a valid, whole number value in 'Hour(s)' field.");
                 result.IsValid = false;
             }
 
@@ -85,9 +92,7 @@ namespace ScheduledPublish.Validation
             //We should also check ancestors because if any ancestor is marked for unpublish
             //our item will be also unpublished instead of published
             //IsValid added for workflow state and DateTime range (Valid From/Valid To)
-            if (item != null 
-                && item.Publishing.IsPublishable(date, true))
-                //&& item.Versions.GetVersions().Any(x => x.Publishing.IsValid(date, true)))
+            if (item != null && item.Publishing.IsPublishable(date, true))
             {
                 return true;
             }

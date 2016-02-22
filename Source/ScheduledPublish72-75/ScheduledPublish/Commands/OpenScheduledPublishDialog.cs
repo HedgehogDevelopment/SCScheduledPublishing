@@ -1,4 +1,5 @@
-﻿using Sitecore;
+﻿using System;
+using Sitecore;
 using Sitecore.Configuration;
 using Sitecore.Data;
 using Sitecore.Data.Items;
@@ -8,12 +9,14 @@ using Sitecore.Shell.Framework.Commands;
 using Sitecore.Text;
 using Sitecore.Web.UI.Sheer;
 using System.Collections.Specialized;
+using Version = Sitecore.Data.Version;
 
 namespace ScheduledPublish.Commands
 {
     /// <summary>
     /// Opens the Scheduled Publishing Dialog
     /// </summary>
+    [Serializable]
     public class OpenScheduledPublishDialog : Command
     {
         public override void Execute(CommandContext context)

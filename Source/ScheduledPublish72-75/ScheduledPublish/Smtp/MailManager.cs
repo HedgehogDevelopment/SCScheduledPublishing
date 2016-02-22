@@ -57,12 +57,13 @@ namespace ScheduledPublish.Smtp
         /// <param name="item">Item to send information on.</param>
         /// <param name="username">Receiver.</param>
         /// <returns>An <see cref="T:System.Net.Mail.MailMessage"/> email message ready to send.</returns>
-        private static MailMessage ComposeEmail(string report, Item item, string username)
+        public static MailMessage ComposeEmail(string report, Item item, string username)
         {
             NotificationEmail mail = new NotificationEmail();
 
             string to = string.Empty;
             string bcc = string.Empty;
+
             string publishedBy = string.Empty;
 
             if (!string.IsNullOrWhiteSpace(username))
@@ -113,8 +114,8 @@ namespace ScheduledPublish.Smtp
                     }
                 }
                 to = string.IsNullOrWhiteSpace(to) && bcc.Length > 0
-                        ? bcc.Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries)[0]
-                        : to;
+                    ? bcc.Split(new[] {","}, StringSplitOptions.RemoveEmptyEntries)[0]
+                    : to;
             }
 
             if (bcc.Contains(","))
@@ -131,7 +132,7 @@ namespace ScheduledPublish.Smtp
             {
                 return null;
             }
-
+            
             string subject = mail.Subject
                 .Replace("[item]", item.DisplayName)
                 .Replace("[path]", item.Paths.FullPath)
@@ -187,6 +188,11 @@ namespace ScheduledPublish.Smtp
             }
         }
 
+        /// <summary>
+        /// Gets email list according to roles per section set.
+        /// </summary>
+        /// <param name="item">Root of the section.</param>
+        /// <returns>Comma-separated string containing emails to send to.</returns>
         private static string GetEmailsForSection(Item item)
         {
             const string sectionNotFoundMessage = "Item '{0}' is not in any section";

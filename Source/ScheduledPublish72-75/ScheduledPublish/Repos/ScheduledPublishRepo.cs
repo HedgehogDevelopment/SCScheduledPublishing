@@ -8,6 +8,7 @@ using Sitecore.SecurityModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using ScheduledPublish.Recurrence.Implementation;
 using Constants = ScheduledPublish.Utils.Constants;
 
 namespace ScheduledPublish.Repos
@@ -26,7 +27,7 @@ namespace ScheduledPublish.Repos
         {
             get
             {
-                return RootFolder == null 
+                return RootFolder == null
                     ? Enumerable.Empty<PublishSchedule>()
                     : RootFolder.Axes.GetDescendants()
                         .Where(x => x.TemplateID == Constants.PUBLISH_SCHEDULE_TEMPLATE_ID)
@@ -40,10 +41,10 @@ namespace ScheduledPublish.Repos
         /// </summary>
         public IEnumerable<PublishSchedule> AllUnpublishedSchedules
         {
-            get 
-            { 
+            get
+            {
                 return AllSchedules.Where(x => x.ItemToPublish != null && !x.IsPublished)
-                .OrderBy(x => x.PublishDate); 
+                .OrderBy(x => x.PublishDate);
             }
         }
 
@@ -55,7 +56,7 @@ namespace ScheduledPublish.Repos
             get
             {
                 Item rootItem = _database.GetItem(Constants.PUBLISH_SCHEDULES_ROOT_ID);
-                
+
                 if (rootItem == null)
                 {
                     Log.Error("Cannot find SchduledPublish root item!", this);
@@ -104,6 +105,28 @@ namespace ScheduledPublish.Repos
         }
 
         /// <summary>
+        /// Get Recurrent Schedules for particular period.
+        /// </summary>
+        /// <param name="fromDate">From date</param>
+        /// <param name="toDate">To date</param>
+        /// <returns>Recurrent Schedules for the selected period.</returns>
+        public IEnumerable<PublishSchedule> GetRecurrentSchedules(DateTime fromDate, DateTime toDate)
+        {
+            if (fromDate > toDate)
+            {
+                return Enumerable.Empty<PublishSchedule>();
+            }
+
+            return AllSchedules
+                .Where(x => x.ItemToPublish != null
+                        && x.IsPublished
+                        && x.RecurrenceType != RecurrenceType.None
+                        && x.PublishDate >= fromDate
+                        && x.PublishDate <= toDate
+                       );
+        }
+
+        /// <summary>
         /// Creates a <see cref="T:ScheduledPublish.Models.PublishSchedule"/> publish schedule item in Sitecore.
         /// </summary>
         /// <param name="publishSchedule">A <see cref="T:ScheduledPublish.Models.PublishSchedule"/> publish schedule to create an item for.</param>
@@ -116,7 +139,7 @@ namespace ScheduledPublish.Repos
                 using (new SecurityDisabler())
                 {
                     TemplateItem publishOptionsTemplate = _database.GetTemplate(Constants.PUBLISH_SCHEDULE_TEMPLATE_ID);
-                    string publishOptionsName = BuildPublishScheduleName(publishSchedule.ItemToPublish);
+                    string publishOptionsName = BuildPublishScheduleName();
                     Item optionsFolder = GetOrCreateFolder(publishSchedule.PublishDate);
                     Item publishOptionsItem = optionsFolder.Add(publishOptionsName, publishOptionsTemplate);
 
@@ -131,11 +154,14 @@ namespace ScheduledPublish.Repos
                     publishOptionsItem[PublishSchedule.PublishModeId] = publishSchedule.PublishMode.ToString();
                     publishOptionsItem[PublishSchedule.PublishChildrenId] = publishSchedule.PublishChildren ? "1" : string.Empty;
                     publishOptionsItem[PublishSchedule.PublishRelatedItemsId] = publishSchedule.PublishRelatedItems ? "1" : string.Empty;
-                    publishOptionsItem[PublishSchedule.TargetLanguagesId] = 
+                    publishOptionsItem[PublishSchedule.TargetLanguagesId] =
                         string.Join("|", publishSchedule.TargetLanguages.Select(x => x.Name));
                     publishOptionsItem[PublishSchedule.SourceDatabaseId] = publishSchedule.SourceDatabase.Name;
                     publishOptionsItem[PublishSchedule.TargetDatabasesId] = string.Join("|", publishSchedule.TargetDatabases.Select(x => x.Name));
                     publishOptionsItem[PublishSchedule.PublishDateId] = DateUtil.ToIsoDate(publishSchedule.PublishDate);
+                    publishOptionsItem[PublishSchedule.RecurrenceTypeId] = publishSchedule.RecurrenceType.ToString();
+                    publishOptionsItem[PublishSchedule.HoursToNextPublishId] =
+                        publishSchedule.HoursToNextPublish.ToString();
 
                     publishOptionsItem.Editing.AcceptChanges();
                     publishOptionsItem.Editing.EndEdit();
@@ -194,9 +220,11 @@ namespace ScheduledPublish.Repos
                     publishSchedule.InnerItem[PublishSchedule.TargetDatabasesId] = string.Join("|", publishSchedule.TargetDatabases.Select(x => x.Name));
                     publishSchedule.InnerItem[PublishSchedule.IsPublishedId] = publishSchedule.IsPublished ? "1" : string.Empty;
 
-                    DateTime oldPublishDate =
-                        DateUtil.IsoDateToDateTime(publishSchedule.InnerItem[PublishSchedule.PublishDateId]);
+                    DateTime oldPublishDate = DateUtil.IsoDateToDateTime(publishSchedule.InnerItem[PublishSchedule.PublishDateId]);
                     publishSchedule.InnerItem[PublishSchedule.PublishDateId] = DateUtil.ToIsoDate(publishSchedule.PublishDate);
+
+                    publishSchedule.InnerItem[PublishSchedule.RecurrenceTypeId] = publishSchedule.RecurrenceType.ToString();
+                    publishSchedule.InnerItem[PublishSchedule.HoursToNextPublishId] = publishSchedule.HoursToNextPublish.ToString();
 
                     publishSchedule.InnerItem.Editing.AcceptChanges();
                     publishSchedule.InnerItem.Editing.EndEdit();
@@ -389,13 +417,9 @@ namespace ScheduledPublish.Repos
         /// </summary>
         /// <param name="item"></param>
         /// <returns></returns>
-        private string BuildPublishScheduleName(Item item)
+        private static string BuildPublishScheduleName()
         {
-            Guid guid = item != null
-                ? item.ID.Guid
-                : Guid.NewGuid();
-
-            return ItemUtil.ProposeValidItemName(string.Format("{0}PublishSchedule", guid));
+            return ItemUtil.ProposeValidItemName(string.Format("{0}PublishSchedule", Guid.NewGuid()));
         }
     }
 }
