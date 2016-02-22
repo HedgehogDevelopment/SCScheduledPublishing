@@ -12,7 +12,7 @@ templatekey: ScheduledPublishEmail
 ----version----
 language: en
 version: 1
-revision: 134216bf-b590-473a-9e6b-8dcb48451b13
+revision: 125e3cd1-1fa6-4f80-842b-ca52d11149b5
 
 ----field----
 field: {A35E5B44-1CD0-49C4-B210-DB4106685CE4}
@@ -39,13 +39,13 @@ Sitecore Scheduled Publish - [item]
 field: {39A13A96-8BF0-4334-B366-16C0ACCC2B60}
 name: EmailMessage
 key: emailmessage
-content-length: 181
+content-length: 177
 
 <p><strong>Item path:</strong> [path]</p>
 <p><strong>Version:</strong> [version]</p>
 <p><strong>Date, Time:</strong> [date], [time]</p>
-<br />
-<br />
+<br>
+<br>
 <p><strong>Report:</strong></p>
 ----field----
 field: {52807595-0F8F-4B20-8D2A-CB71D28C6103}
@@ -74,14 +74,14 @@ name: __Revision
 key: __revision
 content-length: 36
 
-134216bf-b590-473a-9e6b-8dcb48451b13
+125e3cd1-1fa6-4f80-842b-ca52d11149b5
 ----field----
 field: {D9CF14B1-FA16-4BA6-9288-E8A174D4D522}
 name: __Updated
 key: __updated
-content-length: 34
+content-length: 35
 
-20150605T125226:635691055468193800
+20150605T101129:635690958898382538Z
 ----field----
 field: {BADD9CF9-53E0-4D0C-BCC0-2D784C282F6A}
 name: __Updated by

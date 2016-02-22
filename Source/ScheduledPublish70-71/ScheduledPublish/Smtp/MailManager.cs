@@ -1,11 +1,14 @@
-﻿using ScheduledPublish.Models;
+﻿using System.Collections.Generic;
+using System.Linq;
+using ScheduledPublish.Extensions;
+using ScheduledPublish.Models;
 using Sitecore;
 using Sitecore.Data.Items;
 using Sitecore.Diagnostics;
 using System;
-using System.Linq;
 using System.Net;
 using System.Net.Mail;
+using Sitecore.Security.Accounts;
 
 namespace ScheduledPublish.Smtp
 {
@@ -52,23 +55,31 @@ namespace ScheduledPublish.Smtp
         /// </summary>
         /// <param name="report">Report to append to email body.</param>
         /// <param name="item">Item to send information on.</param>
-        /// <param name="sendTo">Receiver's email address.</param>
+        /// <param name="username">Receiver.</param>
         /// <returns>An <see cref="T:System.Net.Mail.MailMessage"/> email message ready to send.</returns>
-        private static MailMessage ComposeEmail(string report, Item item, string sendTo)
+        public static MailMessage ComposeEmail(string report, Item item, string username)
         {
             NotificationEmail mail = new NotificationEmail();
 
             string to = string.Empty;
             string bcc = string.Empty;
 
-            if (!string.IsNullOrEmpty(sendTo))
+            string publishedBy = string.Empty;
+
+            if (!string.IsNullOrWhiteSpace(username))
             {
-                to = sendTo;
+                var author = User.FromName(username, false);
+                if (author.Profile != null && !string.IsNullOrWhiteSpace(author.Profile.Email))
+                {
+                    to = author.Profile.Email;
+                    publishedBy = !string.IsNullOrWhiteSpace(author.Profile.FullName)
+                        ? author.Profile.FullName
+                        : author.Name;
+                }
             }
 
             if (!string.IsNullOrWhiteSpace(mail.EmailTo))
             {
-                
                 if (string.IsNullOrEmpty(to))
                 {
                     var index = mail.EmailTo.IndexOf(',');
@@ -88,23 +99,63 @@ namespace ScheduledPublish.Smtp
                 }
             }
 
+            if (SectionsEmailSettings.Enabled)
+            {
+                string emailList = GetEmailsForSection(item);
+                if (!string.IsNullOrEmpty(emailList))
+                {
+                    if (!string.IsNullOrWhiteSpace(bcc))
+                    {
+                        bcc = string.Format("{0}, {1}", bcc, emailList);
+                    }
+                    else
+                    {
+                        bcc = emailList;
+                    }
+                }
+                to = string.IsNullOrWhiteSpace(to) && bcc.Length > 0
+                    ? bcc.Split(new[] {","}, StringSplitOptions.RemoveEmptyEntries)[0]
+                    : to;
+            }
+
+            if (bcc.Contains(","))
+            {
+                var uniqueBccAddresses = bcc
+                    .Replace(to, "")
+                    .Split(new[] {", "}, StringSplitOptions.RemoveEmptyEntries)
+                    .Distinct();
+
+                bcc = string.Join(", ", uniqueBccAddresses);
+            }
+
             if (string.IsNullOrWhiteSpace(to))
             {
                 return null;
             }
-
-            string body = mail.Body.Replace("[item]", item.DisplayName)
+            
+            string subject = mail.Subject
+                .Replace("[item]", item.DisplayName)
                 .Replace("[path]", item.Paths.FullPath)
                 .Replace("[date]", DateTime.Now.ToShortDateString())
                 .Replace("[time]", DateTime.Now.ToShortTimeString())
                 .Replace("[version]", item.Version.ToString())
-                .Replace("[id]", item.ID.ToString());
+                .Replace("[id]", item.ID.ToString())
+                .Replace("[publisher]", publishedBy);
+
+            string body = mail.Body
+                .Replace("[item]", item.DisplayName)
+                .Replace("[path]", item.Paths.FullPath)
+                .Replace("[date]", DateTime.Now.ToShortDateString())
+                .Replace("[time]", DateTime.Now.ToShortTimeString())
+                .Replace("[version]", item.Version.ToString())
+                .Replace("[id]", item.ID.ToString())
+                .Replace("[publisher]", publishedBy);
 
             MailMessage mailMessage = new MailMessage
             {
                 From = new MailAddress(mail.EmailFrom),
                 To = { to },
-                Subject = mail.Subject.Replace("[item]", item.DisplayName),
+                Subject = subject,
                 Body = body + Environment.NewLine + report,
                 IsBodyHtml = true,
             };
@@ -135,6 +186,54 @@ namespace ScheduledPublish.Smtp
             {
                 Log.Error("Scheduled Publish: Sending email failed: " + ex, mailMessage);
             }
+        }
+
+        /// <summary>
+        /// Gets email list according to roles per section set.
+        /// </summary>
+        /// <param name="item">Root of the section.</param>
+        /// <returns>Comma-separated string containing emails to send to.</returns>
+        private static string GetEmailsForSection(Item item)
+        {
+            const string sectionNotFoundMessage = "Item '{0}' is not in any section";
+            const string roleNotFoundMessage = "Could not find roles to notify for item '{0}'!";
+            const string usersNotFoundMessage = "Could not find users to notify for item '{0}'!";
+
+            ScheduledPublishSection section = item.GetParentSection();
+
+            if (section == null)
+            {
+                Log.Warn(string.Format(sectionNotFoundMessage, item.Name), typeof(MailManager));
+                return string.Empty;
+            }
+
+            IEnumerable<string> sectionRoleNames = section.SectionRoleNames;
+            IList<Role> sectionRoles = sectionRoleNames.Where(Role.Exists).Select(Role.FromName).ToList();
+
+            if (sectionRoles.Count == 0)
+            {
+                Log.Error(string.Format(roleNotFoundMessage, item.Name), typeof(MailManager));
+                return string.Empty;
+            }
+
+            IList<User> users = new List<User>();
+
+            foreach (var sectionRole in sectionRoles)
+            {
+                users = users.Union(RolesInRolesManager.GetUsersInRole(sectionRole, true)).ToList();
+            }
+
+            if (users.Count == 0)
+            {
+                Log.Warn(string.Format(usersNotFoundMessage, item.Name), typeof(MailManager));
+                return string.Empty;
+            }
+
+            IEnumerable<string> emailList = users
+                .Where(x => !string.IsNullOrWhiteSpace(x.Profile.Email))
+                .Select(x => x.Profile.Email);
+
+            return string.Join(", ", emailList);
         }
     }
 }

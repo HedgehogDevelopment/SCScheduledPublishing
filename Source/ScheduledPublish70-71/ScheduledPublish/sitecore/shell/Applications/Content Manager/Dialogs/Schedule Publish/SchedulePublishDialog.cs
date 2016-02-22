@@ -20,11 +20,15 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Text;
 using System.Web.UI;
 using System.Web.UI.HtmlControls;
+using ScheduledPublish.Recurrence.Implementation;
+using ScheduledPublish.Utils;
 using Constants = ScheduledPublish.Utils.Constants;
 using Control = Sitecore.Web.UI.HtmlControls.Control;
 using ItemList = Sitecore.Collections.ItemList;
+using Action = Sitecore.Web.UI.HtmlControls.Action;
 
 namespace ScheduledPublish.sitecore.shell.Applications.Content_Manager.Dialogs.Schedule_Publish
 {
@@ -36,8 +40,8 @@ namespace ScheduledPublish.sitecore.shell.Applications.Content_Manager.Dialogs.S
         protected Groupbox ScheduleSettings;
         protected Groupbox ScheduleLanguages;
         protected Groupbox ScheduleTargets;
-        protected Border ExistingSchedulesDiv;
-        protected GridPanel ExistingSchedulesTable;
+        protected Border ExistingSchedules;
+        protected GridPanel GridRecurrence;
         protected Border Languages;
         protected Border PublishModePanel;
         protected Border PublishingTargets;
@@ -45,8 +49,15 @@ namespace ScheduledPublish.sitecore.shell.Applications.Content_Manager.Dialogs.S
         protected Literal PublishTimeLit;
         protected Checkbox PublishChildren;
         protected Radiobutton SmartPublish;
-        protected Radiobutton Republish;
+        protected Radiobutton Hourly;
+        protected Radiobutton Daily;
+        protected Radiobutton Weekly;
+        protected Radiobutton Monthly;
         protected DateTimePicker PublishDateTimePicker;
+        protected Border BorderRecurrenceSettings;
+        protected Action VisibleAction;
+        protected Edit HoursToNextPublish;
+        protected Button RecurrenceButton;
 
         private readonly Database _database = Context.ContentDatabase;
         private readonly CultureInfo _culture = Context.Culture;
@@ -149,6 +160,51 @@ namespace ScheduledPublish.sitecore.shell.Applications.Content_Manager.Dialogs.S
         }
 
         /// <summary>
+        /// Hourly, Daily, Weekly, Monthly. 
+        /// </summary>
+        private RecurrenceType RecurrenceType
+        {
+            get
+            {
+                string reccurenceType = string.Empty;
+
+                if (Hourly.Checked)
+                {
+                    reccurenceType = Hourly.Value;
+                }
+                else if (Daily.Checked)
+                {
+                    reccurenceType = Daily.Value;
+                }
+                else if (Weekly.Checked)
+                {
+                    reccurenceType = Weekly.Value;
+                }
+                else if (Monthly.Checked)
+                {
+                    reccurenceType = Monthly.Value;
+                }
+
+                RecurrenceType castedType;
+                return Enum.TryParse<RecurrenceType>(reccurenceType, true, out castedType)
+                    ? castedType
+                    : RecurrenceType.None;
+            }
+        }
+
+        /// <summary>
+        /// Hours to the next publish if Hourly option is set as Recurrence type.
+        /// </summary>
+        private int HoursToNextPublishValue
+        {
+            get
+            {
+                int value;
+                int.TryParse(HoursToNextPublish.Value, out value);
+                return value;
+            }
+        }
+        /// <summary>
         /// If true, the action is unpublishing from selected database(s)
         /// </summary>
         private static bool Unpublish
@@ -176,9 +232,11 @@ namespace ScheduledPublish.sitecore.shell.Applications.Content_Manager.Dialogs.S
             {
                 if (Unpublish)
                 {
+                    BuildUnpublishTitles();
+
                     PublishModePanel.Visible = false;
                     ScheduleLanguages.Visible = false;
-                    BuildUnpublishTitles();
+                    RecurrenceButton.Visible = false;
                 }
 
                 BuildExistingSchedules();
@@ -187,6 +245,9 @@ namespace ScheduledPublish.sitecore.shell.Applications.Content_Manager.Dialogs.S
 
                 ServerTime.Text = Constants.CURREN_TIME_ON_SERVER_TEXT + DateTime.Now.ToString(_culture);
                 SmartPublish.Checked = true;
+
+                GridRecurrence.SetExtensibleProperty(BorderRecurrenceSettings, "Row.Style", "display:none");
+                VisibleAction.Checked = false;
             }
 
             base.OnLoad(e);
@@ -202,31 +263,56 @@ namespace ScheduledPublish.sitecore.shell.Applications.Content_Manager.Dialogs.S
             Assert.ArgumentNotNull(sender, "sender");
             Assert.ArgumentNotNull(args, "args");
 
-            PublishSchedule publishSchedule = new PublishSchedule
+            using (new LanguageSwitcher(LanguageManager.DefaultLanguage))
             {
-                ItemToPublish = InnerItem,
-                PublishDate = SelectedPublishDate,
-                SourceDatabase = _database,
-                TargetDatabases = SelectedTargets,
-                TargetLanguages = SelectedLanguages,
-                Unpublish = Unpublish,
-                PublishMode = SmartPublish.Checked ? PublishMode.Smart : PublishMode.Full,
-                PublishChildren = PublishChildren.Checked,
-                SchedulerEmail = Context.User.Profile.Email,
-                IsPublished = false
-            };
 
-            ValidationResult validationResult = ScheduledPublishValidator.Validate(publishSchedule);
-            if (!validationResult.IsValid)
-            {
-                SheerResponse.Alert(string.Join(Environment.NewLine, validationResult.ValidationErrors));
-                return;
+                PublishSchedule publishSchedule = new PublishSchedule
+                {
+                    ItemToPublish = InnerItem,
+                    PublishDate = SelectedPublishDate,
+                    SourceDatabase = _database,
+                    TargetDatabases = SelectedTargets,
+                    TargetLanguages = SelectedLanguages,
+                    Unpublish = Unpublish,
+                    PublishMode = SmartPublish.Checked ? PublishMode.Smart : PublishMode.Full,
+                    PublishChildren = PublishChildren.Checked,
+                    SchedulerUsername = Context.User.Name,
+                    RecurrenceType = RecurrenceType,
+                    HoursToNextPublish = HoursToNextPublishValue,
+                    IsPublished = false
+                };
+
+                if (Unpublish)
+                {
+                    publishSchedule.TargetLanguages = LanguageManager.GetLanguages(_database);
+                }
+
+                ValidationResult validationResult = ScheduledPublishValidator.Validate(publishSchedule);
+                if (!validationResult.IsValid)
+                {
+                    SheerResponse.Alert(string.Join(Environment.NewLine, validationResult.ValidationErrors));
+                    return;
+                }
+
+                _scheduledPublishRepo.CreatePublishSchedule(publishSchedule);
             }
-
-            _scheduledPublishRepo.CreatePublishSchedule(publishSchedule);
 
             base.OnOK(sender, args);
         }
+
+        /// <summary>
+        /// Show / hide the Recurrence section
+        /// </summary>
+        protected void ToggleRecurrence()
+        {
+            bool visible = VisibleAction.Checked;
+
+            Context.ClientPage.ClientResponse.SetStyle("BorderRecurrenceSettingsRow", "display", visible ? "none" : "");
+
+            // Remember to persist the current visibility status, both in the viewstate
+            VisibleAction.Checked = !visible;
+        }
+
 
         /// <summary>
         /// Renders available publishing targets.
@@ -353,63 +439,13 @@ namespace ScheduledPublish.sitecore.shell.Applications.Content_Manager.Dialogs.S
         /// </summary>
         private void BuildExistingSchedules()
         {
-            IEnumerable<PublishSchedule> existingSchedules = _scheduledPublishRepo.GetSchedules(InnerItem.ID).ToList();
+            IEnumerable<PublishSchedule> schedules = _scheduledPublishRepo.GetSchedules(InnerItem.ID).ToArray();
 
-            if (existingSchedules.Any())
-            {
-                ExistingSchedulesDiv.Visible = false;
-                foreach (var schedule in existingSchedules)
-                {
-                    DateTime time = schedule.PublishDate;
-                    Literal timeLit = new Literal();
-                    timeLit.Text = time.ToString(_culture);
-                    ExistingSchedulesTable.Controls.Add(timeLit);
+            string schedulesHtml = BuildExistingSchedulesHtml(schedules);
 
-                    string action = schedule.Unpublish ? Constants.UNPUBLISH_TEXT : Constants.PUBLISH_TEXT;
-                    Literal actionLit = new Literal();
-                    actionLit.Text = action;
-                    ExistingSchedulesTable.Controls.Add(actionLit);
-
-                    string languages = schedule.TargetLanguages != null ?
-                            string.Join(",", schedule.TargetLanguages.Select(x => x.Name)).TrimEnd(',') :
-                            Constants.NOT_APPLICABLE;
-                    Literal languagesLit = new Literal();
-                    languagesLit.Text = languages;
-                    ExistingSchedulesTable.Controls.Add(languagesLit);
-
-
-                    Literal versionLit = new Literal();
-                    string version;
-                    if (schedule.ItemToPublish == null)
-                    {
-                        version = Constants.WEBSITE_PUBLISH_TEXT;
-                    }
-                    else
-                    {
-                        Item itemInVersion = schedule.ItemToPublish.Publishing.GetValidVersion(time, true, false);
-                        if (itemInVersion != null)
-                        {
-                            version = itemInVersion.Version.Number.ToString();
-                        }
-                        else
-                        {
-                            version = Constants.NO_VALID_VERSION_TEXT;
-
-                            languagesLit.Style.Add("color", "red");
-                            actionLit.Style.Add("color", "red");
-                            timeLit.Style.Add("color", "red");
-                            versionLit.Style.Add("color", "red");
-                        }
-                    }
-                    versionLit.Text = version;
-                    ExistingSchedulesTable.Controls.Add(versionLit);
-                }
-            }
-            else
-            {
-                ExistingSchedulesTable.Visible = false;
-                ExistingSchedulesDiv.InnerHtml = Constants.NO_EXISTING_SCHEDULES_TEXT;
-            }
+            ExistingSchedules.InnerHtml = string.IsNullOrWhiteSpace(schedulesHtml)
+                ? Constants.NO_EXISTING_SCHEDULES_TEXT
+                : schedulesHtml;
         }
 
         /// <summary>
@@ -421,6 +457,71 @@ namespace ScheduledPublish.sitecore.shell.Applications.Content_Manager.Dialogs.S
             ScheduleLanguages.Header = Constants.SCHEDULE_UNPUBLISH_LANGUAGES_TITLE;
             ScheduleTargets.Header = Constants.SCHEDULE_UNPUBLISH_TARGETS_TITLE;
             PublishTimeLit.Text = Constants.SCHEDULE_DATETIMEPICKER_UNPUBLISH_TITLE;
+        }
+
+        /// <summary>
+        /// Builds Existing Schedules table.
+        /// </summary>
+        /// <param name="schedules">Existing Schedules</param>
+        /// <returns>Html table</returns>
+        private string BuildExistingSchedulesHtml(IEnumerable<PublishSchedule> schedules)
+        {
+            if (schedules == null)
+            {
+                return string.Empty;
+            }
+
+            PublishSchedule[] schedulesArray = schedules.ToArray();
+            if (schedulesArray.Length == 0)
+            {
+                return string.Empty;
+            }
+
+            StringBuilder sbTable = new StringBuilder(100);
+
+            sbTable.Append("<table width=\"100%\">");
+            sbTable.Append("<tr>");
+            sbTable.Append("<td nowrap=\"nowrap\">Time</td>");
+            sbTable.Append("<td nowrap=\"nowrap\">Action</td>");
+            sbTable.Append("<td nowrap=\"nowrap\">Languages</td>");
+            sbTable.Append("<td nowrap=\"nowrap\">Version</td>");
+            sbTable.Append("<td nowrap=\"nowrap\">Recurrence</td>");
+            sbTable.Append("</tr>");
+            foreach (var schedule in schedulesArray)
+            {
+                string version;
+
+                if (schedule.ItemToPublish != null)
+                {
+                    Item itemInVersion = schedule.ItemToPublish.Publishing.GetValidVersion(schedule.PublishDate, true, false);
+                    if (itemInVersion != null)
+                    {
+                        sbTable.Append("<tr>");
+                        version = itemInVersion.Version.Number.ToString();
+                    }
+                    else
+                    {
+                        sbTable.Append("<tr style='color: red'>");
+                        version = Constants.NO_VALID_VERSION_TEXT;
+                    }
+                }
+                else
+                {
+                    sbTable.Append("<tr>");
+                    version = Constants.WEBSITE_PUBLISH_TEXT;
+                }
+
+                sbTable.AppendFormat("<td nowrap=\"nowrap\">{0}</td>", schedule.PublishDate.ToString(_culture));
+                sbTable.AppendFormat("<td nowrap=\"nowrap\">{0}</td>", schedule.Unpublish ? Constants.UNPUBLISH_TEXT : Constants.PUBLISH_TEXT);
+                sbTable.AppendFormat("<td nowrap=\"nowrap\">{0}</td>", string.Join(",", schedule.TargetLanguages.Select(x => x.Name)).TrimEnd(','));
+                sbTable.AppendFormat("<td nowrap=\"nowrap\">{0}</td>", version);
+                sbTable.AppendFormat("<td nowrap=\"nowrap\">{0}</td>", DialogsHelper.GetRecurrenceMessage(schedule.RecurrenceType, schedule.HoursToNextPublish));
+                sbTable.Append("</tr>");
+            }
+
+            sbTable.Append("</table>");
+
+            return sbTable.ToString();
         }
     }
 }
