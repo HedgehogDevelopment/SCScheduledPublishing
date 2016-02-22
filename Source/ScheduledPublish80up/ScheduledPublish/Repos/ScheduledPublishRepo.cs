@@ -104,6 +104,12 @@ namespace ScheduledPublish.Repos
                        && x.PublishDate <= toDate);
         }
 
+        /// <summary>
+        /// Get Recurrent Schedules for particular period.
+        /// </summary>
+        /// <param name="fromDate">From date</param>
+        /// <param name="toDate">To date</param>
+        /// <returns>Recurrent Schedules for the selected period.</returns>
         public IEnumerable<PublishSchedule> GetRecurrentSchedules(DateTime fromDate, DateTime toDate)
         {
             if (fromDate > toDate)
