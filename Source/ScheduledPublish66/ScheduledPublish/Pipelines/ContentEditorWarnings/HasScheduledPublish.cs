@@ -1,10 +1,13 @@
 ﻿using ScheduledPublish.Models;
 using ScheduledPublish.Repos;
 using Sitecore.Data.Items;
+using Sitecore.Data.Managers;
 using Sitecore.Diagnostics;
+using Sitecore.Globalization;
 using Sitecore.Pipelines.GetContentEditorWarnings;
 using System.Collections.Generic;
 using System.Linq;
+using ScheduledPublish.Utils;
 
 namespace ScheduledPublish.Pipelines.ContentEditorWarnings
 {
@@ -21,14 +24,17 @@ namespace ScheduledPublish.Pipelines.ContentEditorWarnings
             
             ScheduledPublishRepo scheduledPublishRepo = new ScheduledPublishRepo();
 
-            IEnumerable<PublishSchedule> schedulesForCurrentItem = scheduledPublishRepo.GetSchedules(item.ID);
-
-            if (schedulesForCurrentItem.Any())
+            using (new LanguageSwitcher(LanguageManager.DefaultLanguage))
             {
-                GetContentEditorWarningsArgs.ContentEditorWarning warning = args.Add();
-                warning.Icon = "Applications/32x32/information2.png";
-                warning.Text = "This item has been scheduled for publish.";
-                warning.IsExclusive = false;
+                IEnumerable<PublishSchedule> schedulesForCurrentItem = scheduledPublishRepo.GetSchedules(item.ID);
+
+                if (schedulesForCurrentItem.Any())
+                {
+                    GetContentEditorWarningsArgs.ContentEditorWarning warning = args.Add();
+                    warning.Icon = Constants.SCHEDULED_PUBLISH_ICON;
+                    warning.Text = Constants.SCHEDULED_PUBLISH_NOTIFICATION;
+                    warning.IsExclusive = false;
+                }
             }
         }
     }

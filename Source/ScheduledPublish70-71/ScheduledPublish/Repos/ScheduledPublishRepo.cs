@@ -220,7 +220,8 @@ namespace ScheduledPublish.Repos
                     publishSchedule.InnerItem[PublishSchedule.TargetDatabasesId] = string.Join("|", publishSchedule.TargetDatabases.Select(x => x.Name));
                     publishSchedule.InnerItem[PublishSchedule.IsPublishedId] = publishSchedule.IsPublished ? "1" : string.Empty;
 
-                    DateTime oldPublishDate = DateUtil.IsoDateToDateTime(publishSchedule.InnerItem[PublishSchedule.PublishDateId]);
+                    DateTime oldPublishDate =
+                        DateUtil.IsoDateToDateTime(publishSchedule.InnerItem[PublishSchedule.PublishDateId]);
                     publishSchedule.InnerItem[PublishSchedule.PublishDateId] = DateUtil.ToIsoDate(publishSchedule.PublishDate);
 
                     publishSchedule.InnerItem[PublishSchedule.RecurrenceTypeId] = publishSchedule.RecurrenceType.ToString();
