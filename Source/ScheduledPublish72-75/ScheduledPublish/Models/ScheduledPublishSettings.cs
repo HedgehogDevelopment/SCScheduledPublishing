@@ -15,7 +15,7 @@ namespace ScheduledPublish.Models
         {
             get
             {
-                return _database.GetItem(Constants.SETTINGS_ITEM_ID); 
+                return _database.GetItem(Constants.SETTINGS_ITEM_ID);
             }
         }
 

@@ -7,6 +7,7 @@ using Sitecore.Globalization;
 using Sitecore.Pipelines.GetContentEditorWarnings;
 using System.Collections.Generic;
 using System.Linq;
+using ScheduledPublish.Utils;
 
 namespace ScheduledPublish.Pipelines.ContentEditorWarnings
 {
@@ -30,8 +31,8 @@ namespace ScheduledPublish.Pipelines.ContentEditorWarnings
                 if (schedulesForCurrentItem.Any())
                 {
                     GetContentEditorWarningsArgs.ContentEditorWarning warning = args.Add();
-                    warning.Icon = "Applications/32x32/information2.png";
-                    warning.Text = "This item has been scheduled for publish.";
+                    warning.Icon = Constants.SCHEDULED_PUBLISH_ICON;
+                    warning.Text = Constants.SCHEDULED_PUBLISH_NOTIFICATION;
                     warning.IsExclusive = false;
                 }
             }

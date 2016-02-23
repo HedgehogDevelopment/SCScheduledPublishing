@@ -40,12 +40,22 @@
                       hour(s)
                     </td>
                   </tr>
+                  <tr>
+                    <td colspan="3">
+                      <Radiobutton ID="Daily" Value="Daily" Header="Daily" Name="RecurrenceSettings" />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td colspan="3">
+                      <Radiobutton ID="Weekly" Value="Weekly" Header="Weekly" Name="RecurrenceSettings" />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td colspan="3">
+                      <Radiobutton ID="Monthly" Value="Monthly" Header="Monthly" Name="RecurrenceSettings" />
+                    </td>
+                  </tr>
                 </table>
-                <Radiobutton ID="Daily" Value="Daily" Header="Daily" Name="RecurrenceSettings" />
-                <br />
-                <Radiobutton ID="Weekly" Value="Weekly" Header="Weekly" Name="RecurrenceSettings" />
-                <br />
-                <Radiobutton ID="Monthly" Value="Monthly" Header="Monthly" Name="RecurrenceSettings" />
               </Border>
             </GridPanel>
             <Border ID="PublishModePanel">

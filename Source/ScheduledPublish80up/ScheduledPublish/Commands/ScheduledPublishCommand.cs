@@ -88,6 +88,12 @@ namespace ScheduledPublish.Commands
             }
         }
 
+        /// <summary>
+        /// If recurrent publish has succeeded we schedule the next publish 
+        /// moving the publish settings item in the repo.
+        /// </summary>
+        /// <param name="fromDate">Start of the period</param>
+        /// <param name="toDate">End of the period</param>
         private void ManageNextReccurentSchedules(DateTime fromDate, DateTime toDate)
         {
             IRecurrenceScheduler recurrenceScheduler = new RecurrenceScheduler();

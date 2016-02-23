@@ -26,7 +26,7 @@ content-length: 3
 ----version----
 language: en
 version: 1
-revision: c9184109-bfdb-4971-9085-7bf0b6037353
+revision: b8e1366a-3ec7-49c7-81df-378dfc8c0e35
 
 ----field----
 field: {19A69332-A23E-4E70-8D16-B2640CB24CC8}
@@ -35,6 +35,27 @@ key: title
 content-length: 7
 
 Message
+----field----
+field: {577F1689-7DE4-4AD2-A15F-7FDC1759285F}
+name: __Long description
+key: __long description
+content-length: 337
+
+[id] - The id of the published item
+[item] - The name of the published item
+[path] - The full path of the published item
+[version] - The version of the published item
+[date] - The date the item is published
+[time] - The time the item is published
+[publisher] - The full name or username of the person who scheduled the publishing
+
+----field----
+field: {9541E67D-CE8C-4225-803D-33F7F29F09EF}
+name: __Short description
+key: __short description
+content-length: 57
+
+Mouseover this to see a list of available expandable tags
 ----field----
 field: {52807595-0F8F-4B20-8D2A-CB71D28C6103}
 name: __Owner
@@ -62,14 +83,14 @@ name: __Revision
 key: __revision
 content-length: 36
 
-c9184109-bfdb-4971-9085-7bf0b6037353
+b8e1366a-3ec7-49c7-81df-378dfc8c0e35
 ----field----
 field: {D9CF14B1-FA16-4BA6-9288-E8A174D4D522}
 name: __Updated
 key: __updated
-content-length: 34
+content-length: 35
 
-20150428T114856:635658185363826866
+20150722T101827:635731571078477606Z
 ----field----
 field: {BADD9CF9-53E0-4D0C-BCC0-2D784C282F6A}
 name: __Updated by

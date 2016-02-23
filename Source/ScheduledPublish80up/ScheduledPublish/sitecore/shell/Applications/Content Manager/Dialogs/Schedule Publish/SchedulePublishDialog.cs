@@ -23,7 +23,6 @@ using System.Linq;
 using System.Text;
 using System.Web.UI;
 using System.Web.UI.HtmlControls;
-using ScheduledPublish.Recurrence.Abstraction;
 using ScheduledPublish.Recurrence.Implementation;
 using ScheduledPublish.Utils;
 using Constants = ScheduledPublish.Utils.Constants;
@@ -161,6 +160,9 @@ namespace ScheduledPublish.sitecore.shell.Applications.Content_Manager.Dialogs.S
             }
         }
 
+        /// <summary>
+        /// Hourly, Daily, Weekly, Monthly. 
+        /// </summary>
         private RecurrenceType RecurrenceType
         {
             get
@@ -191,6 +193,9 @@ namespace ScheduledPublish.sitecore.shell.Applications.Content_Manager.Dialogs.S
             }
         }
 
+        /// <summary>
+        /// Hours to the next publish if Hourly option is set as Recurrence type.
+        /// </summary>
         private int HoursToNextPublishValue
         {
             get
@@ -456,6 +461,11 @@ namespace ScheduledPublish.sitecore.shell.Applications.Content_Manager.Dialogs.S
             PublishTimeLit.Text = Constants.SCHEDULE_DATETIMEPICKER_UNPUBLISH_TITLE;
         }
 
+        /// <summary>
+        /// Builds Existing Schedules table.
+        /// </summary>
+        /// <param name="schedules">Existing Schedules</param>
+        /// <returns>Html table</returns>
         private string BuildExistingSchedulesHtml(IEnumerable<PublishSchedule> schedules)
         {
             if (schedules == null)

@@ -1,5 +1,6 @@
 ﻿using ScheduledPublish.Models;
 using ScheduledPublish.Repos;
+using ScheduledPublish.Utils;
 using ScheduledPublish.Validation;
 using Sitecore;
 using Sitecore.Data;
@@ -13,7 +14,6 @@ using Sitecore.Web.UI.Sheer;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 using System.Text;
 using System.Web.UI;
 using System.Web.UI.WebControls;
@@ -77,17 +77,28 @@ namespace ScheduledPublish.sitecore.shell.Applications.Content_Manager.Dialogs.E
             IEnumerable<PublishSchedule> allSchedules;
             using (new LanguageSwitcher(LanguageManager.DefaultLanguage))
             {
-                 allSchedules = _scheduledPublishRepo.AllUnpublishedSchedules;
+                allSchedules = _scheduledPublishRepo.AllUnpublishedSchedules;
             }
+            
             foreach (var schedule in allSchedules)
             {
                 if (schedule.InnerItem != null)
                 {
                     StringBuilder sbItem = new StringBuilder();
-                    // Item name and path
+                    // Item name, path, recurrence 
                     sbItem.Append("<tr style='background:#cedff2;border-bottom:1px solid #F0F1F2;'>");
                     Item scheduledItem = schedule.ItemToPublish;
-                    sbItem.Append("<td><b>" + scheduledItem.DisplayName + "</b><br />" + scheduledItem.Paths.FullPath + "</td>");
+                    sbItem.Append("<td>");
+                    sbItem.Append("<b>" + scheduledItem.DisplayName + "</b>");
+                    sbItem.Append("<br />" + scheduledItem.Paths.FullPath);
+                    string recurrenceMessage = 
+                        DialogsHelper.GetRecurrenceMessage(schedule.RecurrenceType,
+                        schedule.HoursToNextPublish);
+                    if (!string.IsNullOrWhiteSpace(recurrenceMessage))
+                    {
+                        sbItem.Append("<br /> Recurrence: " + recurrenceMessage);
+                    }
+                    sbItem.Append("</td>");
 
                     // Is publishing/unpublishing
                     sbItem.Append("<td style='border-left:1px solid #F0F1F2;'>");

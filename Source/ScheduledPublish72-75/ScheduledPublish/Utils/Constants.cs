@@ -18,6 +18,8 @@ namespace ScheduledPublish.Utils
         public const string CURREN_TIME_ON_SERVER_TEXT = "Current time on server: ";
         public const string NO_VALID_VERSION_TEXT = "no valid version";
         public const string NO_EXISTING_SCHEDULES_TEXT = "This item has not been scheduled for publishing yet.";
+        public const string SCHEDULED_PUBLISH_NOTIFICATION = "This item has been scheduled for publish.";
+        public const string SCHEDULED_PUBLISH_ICON = "People/16x16/clock_run.png";
         #endregion
 
         #region Template IDs
@@ -30,7 +32,7 @@ namespace ScheduledPublish.Utils
         #endregion
 
         public static readonly Database SCHEDULED_TASK_CONTEXT_DATABASE = Database.GetDatabase("master");
-        
+
 
         #region Settings
         public static readonly ID SETTINGS_ITEM_ID = ID.Parse("{C1813448-7B11-4813-B0B9-FAF8A7A8F48E}");
@@ -45,6 +47,5 @@ namespace ScheduledPublish.Utils
         public static readonly ID PUBLISH_EMAIL_SETTINGS_MAILSERVERUSERNAME = ID.Parse("{510D71A5-358A-4336-8F2E-A55A33B53F29}");
         public static readonly ID PUBLISH_EMAIL_SETTINGS_MAILSERVERPASSWORD = ID.Parse("{494BDDC5-A953-4BE8-A735-E5BC29BDCA8C}");
         #endregion
-
     }
 }

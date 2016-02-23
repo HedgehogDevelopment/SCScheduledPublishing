@@ -1,10 +1,13 @@
 ﻿using ScheduledPublish.Models;
 using ScheduledPublish.Repos;
+using ScheduledPublish.Utils;
 using ScheduledPublish.Validation;
 using Sitecore;
 using Sitecore.Data;
 using Sitecore.Data.Items;
+using Sitecore.Data.Managers;
 using Sitecore.Diagnostics;
+using Sitecore.Globalization;
 using Sitecore.Web.UI.HtmlControls;
 using Sitecore.Web.UI.Pages;
 using Sitecore.Web.UI.Sheer;
@@ -59,30 +62,58 @@ namespace ScheduledPublish.sitecore.shell.Applications.Content_Manager.Dialogs.E
             sbHeader.Append("<col />");
             sbHeader.Append("<col />");
             sbHeader.Append("<col />");
+            sbHeader.Append("<col />");
+            sbHeader.Append("<col />");
             sbHeader.Append("<tr style=\"background:#e9e9e9\">");
             sbHeader.Append("<td nowrap=\"nowrap\"><b>" + "Item" + "</b></td>");
             sbHeader.Append("<td nowrap=\"nowrap\"><b>" + "Action" + "</b></td>");
+            sbHeader.Append("<td nowrap=\"nowrap\"><b>" + "Subitems" + "</b></td>");
+            sbHeader.Append("<td nowrap=\"nowrap\"><b>" + "Mode" + "</b></td>");
             sbHeader.Append("<td nowrap=\"nowrap\"><b>" + "Date" + "</b></td>");
             sbHeader.Append("<td nowrap=\"nowrap\"><b>" + "Delete" + "</b></td>");
             sbHeader.Append("</tr>");
             AllSchedules.Controls.Add(new LiteralControl(sbHeader.ToString()));
 
+            IEnumerable<PublishSchedule> allSchedules;
+            using (new LanguageSwitcher(LanguageManager.DefaultLanguage))
+            {
+                allSchedules = _scheduledPublishRepo.AllUnpublishedSchedules;
+            }
             
-            IEnumerable<PublishSchedule> allSchedules = _scheduledPublishRepo.AllUnpublishedSchedules;
             foreach (var schedule in allSchedules)
             {
                 if (schedule.InnerItem != null)
                 {
                     StringBuilder sbItem = new StringBuilder();
-                    // Item name and path
+                    // Item name, path, recurrence 
                     sbItem.Append("<tr style='background:#cedff2;border-bottom:1px solid #F0F1F2;'>");
                     Item scheduledItem = schedule.ItemToPublish;
-                    sbItem.Append("<td><b>" + scheduledItem.DisplayName + "</b><br />" + scheduledItem.Paths.FullPath + "</td>");
+                    sbItem.Append("<td>");
+                    sbItem.Append("<b>" + scheduledItem.DisplayName + "</b>");
+                    sbItem.Append("<br />" + scheduledItem.Paths.FullPath);
+                    string recurrenceMessage = 
+                        DialogsHelper.GetRecurrenceMessage(schedule.RecurrenceType,
+                        schedule.HoursToNextPublish);
+                    if (!string.IsNullOrWhiteSpace(recurrenceMessage))
+                    {
+                        sbItem.Append("<br /> Recurrence: " + recurrenceMessage);
+                    }
+                    sbItem.Append("</td>");
 
                     // Is publishing/unpublishing
                     sbItem.Append("<td style='border-left:1px solid #F0F1F2;'>");
                     string isUnpublishing = schedule.Unpublish ? "Unpublish" : "Publish";
                     sbItem.Append(isUnpublishing);
+                    sbItem.Append("</td><td style='border-left:1px solid #F0F1F2; text-align: center;'>");
+
+                    // Subitems
+                    string includeSubitems = schedule.PublishChildren ? "Yes" : "No";
+                    sbItem.Append(includeSubitems);
+                    sbItem.Append("</td><td style='border-left:1px solid #F0F1F2;'>");
+
+                    // Publish mode
+                    string publishMode = schedule.PublishMode.ToString();
+                    sbItem.Append(publishMode);
                     sbItem.Append("</td><td style='border-left:1px solid #F0F1F2;'>");
 
                     // Current scheudled publish date and time
@@ -121,46 +152,49 @@ namespace ScheduledPublish.sitecore.shell.Applications.Content_Manager.Dialogs.E
             Assert.ArgumentNotNull(sender, "sender");
             Assert.ArgumentNotNull(args, "args");
 
-            foreach (string key in Context.ClientPage.ClientRequest.Form.Keys)
+            using (new LanguageSwitcher(LanguageManager.DefaultLanguage))
             {
-                if (key != null && key.StartsWith("dt_", StringComparison.InvariantCulture))
+                foreach (string key in Context.ClientPage.ClientRequest.Form.Keys)
                 {
-                    string id = StringUtil.Mid(key, 3, 38);
-
-                    DateTimePicker dtEditPicker = AllSchedules.FindControl("dt_" + id) as DateTimePicker;
-
-                    Assert.IsNotNull(dtEditPicker, "dtEditPicker");
-
-                    DateTime dateTime = DateUtil.IsoDateToDateTime(dtEditPicker.Value);
-                    PublishSchedule publishSchedule = new PublishSchedule(_database.GetItem(new ID(id)));
-
-                    //Scheudled time has changed
-                    if (publishSchedule.PublishDate != dateTime)
+                    if (key != null && key.StartsWith("dt_", StringComparison.InvariantCulture))
                     {
-                        publishSchedule.PublishDate = dateTime;
+                        string id = StringUtil.Mid(key, 3, 38);
 
-                        ValidationResult validationResult = ScheduledPublishValidator.Validate(publishSchedule);
-                        if (!validationResult.IsValid)
+                        DateTimePicker dtEditPicker = AllSchedules.FindControl("dt_" + id) as DateTimePicker;
+
+                        Assert.IsNotNull(dtEditPicker, "dtEditPicker");
+
+                        DateTime dateTime = DateUtil.IsoDateToDateTime(dtEditPicker.Value);
+                        PublishSchedule publishSchedule = new PublishSchedule(_database.GetItem(new ID(id)));
+
+                        //Scheudled time has changed
+                        if (publishSchedule.PublishDate != dateTime)
                         {
-                            SheerResponse.Alert(string.Join(Environment.NewLine, validationResult.ValidationErrors));
-                            return;
+                            publishSchedule.PublishDate = dateTime;
+
+                            ValidationResult validationResult = ScheduledPublishValidator.Validate(publishSchedule);
+                            if (!validationResult.IsValid)
+                            {
+                                SheerResponse.Alert(string.Join(Environment.NewLine, validationResult.ValidationErrors));
+                                return;
+                            }
+
+                            _scheduledPublishRepo.UpdatePublishSchedule(publishSchedule);
                         }
-
-                        _scheduledPublishRepo.UpdatePublishSchedule(publishSchedule);
                     }
-                }
-                else if (key != null && key.StartsWith("del_", StringComparison.InvariantCulture))
-                {
-                    string id = StringUtil.Mid(key, 4, 38);
-                    Checkbox deleteCheckbox = AllSchedules.FindControl("del_" + id) as Checkbox;
-
-                    Assert.IsNotNull(deleteCheckbox, "deleteCheckbox");
-
-                    bool doDelete = deleteCheckbox.Checked;
-                    if (doDelete)
+                    else if (key != null && key.StartsWith("del_", StringComparison.InvariantCulture))
                     {
-                        Item publishOption = _database.GetItem(new ID(id));
-                        _scheduledPublishRepo.DeleteItem(publishOption);
+                        string id = StringUtil.Mid(key, 4, 38);
+                        Checkbox deleteCheckbox = AllSchedules.FindControl("del_" + id) as Checkbox;
+
+                        Assert.IsNotNull(deleteCheckbox, "deleteCheckbox");
+
+                        bool doDelete = deleteCheckbox.Checked;
+                        if (doDelete)
+                        {
+                            Item publishOption = _database.GetItem(new ID(id));
+                            _scheduledPublishRepo.DeleteItem(publishOption);
+                        }
                     }
                 }
             }
