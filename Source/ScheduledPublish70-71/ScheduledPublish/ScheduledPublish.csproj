@@ -93,7 +93,7 @@
     <Content Include="sitecore\shell\Applications\Content Manager\Dialogs\Schedule Publish\Schedule Publish.xml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="App_Config\Include\ScheduledPublish\ZZ_ScheduledPublishControl.config" />
+    <Content Include="App_Config\Include\ZZ_ScheduledPublish\ZZ_ScheduledPublishControl.config" />
   </ItemGroup>
   <ItemGroup />
   <PropertyGroup>

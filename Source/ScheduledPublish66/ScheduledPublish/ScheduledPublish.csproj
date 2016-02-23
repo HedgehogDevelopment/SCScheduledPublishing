@@ -94,7 +94,7 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
-    <Content Include="App_Config\Include\ScheduledPublish\ZZ_ScheduledPublishControl.config" />
+    <Content Include="App_Config\Include\ZZ_ScheduledPublish\ZZ_ScheduledPublishControl.config" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
