@@ -6,6 +6,7 @@ using Sitecore.Publishing;
 using System;
 using System.Linq;
 using System.Text;
+using Sitecore.Data.Items;
 using Sitecore.SecurityModel;
 
 namespace ScheduledPublish.Utils
@@ -22,7 +23,7 @@ namespace ScheduledPublish.Utils
         /// <returns>A <see cref="T:Sitecore.Handle"/> publish handle.</returns>
         public static Handle Publish(PublishSchedule publishSchedule)
         {
-            return publishSchedule.ItemToPublish != null
+            return publishSchedule.Items.Any()
                 ? PublishItem(publishSchedule)
                 : PublishWebsite(publishSchedule);
         }
@@ -95,29 +96,32 @@ namespace ScheduledPublish.Utils
         /// <returns>A <see cref="T:Sitecore.Handle"/> publish handle.</returns>
         private static Handle PublishItem(PublishSchedule publishSchedule)
         {
-            if (publishSchedule.ItemToPublish == null)
+            if (publishSchedule.Items.Any())
             {
                 Log.Error("Scheduled Publish: Scheduled Publish Task didn't execute because PublishSchedule.ItemToPublish is null", new object());
                 return null;
             }
 
+            Item itemToPublish = publishSchedule.Items.First();
             Handle handle = null;
 
             try
             {
+                
+
                 if (publishSchedule.Unpublish)
                 {
                     using (new SecurityDisabler())
                     {
-                        publishSchedule.ItemToPublish.Editing.BeginEdit();
-                        publishSchedule.ItemToPublish.Publishing.NeverPublish = true;
-                        publishSchedule.ItemToPublish.Editing.AcceptChanges();
-                        publishSchedule.ItemToPublish.Editing.EndEdit();
+                        itemToPublish.Editing.BeginEdit();
+                        itemToPublish.Publishing.NeverPublish = true;
+                        itemToPublish.Editing.AcceptChanges();
+                        itemToPublish.Editing.EndEdit();
                     }
                 }
 
                 handle = PublishManager.PublishItem(
-                    publishSchedule.ItemToPublish,
+                    itemToPublish,
                     publishSchedule.TargetDatabases.ToArray(),
                     publishSchedule.TargetLanguages.ToArray(),
                     publishSchedule.PublishChildren,
@@ -130,10 +134,10 @@ namespace ScheduledPublish.Utils
                 {
                     using (new SecurityDisabler())
                     {
-                        publishSchedule.ItemToPublish.Editing.BeginEdit();
-                        publishSchedule.ItemToPublish.Publishing.NeverPublish = false;
-                        publishSchedule.ItemToPublish.Editing.AcceptChanges();
-                        publishSchedule.ItemToPublish.Editing.EndEdit();
+                        itemToPublish.Editing.BeginEdit();
+                        itemToPublish.Publishing.NeverPublish = false;
+                        itemToPublish.Editing.AcceptChanges();
+                        itemToPublish.Editing.EndEdit();
                     }
                 }
             }
@@ -141,8 +145,8 @@ namespace ScheduledPublish.Utils
             {
                 Log.Error(
                     string.Format("Scheduled Publish: Scheduled Publish Task failed for {0} {1} {2}",
-                                   publishSchedule.ItemToPublish.Name,
-                                   publishSchedule.ItemToPublish.ID,
+                                   itemToPublish.Name,
+                                   itemToPublish.ID,
                                    ex), new object());
             }
 

@@ -27,7 +27,7 @@ namespace ScheduledPublish.Validation
                 return result;
             }
 
-            if (!IsFutureDate(publishSchedule.PublishDate))
+            if (!IsFutureDate(publishSchedule.ScheduledDate))
             {
                 result.ValidationErrors.Add("Please, select future date.");
                 result.IsValid = false;
@@ -56,13 +56,13 @@ namespace ScheduledPublish.Validation
                 result.IsValid = false;
             }
 
-            if (!IsPublishableItem(publishSchedule.ItemToPublish, publishSchedule.PublishDate))
+            if (!IsPublishableItem(publishSchedule.Items.FirstOrDefault(), publishSchedule.ScheduledDate))
             {
                 result.ValidationErrors.Add("Item is not publishable at that time.");
                 result.IsValid = false;
             }
 
-            if (publishSchedule.RecurrenceType == RecurrenceType.Hourly && publishSchedule.HoursToNextPublish == 0)
+            if (publishSchedule.RecurrenceType == RecurrenceType.Hourly && publishSchedule.HoursToNextSchedule == 0)
             {
                 result.ValidationErrors.Add("Please, enter a valid, whole number value in 'Hour(s)' field.");
                 result.IsValid = false;

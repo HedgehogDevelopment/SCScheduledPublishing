@@ -1,7 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using ScheduledPublish.Models;
-using ScheduledPublish.Repos;
+using ScheduledPublish.Repos.Abstraction;
+using ScheduledPublish.Repos.Implementation;
 using ScheduledPublish.Utils;
 using Sitecore.Data.Items;
 using Sitecore.Data.Managers;
@@ -12,6 +13,8 @@ namespace ScheduledPublish.Gutter
 {
     public class ScheduledPublishGutterRenderer : GutterRenderer
     {
+        private ISchedulesRepo<PublishSchedule> _schedulesRepo;
+          
         protected override GutterIconDescriptor GetIconDescriptor(Item item)
         {
             if (item == null)
@@ -19,11 +22,11 @@ namespace ScheduledPublish.Gutter
                 return null;
             }
 
-            ScheduledPublishRepo scheduledPublishRepo = new ScheduledPublishRepo();
+            _schedulesRepo = new ScheduledPublishRepo();
 
             using (new LanguageSwitcher(LanguageManager.DefaultLanguage))
             {
-                IEnumerable<PublishSchedule> schedulesForCurrentItem = scheduledPublishRepo.GetSchedules(item.ID);
+                IEnumerable<PublishSchedule> schedulesForCurrentItem = _schedulesRepo.GetSchedules(item.ID);
 
                 if (schedulesForCurrentItem.Any())
                 {

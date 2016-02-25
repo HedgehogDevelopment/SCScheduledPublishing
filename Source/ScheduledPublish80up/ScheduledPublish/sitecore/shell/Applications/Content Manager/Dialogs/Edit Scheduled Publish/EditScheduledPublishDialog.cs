@@ -1,5 +1,4 @@
 ﻿using ScheduledPublish.Models;
-using ScheduledPublish.Repos;
 using ScheduledPublish.Utils;
 using ScheduledPublish.Validation;
 using Sitecore;
@@ -14,9 +13,12 @@ using Sitecore.Web.UI.Sheer;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Text;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using ScheduledPublish.Repos.Abstraction;
+using ScheduledPublish.Repos.Implementation;
 using Constants = ScheduledPublish.Utils.Constants;
 using Literal = Sitecore.Web.UI.HtmlControls.Literal;
 
@@ -32,7 +34,8 @@ namespace ScheduledPublish.sitecore.shell.Applications.Content_Manager.Dialogs.E
 
         private readonly Database _database = Context.ContentDatabase;
         private readonly CultureInfo _culture = Context.Culture;
-        private ScheduledPublishRepo _scheduledPublishRepo;
+        private ISchedulesRepo<PublishSchedule> _schedulesRepo;
+
 
         /// <summary>
         /// Raises the load event
@@ -40,7 +43,7 @@ namespace ScheduledPublish.sitecore.shell.Applications.Content_Manager.Dialogs.E
         /// <param name="e">The <see cref="T:System.EventArgs"/> instance containing the event data.</param>
         protected override void OnLoad(EventArgs e)
         {
-            _scheduledPublishRepo = new ScheduledPublishRepo();
+            _schedulesRepo = new ScheduledPublishRepo();
 
             if (!Context.ClientPage.IsEvent)
             {
@@ -77,7 +80,7 @@ namespace ScheduledPublish.sitecore.shell.Applications.Content_Manager.Dialogs.E
             IEnumerable<PublishSchedule> allSchedules;
             using (new LanguageSwitcher(LanguageManager.DefaultLanguage))
             {
-                allSchedules = _scheduledPublishRepo.AllUnpublishedSchedules;
+                allSchedules = _schedulesRepo.GetUnexecutedSchedules();
             }
             
             foreach (var schedule in allSchedules)
@@ -87,13 +90,13 @@ namespace ScheduledPublish.sitecore.shell.Applications.Content_Manager.Dialogs.E
                     StringBuilder sbItem = new StringBuilder();
                     // Item name, path, recurrence 
                     sbItem.Append("<tr style='background:#cedff2;border-bottom:1px solid #F0F1F2;'>");
-                    Item scheduledItem = schedule.ItemToPublish;
+                    Item scheduledItem = schedule.Items.FirstOrDefault();
                     sbItem.Append("<td>");
-                    sbItem.Append("<b>" + scheduledItem.DisplayName + "</b>");
-                    sbItem.Append("<br />" + scheduledItem.Paths.FullPath);
+                    sbItem.AppendFormat("<b>{0}</b>", scheduledItem == null ? Constants.WEBSITE_PUBLISH_TEXT : scheduledItem.DisplayName);
+                    sbItem.AppendFormat("<br />{0}", scheduledItem == null ? string.Empty : scheduledItem.Paths.FullPath);
                     string recurrenceMessage = 
                         DialogsHelper.GetRecurrenceMessage(schedule.RecurrenceType,
-                        schedule.HoursToNextPublish);
+                        schedule.HoursToNextSchedule);
                     if (!string.IsNullOrWhiteSpace(recurrenceMessage))
                     {
                         sbItem.Append("<br /> Recurrence: " + recurrenceMessage);
@@ -118,14 +121,14 @@ namespace ScheduledPublish.sitecore.shell.Applications.Content_Manager.Dialogs.E
 
                     // Current scheudled publish date and time
                     AllSchedules.Controls.Add(new LiteralControl(sbItem.ToString()));
-                    DateTime pbDate = schedule.PublishDate;
+                    DateTime pbDate = schedule.ScheduledDate;
                     AllSchedules.Controls.Add(new LiteralControl(pbDate.ToString(_culture)));
 
                     // Pick new date and time
                     DateTimePicker dtPicker = new DateTimePicker();
                     dtPicker.ID = "dt_" + schedule.InnerItem.ID;
                     dtPicker.Width = new Unit(100.0, UnitType.Percentage);
-                    dtPicker.Value = DateUtil.ToIsoDate(schedule.PublishDate);
+                    dtPicker.Value = DateUtil.ToIsoDate(schedule.ScheduledDate);
                     AllSchedules.Controls.Add(dtPicker);
                     AllSchedules.Controls.Add(new LiteralControl("</td>"));
 
@@ -168,9 +171,9 @@ namespace ScheduledPublish.sitecore.shell.Applications.Content_Manager.Dialogs.E
                         PublishSchedule publishSchedule = new PublishSchedule(_database.GetItem(new ID(id)));
 
                         //Scheudled time has changed
-                        if (publishSchedule.PublishDate != dateTime)
+                        if (publishSchedule.ScheduledDate != dateTime)
                         {
-                            publishSchedule.PublishDate = dateTime;
+                            publishSchedule.ScheduledDate = dateTime;
 
                             ValidationResult validationResult = ScheduledPublishValidator.Validate(publishSchedule);
                             if (!validationResult.IsValid)
@@ -179,7 +182,7 @@ namespace ScheduledPublish.sitecore.shell.Applications.Content_Manager.Dialogs.E
                                 return;
                             }
 
-                            _scheduledPublishRepo.UpdatePublishSchedule(publishSchedule);
+                            _schedulesRepo.UpdateSchedule(publishSchedule);
                         }
                     }
                     else if (key != null && key.StartsWith("del_", StringComparison.InvariantCulture))
@@ -193,7 +196,8 @@ namespace ScheduledPublish.sitecore.shell.Applications.Content_Manager.Dialogs.E
                         if (doDelete)
                         {
                             Item publishOption = _database.GetItem(new ID(id));
-                            _scheduledPublishRepo.DeleteItem(publishOption);
+                            PublishSchedule schedule = new PublishSchedule(publishOption);
+                            _schedulesRepo.DeleteSchedule(schedule);
                         }
                     }
                 }

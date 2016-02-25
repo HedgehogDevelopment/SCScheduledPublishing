@@ -11,7 +11,7 @@ namespace ScheduledPublish.Models
     /// </summary>
     public static class SectionsEmailSettings
     {
-        private static readonly Database _database = Constants.SCHEDULED_TASK_CONTEXT_DATABASE;
+        private static readonly Database _database = Database.GetDatabase(Constants.SCHEDULED_REPO_CONTEXT_DATABASE);
         private static readonly IEnumerable<ScheduledPublishSection> _sectionItems = InnerItem.Children.Select(x => new ScheduledPublishSection(x));
 
         public static Item InnerItem

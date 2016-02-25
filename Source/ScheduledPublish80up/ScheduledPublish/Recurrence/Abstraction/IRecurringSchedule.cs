@@ -3,12 +3,12 @@ using ScheduledPublish.Recurrence.Implementation;
 
 namespace ScheduledPublish.Recurrence.Abstraction
 {
-    public interface IRecurrentPublish
+    public interface IRecurringSchedule
     {
-        DateTime PublishDate { get; set; }
+        DateTime ScheduledDate { get; set; }
 
         RecurrenceType RecurrenceType { get; set; }
 
-        int HoursToNextPublish { get; set; }
+        int HoursToNextSchedule { get; set; }
     }
 }

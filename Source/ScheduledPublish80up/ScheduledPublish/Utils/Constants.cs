@@ -20,6 +20,7 @@ namespace ScheduledPublish.Utils
         public const string NO_EXISTING_SCHEDULES_TEXT = "This item has not been scheduled for publishing yet.";
         public const string SCHEDULED_PUBLISH_NOTIFICATION = "This item has been scheduled for publish.";
         public const string SCHEDULED_PUBLISH_ICON = "People/16x16/clock_run.png";
+        public static readonly string SCHEDULED_REPO_CONTEXT_DATABASE = "master";
         #endregion
 
         #region Template IDs
@@ -30,9 +31,6 @@ namespace ScheduledPublish.Utils
         #region Item IDs
         public static readonly ID PUBLISH_SCHEDULES_ROOT_ID = ID.Parse("{7D8B2A62-A35A-4DA1-B7B6-89C11758C2E6}");
         #endregion
-
-        public static readonly Database SCHEDULED_TASK_CONTEXT_DATABASE = Database.GetDatabase("master");
-
 
         #region Settings
         public static readonly ID SETTINGS_ITEM_ID = ID.Parse("{C1813448-7B11-4813-B0B9-FAF8A7A8F48E}");

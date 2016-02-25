@@ -1,5 +1,4 @@
 ﻿using ScheduledPublish.Models;
-using ScheduledPublish.Repos;
 using ScheduledPublish.Smtp;
 using ScheduledPublish.Utils;
 using Sitecore;
@@ -13,6 +12,8 @@ using System.Linq;
 using System.Text;
 using ScheduledPublish.Recurrence.Abstraction;
 using ScheduledPublish.Recurrence.Implementation;
+using ScheduledPublish.Repos.Abstraction;
+using ScheduledPublish.Repos.Implementation;
 using Constants = ScheduledPublish.Utils.Constants;
 
 namespace ScheduledPublish.Commands
@@ -22,7 +23,7 @@ namespace ScheduledPublish.Commands
     /// </summary>
     public class ScheduledPublishCommand
     {
-        private ScheduledPublishRepo _scheduledPublishRepo;
+        private ISchedulesRepo<PublishSchedule> _schedulesRepo;
 
         /// <summary>
         /// Start point of the command
@@ -34,7 +35,7 @@ namespace ScheduledPublish.Commands
         {
             Log.Info("Scheduled Publish: started", this);
 
-            _scheduledPublishRepo = new ScheduledPublishRepo();
+            _schedulesRepo = new ScheduledPublishRepo();
 
             Stopwatch commandStopwatch = new Stopwatch();
             commandStopwatch.Start();
@@ -51,7 +52,7 @@ namespace ScheduledPublish.Commands
             DateTime alertFromDate = publishFromDate.AddHours(-2);
             AlertForFailedSchedules(alertFromDate, alertToDate);
 
-            _scheduledPublishRepo.CleanBucket();
+            _schedulesRepo.CleanRepo();
             commandStopwatch.Stop();
             Log.Info("Scheduled Publish: Total Run " + commandStopwatch.ElapsedMilliseconds, this);
         }
@@ -63,7 +64,7 @@ namespace ScheduledPublish.Commands
         /// <param name="toDate">End of the period</param>
         private void PublishSchedules(DateTime fromDate, DateTime toDate)
         {
-            IEnumerable<PublishSchedule> duePublishSchedules = _scheduledPublishRepo.GetUnpublishedSchedules(fromDate, toDate);
+            IEnumerable<PublishSchedule> duePublishSchedules = _schedulesRepo.GetUnexecutedSchedules(fromDate, toDate);
 
             foreach (var schedule in duePublishSchedules)
             {
@@ -78,7 +79,7 @@ namespace ScheduledPublish.Commands
                 {
                     try
                     {
-                        MailManager.SendEmail(report.Message, schedule.ItemToPublish, schedule.SchedulerUsername);
+                        MailManager.SendEmail(report.Message, schedule.Items.FirstOrDefault(), schedule.SchedulerUsername);
                     }
                     catch (Exception ex)
                     {
@@ -96,15 +97,15 @@ namespace ScheduledPublish.Commands
         /// <param name="toDate">End of the period</param>
         private void ManageNextReccurentSchedules(DateTime fromDate, DateTime toDate)
         {
-            IRecurrenceScheduler recurrenceScheduler = new RecurrenceScheduler();
+            IRecurringScheduler recurrenceScheduler = new RecurringScheduler();
 
-            IEnumerable<PublishSchedule> dueReccurentSchedules = _scheduledPublishRepo.GetRecurrentSchedules(fromDate, toDate);
+            IEnumerable<PublishSchedule> dueReccurentSchedules = _schedulesRepo.GetRecurringSchedules(fromDate, toDate);
 
             foreach (var schedule in dueReccurentSchedules)
             {
                 recurrenceScheduler.ScheduleNextRecurrence(schedule);
-                schedule.IsPublished = false;
-                _scheduledPublishRepo.UpdatePublishSchedule(schedule);
+                schedule.IsExecuted = false;
+                _schedulesRepo.UpdateSchedule(schedule);
             }
         }
 
@@ -115,7 +116,7 @@ namespace ScheduledPublish.Commands
         /// <param name="toDate">End of the period</param>
         private void AlertForFailedSchedules(DateTime fromDate, DateTime toDate)
         {
-            IEnumerable<PublishSchedule> failedSchedules = _scheduledPublishRepo.GetUnpublishedSchedules(fromDate, toDate);
+            IEnumerable<PublishSchedule> failedSchedules = _schedulesRepo.GetUnexecutedSchedules(fromDate, toDate);
             if (failedSchedules == null)
             {
                 return;
@@ -133,8 +134,8 @@ namespace ScheduledPublish.Commands
             {
                 sbMessage.AppendLine("Following item failed for scheduled publish:");
                 sbMessage.AppendFormat("{0} for {1}.",
-                                        schedule.ItemToPublish != null ? schedule.ItemToPublish.Paths.FullPath : Constants.WEBSITE_PUBLISH_TEXT,
-                                        schedule.PublishDate);
+                                        schedule.Items.Any() ? schedule.Items.First().Paths.FullPath : Constants.WEBSITE_PUBLISH_TEXT,
+                                        schedule.ScheduledDate);
                 sbMessage.AppendLine();
                 sbMessage.Append("Please, review and publish it manually.");
 
@@ -146,7 +147,7 @@ namespace ScheduledPublish.Commands
                 {
                     try
                     {
-                        MailManager.SendEmail(message, schedule.ItemToPublish, schedule.SchedulerUsername);
+                        MailManager.SendEmail(message, schedule.Items.FirstOrDefault(), schedule.SchedulerUsername);
                     }
                     catch (Exception ex)
                     {
@@ -169,9 +170,9 @@ namespace ScheduledPublish.Commands
                 return;
             }
 
-            publishSchedule.IsPublished = true;
+            publishSchedule.IsExecuted = true;
 
-            _scheduledPublishRepo.UpdatePublishSchedule(publishSchedule);
+            _schedulesRepo.UpdateSchedule(publishSchedule);
         }
     }
 }

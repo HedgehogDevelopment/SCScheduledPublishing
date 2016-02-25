@@ -1,5 +1,4 @@
 ﻿using ScheduledPublish.Models;
-using ScheduledPublish.Repos;
 using ScheduledPublish.Validation;
 using Sitecore;
 using Sitecore.Collections;
@@ -24,6 +23,8 @@ using System.Text;
 using System.Web.UI;
 using System.Web.UI.HtmlControls;
 using ScheduledPublish.Recurrence.Implementation;
+using ScheduledPublish.Repos.Abstraction;
+using ScheduledPublish.Repos.Implementation;
 using ScheduledPublish.Utils;
 using Constants = ScheduledPublish.Utils.Constants;
 using Control = Sitecore.Web.UI.HtmlControls.Control;
@@ -62,7 +63,7 @@ namespace ScheduledPublish.sitecore.shell.Applications.Content_Manager.Dialogs.S
 
         private readonly Database _database = Context.ContentDatabase;
         private readonly CultureInfo _culture = Context.Culture;
-        private ScheduledPublishRepo _scheduledPublishRepo;
+        private ISchedulesRepo<PublishSchedule> _schedulesRepo;
 
         /// <summary>
         /// Current selected item
@@ -227,7 +228,7 @@ namespace ScheduledPublish.sitecore.shell.Applications.Content_Manager.Dialogs.S
         {
             Assert.ArgumentNotNull(e, "e");
 
-            _scheduledPublishRepo = new ScheduledPublishRepo();
+            _schedulesRepo = new ScheduledPublishRepo();
 
             if (!Context.ClientPage.IsEvent)
             {
@@ -269,8 +270,8 @@ namespace ScheduledPublish.sitecore.shell.Applications.Content_Manager.Dialogs.S
 
                 PublishSchedule publishSchedule = new PublishSchedule
                 {
-                    ItemToPublish = InnerItem,
-                    PublishDate = SelectedPublishDate,
+                    Items = new [] { InnerItem },
+                    ScheduledDate = SelectedPublishDate,
                     SourceDatabase = _database,
                     TargetDatabases = SelectedTargets,
                     TargetLanguages = SelectedLanguages,
@@ -280,8 +281,8 @@ namespace ScheduledPublish.sitecore.shell.Applications.Content_Manager.Dialogs.S
                     PublishRelatedItems = PublishRelatedItems.Checked,
                     SchedulerUsername = Context.User.Name,
                     RecurrenceType = RecurrenceType,
-                    HoursToNextPublish = HoursToNextPublishValue,
-                    IsPublished = false
+                    HoursToNextSchedule = HoursToNextPublishValue,
+                    IsExecuted = false
                 };
 
                 if (Unpublish)
@@ -296,7 +297,7 @@ namespace ScheduledPublish.sitecore.shell.Applications.Content_Manager.Dialogs.S
                     return;
                 }
 
-                _scheduledPublishRepo.CreatePublishSchedule(publishSchedule);
+                _schedulesRepo.CreateSchedule(publishSchedule);
             }
 
             base.OnOK(sender, args);
@@ -441,7 +442,7 @@ namespace ScheduledPublish.sitecore.shell.Applications.Content_Manager.Dialogs.S
         /// </summary>
         private void BuildExistingSchedules()
         {
-            IEnumerable<PublishSchedule> schedules = _scheduledPublishRepo.GetSchedules(InnerItem.ID).ToArray();
+            IEnumerable<PublishSchedule> schedules = _schedulesRepo.GetSchedules(InnerItem.ID).ToArray();
 
             string schedulesHtml = BuildExistingSchedulesHtml(schedules);
 
@@ -493,9 +494,9 @@ namespace ScheduledPublish.sitecore.shell.Applications.Content_Manager.Dialogs.S
             {
                 string version;
 
-                if (schedule.ItemToPublish != null)
+                if (schedule.Items.Any())
                 {
-                    Item itemInVersion = schedule.ItemToPublish.Publishing.GetValidVersion(schedule.PublishDate, true, false);
+                    Item itemInVersion = schedule.Items.First().Publishing.GetValidVersion(schedule.ScheduledDate, true, false);
                     if (itemInVersion != null)
                     {
                         sbTable.Append("<tr>");
@@ -513,11 +514,11 @@ namespace ScheduledPublish.sitecore.shell.Applications.Content_Manager.Dialogs.S
                     version = Constants.WEBSITE_PUBLISH_TEXT;
                 }
 
-                sbTable.AppendFormat("<td nowrap=\"nowrap\">{0}</td>", schedule.PublishDate.ToString(_culture));
+                sbTable.AppendFormat("<td nowrap=\"nowrap\">{0}</td>", schedule.ScheduledDate.ToString(_culture));
                 sbTable.AppendFormat("<td nowrap=\"nowrap\">{0}</td>", schedule.Unpublish ? Constants.UNPUBLISH_TEXT : Constants.PUBLISH_TEXT);
                 sbTable.AppendFormat("<td nowrap=\"nowrap\">{0}</td>", string.Join(",", schedule.TargetLanguages.Select(x => x.Name)).TrimEnd(','));
                 sbTable.AppendFormat("<td nowrap=\"nowrap\">{0}</td>", version);
-                sbTable.AppendFormat("<td nowrap=\"nowrap\">{0}</td>", DialogsHelper.GetRecurrenceMessage(schedule.RecurrenceType, schedule.HoursToNextPublish));
+                sbTable.AppendFormat("<td nowrap=\"nowrap\">{0}</td>", DialogsHelper.GetRecurrenceMessage(schedule.RecurrenceType, schedule.HoursToNextSchedule));
                 sbTable.Append("</tr>");
             }
 
