@@ -4,14 +4,21 @@
 # Overview: #  
 
 The purpose of Scheduled Publish Module for Sitecore is to give the content editor the option to delay the publishing of an item for a future point in time. The full documentation is available in "Documentation" folder. 
-The module supports Sitecore versions: 6.6(.Net Framework 4.0), 7.0, 7.1, 7.2, 7.5 and 8.0
+The module supports Sitecore versions: 6.6(.Net Framework 4.0), 7.0, 7.1, 7.2, 7.5 and 8.0  
+
+Blog Post about this feature: [https://spareva.wordpress.com/2015/11/10/sitecore-scheduled-publish-module-content-editors-perspective/
+](https://spareva.wordpress.com/2015/11/10/sitecore-scheduled-publish-module-content-editors-perspective/)
+
+Sitecore Marketplace Url: [https://marketplace.sitecore.net/Modules/S/Sitecore_Scheduled_Publish.aspx?sc_lang=en
+](https://marketplace.sitecore.net/Modules/S/Sitecore_Scheduled_Publish.aspx?sc_lang=en
+)
 
 
 ## Source projects: ##
 
-"ScheduledPublish66" - Source code for Sitecore 6.6
-"ScheduledPublish70-71" - Source code for Sitecore 7.0 and 7.1 
-"ScheduledPublish72up" - Source code for Sitecore 7.2, 7.5 and 8.0
+"ScheduledPublish66" - Source code for Sitecore 6.6  
+"ScheduledPublish70-71" - Source code for Sitecore 7.0 and 7.1   
+"ScheduledPublish72up" - Source code for Sitecore 7.2, 7.5 and 8.0  
 
 
 ## Setup: ##
