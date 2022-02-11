@@ -1,0 +1,68 @@
+{
+  "namespace": "ScheduledPublish",
+  "references": [
+    "*.Foundation.*"
+  ],
+  "items": {
+    "includes": [
+      {
+        "name": "Templates",
+        "path": "/sitecore/templates/Scheduled Publish",
+        "scope": "itemAndDescendants",
+        "allowedPushOperations": "createUpdateAndDelete"
+      },
+      {
+        "name": "SystemTaskSchedules",
+        "path": "/sitecore/system/Tasks/Schedules/ScheduledPublishTask",
+        "scope": "singleItem",
+        "allowedPushOperations": "CreateOnly"
+      },
+      {
+        "name": "SystemTaskCommand",
+        "path": "/sitecore/system/Tasks/Commands/ScheduledPublishCommand",
+        "scope": "singleItem",
+        "allowedPushOperations": "CreateAndUpdate"
+      },
+      {
+        "name": "Modules",
+        "path": "/sitecore/system/Modules/Scheduled Publish",
+        "allowedPushOperations": "createUpdateAndDelete",
+        "rules": [
+          {
+            "path": "/Publish Schedules",
+            "scope": "singleItem",
+            "allowedPushOperations": "CreateOnly"
+          }
+        ]
+      },
+      {
+        "name": "CoreGutter",
+        "path": "/sitecore/content/Applications/Content Editor/Gutters/Scheduled Publish",
+        "scope": "singleItem",
+        "database": "core",
+        "allowedPushOperations": "createUpdateAndDelete"
+      },
+      {
+        "name": "CoreStrip",
+        "path": "/sitecore/content/Applications/Content Editor/Ribbons/Strips/Publish/Scheduled Publish",
+        "scope": "singleItem",
+        "database": "core",
+        "allowedPushOperations": "createUpdateAndDelete"
+      },
+      {
+        "name": "CoreRibbon",
+        "path": "/sitecore/content/Applications/Content Editor/Ribbons/Chunks/Scheduled Publish",
+        "scope": "itemAndDescendants",
+        "database": "core",
+        "allowedPushOperations": "createUpdateAndDelete"
+      },
+      {
+        "name": "CoreFieldTypes",
+        "path": "/sitecore/system/Field types/Custom Field Types",
+        "scope": "itemAndDescendants",
+        "database": "core",
+        "allowedPushOperations": "createUpdateAndDelete"
+      }
+    ]
+  }
+}
