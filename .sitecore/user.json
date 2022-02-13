@@ -1,0 +1,14 @@
+{
+  "endpoints": {
+    "default": {
+      "allowWrite": true,
+      "host": "https://cm.localho.st/",
+      "authority": "https://id.localho.st/",
+      "accessToken": "",
+      "refreshToken": "",
+      "clientId": "Device",
+      "variables": {}
+    }
+  },
+  "$schema": "./schemas/UserConfiguration.schema.json"
+}

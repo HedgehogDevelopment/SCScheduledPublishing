@@ -1,0 +1,26 @@
+﻿---
+ID: "5a61888a-d797-4582-ad3a-5ffa8ac4cf91"
+Parent: "204239b4-e157-47f7-ab52-a88d41c3d8c2"
+Template: "268c63f3-7c40-4368-ab2a-a76ab98bff35"
+Path: /sitecore/system/Modules/Scheduled Publish/Scheduled Publish Email/Scheduled Publish Sections Email Settings
+Languages:
+- Language: en
+  Versions:
+  - Version: 1
+    Fields:
+    - ID: "25bed78c-4957-4165-998a-ca1b52f67497"
+      Hint: __Created
+      Value: 20150715T150952Z
+    - ID: "8cdc337e-a112-42fb-bbb4-4143751e123f"
+      Hint: __Revision
+      Value: "d0bb7a6a-5a70-4c77-9984-4f216706ce24"
+    - ID: "badd9cf9-53e0-4d0c-bcc0-2d784c282f6a"
+      Hint: __Updated by
+      Value: |
+        sitecore\admin
+    - ID: "d9062d79-a51d-4f04-92ed-b7a3662fe35c"
+      Hint: Enabled
+      Value: 1
+    - ID: "d9cf14b1-fa16-4ba6-9288-e8a174d4d522"
+      Hint: __Updated
+      Value: "20151022T145121:635811222812135743"

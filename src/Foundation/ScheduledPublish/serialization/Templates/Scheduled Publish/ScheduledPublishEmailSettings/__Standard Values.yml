@@ -1,0 +1,37 @@
+﻿---
+ID: "b81183ba-1696-496a-a9c3-1e19c3695c60"
+Parent: "3a42de12-4710-4525-9687-92c50064de67"
+Template: "3a42de12-4710-4525-9687-92c50064de67"
+Path: /sitecore/templates/Scheduled Publish/ScheduledPublishEmailSettings/__Standard Values
+Languages:
+- Language: en
+  Versions:
+  - Version: 1
+    Fields:
+    - ID: "214f19d5-72a8-4332-9375-85e599a2a451"
+      Hint: MailServer
+      Value: localhost
+    - ID: "25bed78c-4957-4165-998a-ca1b52f67497"
+      Hint: __Created
+      Value: 20150429T154154
+    - ID: "52807595-0f8f-4b20-8d2a-cb71d28c6103"
+      Hint: __Owner
+      Value: |
+        sitecore\admin
+    - ID: "5dd74568-4d4b-44c1-b513-0af5f4cda34f"
+      Hint: __Created by
+      Value: |
+        sitecore\admin
+    - ID: "8cdc337e-a112-42fb-bbb4-4143751e123f"
+      Hint: __Revision
+      Value: "09ca252b-7771-4c4a-b7cd-306eb424804a"
+    - ID: "a08b5c87-8dd1-48bc-93be-6001210791bd"
+      Hint: MailServerPort
+      Value: 25
+    - ID: "badd9cf9-53e0-4d0c-bcc0-2d784c282f6a"
+      Hint: __Updated by
+      Value: |
+        sitecore\admin
+    - ID: "d9cf14b1-fa16-4ba6-9288-e8a174d4d522"
+      Hint: __Updated
+      Value: "20150605T085031:635690910311090023Z"

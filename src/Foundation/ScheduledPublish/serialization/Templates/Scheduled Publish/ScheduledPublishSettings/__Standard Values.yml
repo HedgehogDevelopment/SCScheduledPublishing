@@ -1,0 +1,31 @@
+﻿---
+ID: "f0d22e55-0d5a-4362-a618-360e6698eb4e"
+Parent: "3d78a46a-2385-442c-b30e-04c37dbd8c9d"
+Template: "3d78a46a-2385-442c-b30e-04c37dbd8c9d"
+Path: /sitecore/templates/Scheduled Publish/ScheduledPublishSettings/__Standard Values
+Languages:
+- Language: en
+  Versions:
+  - Version: 1
+    Fields:
+    - ID: "25bed78c-4957-4165-998a-ca1b52f67497"
+      Hint: __Created
+      Value: 20150508T172930
+    - ID: "52807595-0f8f-4b20-8d2a-cb71d28c6103"
+      Hint: __Owner
+      Value: |
+        sitecore\admin
+    - ID: "5dd74568-4d4b-44c1-b513-0af5f4cda34f"
+      Hint: __Created by
+      Value: |
+        sitecore\admin
+    - ID: "8cdc337e-a112-42fb-bbb4-4143751e123f"
+      Hint: __Revision
+      Value: "46ca4c10-60da-4d4b-9581-548ed4c6206d"
+    - ID: "badd9cf9-53e0-4d0c-bcc0-2d784c282f6a"
+      Hint: __Updated by
+      Value: |
+        sitecore\admin
+    - ID: "d9cf14b1-fa16-4ba6-9288-e8a174d4d522"
+      Hint: __Updated
+      Value: "20150508T172930:635667029709488395"
