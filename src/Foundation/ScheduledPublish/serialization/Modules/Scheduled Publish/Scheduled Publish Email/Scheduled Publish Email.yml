@@ -1,0 +1,49 @@
+﻿---
+ID: "292c5a92-a8bb-4f27-97a5-29564df45329"
+Parent: "204239b4-e157-47f7-ab52-a88d41c3d8c2"
+Template: "e59ae416-5b5c-48d4-a2f8-08d6214bc314"
+Path: /sitecore/system/Modules/Scheduled Publish/Scheduled Publish Email/Scheduled Publish Email
+Languages:
+- Language: en
+  Versions:
+  - Version: 1
+    Fields:
+    - ID: "20deb7ce-6ad1-459f-b1a4-f6ae88b2c62a"
+      Hint: EmailSubject
+      Value: "Sitecore Scheduled Publish - [item]"
+    - ID: "25bed78c-4957-4165-998a-ca1b52f67497"
+      Hint: __Created
+      Value: 20150427T105300
+    - ID: "39a13a96-8bf0-4334-b366-16c0accc2b60"
+      Hint: EmailMessage
+      Value: |
+        <p><strong>Item path:</strong> [path]</p>
+        <p><strong>Version:</strong> [version]</p>
+        <p><strong>Date, Time:</strong> [date], [time]</p>
+        <br>
+        <br>
+        <p><strong>Report:</strong></p>
+    - ID: "4a6046aa-2b94-47b2-9a27-3b83f0601822"
+      Hint: EmailFrom
+      Value: "sc-scheduledpublish@no-reply.com"
+    - ID: "52807595-0f8f-4b20-8d2a-cb71d28c6103"
+      Hint: __Owner
+      Value: |
+        sitecore\admin
+    - ID: "5dd74568-4d4b-44c1-b513-0af5f4cda34f"
+      Hint: __Created by
+      Value: |
+        sitecore\admin
+    - ID: "8cdc337e-a112-42fb-bbb4-4143751e123f"
+      Hint: __Revision
+      Value: "125e3cd1-1fa6-4f80-842b-ca52d11149b5"
+    - ID: "a35e5b44-1cd0-49c4-b210-db4106685ce4"
+      Hint: EmailTo
+      Value: 
+    - ID: "badd9cf9-53e0-4d0c-bcc0-2d784c282f6a"
+      Hint: __Updated by
+      Value: |
+        sitecore\admin
+    - ID: "d9cf14b1-fa16-4ba6-9288-e8a174d4d522"
+      Hint: __Updated
+      Value: "20150605T101129:635690958898382538Z"

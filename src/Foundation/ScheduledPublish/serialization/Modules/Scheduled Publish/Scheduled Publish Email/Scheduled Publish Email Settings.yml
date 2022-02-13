@@ -1,0 +1,38 @@
+﻿---
+ID: "f6e2c93b-635c-4657-92e8-3b1f02c51d34"
+Parent: "204239b4-e157-47f7-ab52-a88d41c3d8c2"
+Template: "3a42de12-4710-4525-9687-92c50064de67"
+Path: /sitecore/system/Modules/Scheduled Publish/Scheduled Publish Email/Scheduled Publish Email Settings
+Languages:
+- Language: en
+  Versions:
+  - Version: 1
+    Fields:
+    - ID: "214f19d5-72a8-4332-9375-85e599a2a451"
+      Hint: MailServer
+      Value: localhost
+    - ID: "25bed78c-4957-4165-998a-ca1b52f67497"
+      Hint: __Created
+      Value: 20150429T154614
+    - ID: "494bddc5-a953-4be8-a735-e5bc29bdca8c"
+      Hint: MailServerPassword
+      Value: 
+    - ID: "510d71a5-358a-4336-8f2e-a55a33b53f29"
+      Hint: MailServerUsername
+      Value: 
+    - ID: "5729e93e-6e14-4ad8-bb76-7803302c95c3"
+      Hint: UseWebConfig
+      Value: 
+    - ID: "8cdc337e-a112-42fb-bbb4-4143751e123f"
+      Hint: __Revision
+      Value: "efcea8b0-cdc6-4343-af57-a216c3507fd8"
+    - ID: "a08b5c87-8dd1-48bc-93be-6001210791bd"
+      Hint: MailServerPort
+      Value: 25
+    - ID: "badd9cf9-53e0-4d0c-bcc0-2d784c282f6a"
+      Hint: __Updated by
+      Value: |
+        sitecore\admin
+    - ID: "d9cf14b1-fa16-4ba6-9288-e8a174d4d522"
+      Hint: __Updated
+      Value: "20150605T081707:635690890273146787Z"
