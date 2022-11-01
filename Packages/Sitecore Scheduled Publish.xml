@@ -2,17 +2,14 @@
   <Metadata>
     <metadata>
       <PackageName>Sitecore Schedule Publish</PackageName>
-      <Author />
-      <Version>10+</Version>
+      <Author>Nehemiah Jeyakumar</Author>
+      <Version>10.2</Version>
       <Revision />
       <License />
-      <Comment>Upgraded to 10+
-Tested till 10.2.0
-https://github.com/nehemiahj/SCScheduledPublishing
-Forked from https://github.com/HedgehogDevelopment/SCScheduledPublishing</Comment>
+      <Comment />
       <Attributes />
       <Readme />
-      <Publisher />
+      <Publisher>https://github.com/nehemiahj/SCScheduledPublishing</Publisher>
       <PostStep />
       <PackageID />
     </metadata>
@@ -93,25 +90,19 @@ Forked from https://github.com/HedgehogDevelopment/SCScheduledPublishing</Commen
       <SkipVersions>False</SkipVersions>
       <Converter>
         <ItemToEntryConverter>
-          <Transforms>
-            <InstallerConfigurationTransform>
-              <Options>
-                <BehaviourOptions>
-                  <ItemMode>Undefined</ItemMode>
-                  <ItemMergeMode>Undefined</ItemMergeMode>
-                </BehaviourOptions>
-              </Options>
-            </InstallerConfigurationTransform>
-          </Transforms>
+          <Transforms />
         </ItemToEntryConverter>
       </Converter>
       <Include />
       <Exclude />
-      <Name>Sitecore Schedule Publish</Name>
+      <Name>Sitecore Items</Name>
     </xitems>
     <xfiles>
       <Entries>
+        <x-item>/App_Config/Include/ZZ_ScheduledPublish/ZZ_ScheduledPublishControl.config</x-item>
         <x-item>/bin/ScheduledPublish.dll</x-item>
+        <x-item>/sitecore/shell/Applications/Content Manager/Dialogs/Edit Scheduled Publish/Edit Scheduled Publish.xml</x-item>
+        <x-item>/sitecore/shell/Applications/Content Manager/Dialogs/Schedule Publish/Schedule Publish.xml</x-item>
       </Entries>
       <Converter>
         <FileToEntryConverter>
@@ -130,7 +121,7 @@ Forked from https://github.com/HedgehogDevelopment/SCScheduledPublishing</Commen
       </Converter>
       <Include />
       <Exclude />
-      <Name>Assembly</Name>
+      <Name>File System Items</Name>
     </xfiles>
   </Sources>
   <Converter>
