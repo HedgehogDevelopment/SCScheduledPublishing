@@ -3,8 +3,18 @@
   "modules": [
     "src/*/*/*/*.module.json"
   ],
+  "plugins": [
+    "Sitecore.DevEx.Extensibility.Serialization@5.1.25"
+  ],
   "serialization": {
     "defaultMaxRelativeItemPathLength": 180,
-    "defaultModuleRelativeSerializationPath": "../serialization"
+    "defaultModuleRelativeSerializationPath": "../serialization",
+    "removeOrphansForRoles": true,
+    "continueOnItemFailure": false,
+    "excludedFields": []
+  },
+  "settings": {
+    "telemetryEnabled": false,
+    "versionComparingEnabled": true
   }
 }
