@@ -10,6 +10,7 @@ The purpose of Scheduled Publish is to give the content editor the option to del
 ## Setup: ##
  1. Package is compatible for Sitecore v10+. You can download it from [here](https://github.com/nehemiahj/SCScheduledPublishing/tree/master/Packages). 
  2. You can take the source and add it to your solution. 
+ 3. Use the Docker Image from [here](https://hub.docker.com/r/nehemiah/sitecore-scheduled-publish). ```docker pull nehemiah/sitecore-scheduled-publish```
 ## Features: ##
  - Scheduled Publish
  - Scheduled Unpublish
