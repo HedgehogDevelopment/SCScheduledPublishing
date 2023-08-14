@@ -5,7 +5,7 @@ forked from [HedgehogDevelopment/SCScheduledPublishing](https://github.com/Hedge
 # Overview: # 
 The purpose of Scheduled Publish is to give the content editor the option to delay the publishing of an item for a future point in time. Thus, a page or a feature that should go live at a specific time can be created and populated in Sitecore and previewed long before it goes live without the risk of an accidental publish before the specific time. Moreover, there is no need for a content-editor to go to Sitecore and manually publish something at an inconvenient hour, e.g. a New Year’s announcement. Scheduled Publish intends to give the content-editor all features of a normal publish with the addition of automation, timing and notifications.
 ## Source: ##
- - [Source](https://github.com/nehemiahj/SCScheduledPublishing/tree/master/src/Foundation/ScheduledPublish) is updated to Sitecore 10.2.0.   
+ - [Source](https://github.com/nehemiahj/SCScheduledPublishing/tree/master/src/Foundation/ScheduledPublish) is updated to Sitecore 10.3.0.   
  - [Sitecore Content Serialization](https://doc.sitecore.com/xp/en/developers/102/developer-tools/sitecore-content-serialization.html) is used to serialize the content. You can use Sitecore CLI to Push and Pull the content. 
 ## Setup: ##
  1. Package is compatible for Sitecore v10+. You can download it from [here](https://github.com/nehemiahj/SCScheduledPublishing/tree/master/Packages). 
