@@ -1,0 +1,47 @@
+﻿---
+ID: "6ac30bef-6942-4975-9a5c-27990e78141b"
+Parent: "e59ae416-5b5c-48d4-a2f8-08d6214bc314"
+Template: "e59ae416-5b5c-48d4-a2f8-08d6214bc314"
+Path: /sitecore/templates/Scheduled Publish/ScheduledPublishEmail/__Standard Values
+Languages:
+- Language: en
+  Versions:
+  - Version: 1
+    Fields:
+    - ID: "20deb7ce-6ad1-459f-b1a4-f6ae88b2c62a"
+      Hint: EmailSubject
+      Value: "Sitecore Scheduled Publish - [item]"
+    - ID: "25bed78c-4957-4165-998a-ca1b52f67497"
+      Hint: __Created
+      Value: 20150428T133058
+    - ID: "39a13a96-8bf0-4334-b366-16c0accc2b60"
+      Hint: EmailMessage
+      Value: |
+        <p>You can use any the following optional placeholders:</p>
+        <p>[id] - the id of the item being published&nbsp;</p>
+        <p>[item] - name of the item being published</p>
+        <p>[path] - path of the item being published in the content tree</p>
+        <p>[date] - date when the publishing took place</p>
+        <p>[time] - the time when the publishing took place</p>
+        <p>[version] - the version of the item which was published</p>
+    - ID: "4a6046aa-2b94-47b2-9a27-3b83f0601822"
+      Hint: EmailFrom
+      Value: "sc-scheduledpublish@no-reply.com"
+    - ID: "52807595-0f8f-4b20-8d2a-cb71d28c6103"
+      Hint: __Owner
+      Value: |
+        sitecore\admin
+    - ID: "5dd74568-4d4b-44c1-b513-0af5f4cda34f"
+      Hint: __Created by
+      Value: |
+        sitecore\admin
+    - ID: "8cdc337e-a112-42fb-bbb4-4143751e123f"
+      Hint: __Revision
+      Value: "e5f3db3c-2fed-4b9c-a7ad-c5dcfc94d668"
+    - ID: "badd9cf9-53e0-4d0c-bcc0-2d784c282f6a"
+      Hint: __Updated by
+      Value: |
+        sitecore\admin
+    - ID: "d9cf14b1-fa16-4ba6-9288-e8a174d4d522"
+      Hint: __Updated
+      Value: "20150605T085013:635690910137773372Z"

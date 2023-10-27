@@ -1,0 +1,144 @@
+<project>
+  <Metadata>
+    <metadata>
+      <PackageName>Sitecore Schedule Publish</PackageName>
+      <Author>Nehemiah Jeyakumar</Author>
+      <Version>10.3</Version>
+      <Revision />
+      <License />
+      <Comment />
+      <Attributes />
+      <Readme />
+      <Publisher>https://github.com/nehemiahj/SCScheduledPublishing</Publisher>
+      <PostStep />
+      <PackageID />
+    </metadata>
+  </Metadata>
+  <SaveProject>True</SaveProject>
+  <Sources>
+    <xitems>
+      <Entries>
+        <x-item>/core/sitecore/content/Applications/Content Editor/Gutters/Scheduled Publish/{7E47012E-A65D-4991-A93F-22BADC944665}/invariant/0</x-item>
+        <x-item>/core/sitecore/content/Applications/Content Editor/Ribbons/Chunks/Scheduled Publish/{4E222A0A-E3EF-4FEB-90D0-08B1B7EA0621}/invariant/0</x-item>
+        <x-item>/core/sitecore/content/Applications/Content Editor/Ribbons/Chunks/Scheduled Publish/Edit Publish Schedule/{5D9525F4-FF99-4935-B35A-F7ED8AE242CB}/invariant/0</x-item>
+        <x-item>/core/sitecore/content/Applications/Content Editor/Ribbons/Chunks/Scheduled Publish/Schedule Publish/{BF7309D9-FD4E-4F8C-8BA4-9BA74815B112}/invariant/0</x-item>
+        <x-item>/core/sitecore/content/Applications/Content Editor/Ribbons/Chunks/Scheduled Publish/Schedule Unpublish/{5696FB9A-2213-45A6-BDF8-7E5B9EBE4341}/invariant/0</x-item>
+        <x-item>/core/sitecore/content/Applications/Content Editor/Ribbons/Strips/Publish/Scheduled Publish/{D52D006E-94BC-40A5-BC3F-5FFF23D3D3DA}/invariant/0</x-item>
+        <x-item>/core/sitecore/system/Field types/Custom Field Types/{4C1DC504-F722-4558-8887-3D0807F30B2F}/invariant/0</x-item>
+        <x-item>/core/sitecore/system/Field types/Custom Field Types/Roles Multilist/{5BF5C3FC-74D6-41F9-8BB0-F26519EF8C26}/invariant/0</x-item>
+        <x-item>/core/sitecore/system/Field types/Custom Field Types/Roles Multilist/Menu/{7779CFA0-BFD1-486C-8E97-20F13B39376C}/invariant/0</x-item>
+        <x-item>/core/sitecore/system/Field types/Custom Field Types/Roles Multilist/Menu/Deselect All/{BE8A56ED-54AB-45D0-B057-D14881779D54}/invariant/0</x-item>
+        <x-item>/core/sitecore/system/Field types/Custom Field Types/Roles Multilist/Menu/Select All/{BBD6DCF5-53F1-4148-A579-B30958024BA9}/invariant/0</x-item>
+        <x-item>/master/sitecore/system/Modules/Scheduled Publish/{9D1F829B-FEB3-45A8-85E1-EF59EB156C3A}/invariant/0</x-item>
+        <x-item>/master/sitecore/system/Modules/Scheduled Publish/Publish Schedules/{7D8B2A62-A35A-4DA1-B7B6-89C11758C2E6}/invariant/0</x-item>
+        <x-item>/master/sitecore/system/Modules/Scheduled Publish/Scheduled Publish Email/{204239B4-E157-47F7-AB52-A88D41C3D8C2}/invariant/0</x-item>
+        <x-item>/master/sitecore/system/Modules/Scheduled Publish/Scheduled Publish Email/Scheduled Publish Email Settings/{F6E2C93B-635C-4657-92E8-3B1F02C51D34}/invariant/0</x-item>
+        <x-item>/master/sitecore/system/Modules/Scheduled Publish/Scheduled Publish Email/Scheduled Publish Email/{292C5A92-A8BB-4F27-97A5-29564DF45329}/invariant/0</x-item>
+        <x-item>/master/sitecore/system/Modules/Scheduled Publish/Scheduled Publish Email/Scheduled Publish Sections Email Settings/{5A61888A-D797-4582-AD3A-5FFA8AC4CF91}/invariant/0</x-item>
+        <x-item>/master/sitecore/system/Modules/Scheduled Publish/Settings/{C1813448-7B11-4813-B0B9-FAF8A7A8F48E}/invariant/0</x-item>
+        <x-item>/master/sitecore/system/Tasks/Commands/ScheduledPublishCommand/{EF235C25-AE83-4678-9E2C-C22175925893}/invariant/0</x-item>
+        <x-item>/master/sitecore/system/Tasks/Schedules/ScheduledPublishTask/{8EDE5C9E-265D-434A-9D1F-763B7755A9A0}/invariant/0</x-item>
+        <x-item>/master/sitecore/templates/Scheduled Publish/{9519E190-040A-492B-A2D0-8B3D3127F083}/invariant/0</x-item>
+        <x-item>/master/sitecore/templates/Scheduled Publish/IRecurrentPublish/{20569CC9-8986-445E-9D7F-7CC066E7C14B}/invariant/0</x-item>
+        <x-item>/master/sitecore/templates/Scheduled Publish/IRecurrentPublish/Publish Schedule/{7173DC28-A6DB-4A06-A88B-F03AB8BB071A}/invariant/0</x-item>
+        <x-item>/master/sitecore/templates/Scheduled Publish/IRecurrentPublish/Publish Schedule/ScheduledDate/{9691E387-E516-450E-83EA-845AF5BA7276}/invariant/0</x-item>
+        <x-item>/master/sitecore/templates/Scheduled Publish/IRecurrentPublish/Recurrent Publish/{DCC5DCB7-7988-44FC-89F3-F14CC0D682DF}/invariant/0</x-item>
+        <x-item>/master/sitecore/templates/Scheduled Publish/IRecurrentPublish/Recurrent Publish/HoursToNextPublish/{CE68EA41-A925-494C-BE41-14C6C5BCB671}/invariant/0</x-item>
+        <x-item>/master/sitecore/templates/Scheduled Publish/IRecurrentPublish/Recurrent Publish/RecurrenceType/{41255D0C-B40E-4218-87DC-C8EBF349A4FE}/invariant/0</x-item>
+        <x-item>/master/sitecore/templates/Scheduled Publish/PublishSchedule/__Standard Values/{B4634F61-D9E8-4D02-BC21-DFEA5E720C91}/invariant/0</x-item>
+        <x-item>/master/sitecore/templates/Scheduled Publish/PublishSchedule/{9F110258-0139-4FC9-AED8-5610C13DADF3}/invariant/0</x-item>
+        <x-item>/master/sitecore/templates/Scheduled Publish/PublishSchedule/Publish Schedule/{089776BB-E159-4F2E-AEFD-F1CDE718536B}/invariant/0</x-item>
+        <x-item>/master/sitecore/templates/Scheduled Publish/PublishSchedule/Publish Schedule/CreatedBy/{0BBED214-85E7-4773-AB6A-9608CAC921FE}/invariant/0</x-item>
+        <x-item>/master/sitecore/templates/Scheduled Publish/PublishSchedule/Publish Schedule/IsPublished/{EEAC5DF6-19B2-425B-84F4-466D44213108}/invariant/0</x-item>
+        <x-item>/master/sitecore/templates/Scheduled Publish/PublishSchedule/Publish Schedule/ItemToPublish/{8B07571D-D616-4373-8DB0-D77672911D16}/invariant/0</x-item>
+        <x-item>/master/sitecore/templates/Scheduled Publish/PublishSchedule/Publish Schedule/PublishChildren/{7E70DC6C-21E1-48C2-8AEC-ACA6A4B8BCB2}/invariant/0</x-item>
+        <x-item>/master/sitecore/templates/Scheduled Publish/PublishSchedule/Publish Schedule/PublishLanguages/{65C16118-BD34-4E45-9AAD-45C7AD0AE69A}/invariant/0</x-item>
+        <x-item>/master/sitecore/templates/Scheduled Publish/PublishSchedule/Publish Schedule/PublishMode/{F313EF5C-AC40-46DB-9AA1-52C70D590338}/invariant/0</x-item>
+        <x-item>/master/sitecore/templates/Scheduled Publish/PublishSchedule/Publish Schedule/PublishRelatedItems/{D1DE06E3-0A92-4DCE-8787-FA6DF424E3F5}/invariant/0</x-item>
+        <x-item>/master/sitecore/templates/Scheduled Publish/PublishSchedule/Publish Schedule/SourceDatabase/{61632EB9-8A59-4AAB-B790-91AF3DA7B9F4}/invariant/0</x-item>
+        <x-item>/master/sitecore/templates/Scheduled Publish/PublishSchedule/Publish Schedule/TargetDatabases/{193B7E69-8C83-422F-80B2-F7B48C42775E}/invariant/0</x-item>
+        <x-item>/master/sitecore/templates/Scheduled Publish/PublishSchedule/Publish Schedule/Unpublish/{0A1E6524-43BA-4F3D-B7BF-1DD696FB2953}/invariant/0</x-item>
+        <x-item>/master/sitecore/templates/Scheduled Publish/ScheduledPublishEmail/__Standard Values/{6AC30BEF-6942-4975-9A5C-27990E78141B}/invariant/0</x-item>
+        <x-item>/master/sitecore/templates/Scheduled Publish/ScheduledPublishEmail/{E59AE416-5B5C-48D4-A2F8-08D6214BC314}/invariant/0</x-item>
+        <x-item>/master/sitecore/templates/Scheduled Publish/ScheduledPublishEmail/Notification Email/{D9012DCB-71D0-4A2E-94E1-083D66508092}/invariant/0</x-item>
+        <x-item>/master/sitecore/templates/Scheduled Publish/ScheduledPublishEmail/Notification Email/EmailFrom/{4A6046AA-2B94-47B2-9A27-3B83F0601822}/invariant/0</x-item>
+        <x-item>/master/sitecore/templates/Scheduled Publish/ScheduledPublishEmail/Notification Email/EmailMessage/{39A13A96-8BF0-4334-B366-16C0ACCC2B60}/invariant/0</x-item>
+        <x-item>/master/sitecore/templates/Scheduled Publish/ScheduledPublishEmail/Notification Email/EmailSubject/{20DEB7CE-6AD1-459F-B1A4-F6AE88B2C62A}/invariant/0</x-item>
+        <x-item>/master/sitecore/templates/Scheduled Publish/ScheduledPublishEmail/Notification Email/EmailTo/{A35E5B44-1CD0-49C4-B210-DB4106685CE4}/invariant/0</x-item>
+        <x-item>/master/sitecore/templates/Scheduled Publish/ScheduledPublishEmailSettings/__Standard Values/{B81183BA-1696-496A-A9C3-1E19C3695C60}/invariant/0</x-item>
+        <x-item>/master/sitecore/templates/Scheduled Publish/ScheduledPublishEmailSettings/{3A42DE12-4710-4525-9687-92C50064DE67}/invariant/0</x-item>
+        <x-item>/master/sitecore/templates/Scheduled Publish/ScheduledPublishEmailSettings/Scheduled Publish Email Settings/{D82ED0E5-8362-4F76-8883-D3B6F6F29A0E}/invariant/0</x-item>
+        <x-item>/master/sitecore/templates/Scheduled Publish/ScheduledPublishEmailSettings/Scheduled Publish Email Settings/MailServer/{214F19D5-72A8-4332-9375-85E599A2A451}/invariant/0</x-item>
+        <x-item>/master/sitecore/templates/Scheduled Publish/ScheduledPublishEmailSettings/Scheduled Publish Email Settings/MailServerPassword/{494BDDC5-A953-4BE8-A735-E5BC29BDCA8C}/invariant/0</x-item>
+        <x-item>/master/sitecore/templates/Scheduled Publish/ScheduledPublishEmailSettings/Scheduled Publish Email Settings/MailServerPort/{A08B5C87-8DD1-48BC-93BE-6001210791BD}/invariant/0</x-item>
+        <x-item>/master/sitecore/templates/Scheduled Publish/ScheduledPublishEmailSettings/Scheduled Publish Email Settings/MailServerUsername/{510D71A5-358A-4336-8F2E-A55A33B53F29}/invariant/0</x-item>
+        <x-item>/master/sitecore/templates/Scheduled Publish/ScheduledPublishEmailSettings/Scheduled Publish Email Settings/UseWebConfig/{5729E93E-6E14-4AD8-BB76-7803302C95C3}/invariant/0</x-item>
+        <x-item>/master/sitecore/templates/Scheduled Publish/ScheduledPublishSectionsEmailSettings/__Standard Values/{90BB9E9A-2C03-4334-800A-CB7C4105E4D9}/invariant/0</x-item>
+        <x-item>/master/sitecore/templates/Scheduled Publish/ScheduledPublishSectionsEmailSettings/{268C63F3-7C40-4368-AB2A-A76AB98BFF35}/invariant/0</x-item>
+        <x-item>/master/sitecore/templates/Scheduled Publish/ScheduledPublishSectionsEmailSettings/Sections Email Settings/{C32A9DD9-1B44-4B68-8B34-21333F8F97A5}/invariant/0</x-item>
+        <x-item>/master/sitecore/templates/Scheduled Publish/ScheduledPublishSectionsEmailSettings/Sections Email Settings/Enabled/{D9062D79-A51D-4F04-92ED-B7A3662FE35C}/invariant/0</x-item>
+        <x-item>/master/sitecore/templates/Scheduled Publish/ScheduledPublishSettings/__Standard Values/{F0D22E55-0D5A-4362-A618-360E6698EB4E}/invariant/0</x-item>
+        <x-item>/master/sitecore/templates/Scheduled Publish/ScheduledPublishSettings/{3D78A46A-2385-442C-B30E-04C37DBD8C9D}/invariant/0</x-item>
+        <x-item>/master/sitecore/templates/Scheduled Publish/ScheduledPublishSettings/ScheduledPublishSettings/{78B6E432-159E-4763-A5A7-EB0BB69C58BB}/invariant/0</x-item>
+        <x-item>/master/sitecore/templates/Scheduled Publish/ScheduledPublishSettings/ScheduledPublishSettings/ScheduledPublishSettingsSendEmail/{C3CDED2B-CD39-4AD9-B361-865773A41C74}/invariant/0</x-item>
+        <x-item>/master/sitecore/templates/Scheduled Publish/SectionEmailSettings/__Standard Values/{D16590F5-74D1-4EAE-BAD6-6E42DAADE13B}/invariant/0</x-item>
+        <x-item>/master/sitecore/templates/Scheduled Publish/SectionEmailSettings/{5F89EB71-E048-4D9E-B1DF-BA4842861738}/invariant/0</x-item>
+        <x-item>/master/sitecore/templates/Scheduled Publish/SectionEmailSettings/Section Email Settings/{1EAC7BD5-E5F9-4BF4-B4EC-3FDE8E476D40}/invariant/0</x-item>
+        <x-item>/master/sitecore/templates/Scheduled Publish/SectionEmailSettings/Section Email Settings/SectionRoles/{74F33BF8-EA32-489F-A9CC-B54622222FB6}/invariant/0</x-item>
+        <x-item>/master/sitecore/templates/Scheduled Publish/SectionEmailSettings/Section Email Settings/SectionRoot/{42113E0D-F76D-47C9-A3A1-31EBE11854C3}/invariant/0</x-item>
+      </Entries>
+      <SkipVersions>False</SkipVersions>
+      <Converter>
+        <ItemToEntryConverter>
+          <Transforms>
+            <InstallerConfigurationTransform>
+              <Options>
+                <BehaviourOptions>
+                  <ItemMode>Undefined</ItemMode>
+                  <ItemMergeMode>Undefined</ItemMergeMode>
+                </BehaviourOptions>
+              </Options>
+            </InstallerConfigurationTransform>
+          </Transforms>
+        </ItemToEntryConverter>
+      </Converter>
+      <Include />
+      <Exclude />
+      <Name>Sitecore Items</Name>
+    </xitems>
+    <xfiles>
+      <Entries>
+        <x-item>/App_Config/Include/ZZ_ScheduledPublish/ZZ_ScheduledPublishControl.config</x-item>
+        <x-item>/bin/ScheduledPublish.dll</x-item>
+        <x-item>/sitecore/shell/Applications/Content Manager/Dialogs/Edit Scheduled Publish/Edit Scheduled Publish.xml</x-item>
+        <x-item>/sitecore/shell/Applications/Content Manager/Dialogs/Schedule Publish/Schedule Publish.xml</x-item>
+      </Entries>
+      <Converter>
+        <FileToEntryConverter>
+          <Root>/</Root>
+          <Transforms>
+            <InstallerConfigurationTransform>
+              <Options>
+                <BehaviourOptions>
+                  <ItemMode>Undefined</ItemMode>
+                  <ItemMergeMode>Undefined</ItemMergeMode>
+                </BehaviourOptions>
+              </Options>
+            </InstallerConfigurationTransform>
+          </Transforms>
+        </FileToEntryConverter>
+      </Converter>
+      <Include />
+      <Exclude />
+      <Name>File System Items</Name>
+    </xfiles>
+  </Sources>
+  <Converter>
+    <TrivialConverter>
+      <Transforms />
+    </TrivialConverter>
+  </Converter>
+  <Include />
+  <Exclude />
+  <Name />
+</project>
