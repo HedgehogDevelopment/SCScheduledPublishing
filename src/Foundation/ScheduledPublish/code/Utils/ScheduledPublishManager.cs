@@ -7,6 +7,7 @@ using System;
 using System.Linq;
 using System.Text;
 using Sitecore.SecurityModel;
+using Sitecore.Security.Accounts;
 
 namespace ScheduledPublish.Utils
 {
@@ -45,7 +46,7 @@ namespace ScheduledPublish.Utils
             else
             {
                 PublishStatus status = PublishManager.GetStatus(handle);
-                
+
                 if (status == null)
                 {
                     sbMessage.Append("The scheduled publishing process was unexpectedly interrupted.<br/>");
@@ -81,7 +82,7 @@ namespace ScheduledPublish.Utils
 
             ScheduledPublishReport report = new ScheduledPublishReport
             {
-                IsSuccessful = isSuccessful, 
+                IsSuccessful = isSuccessful,
                 Message = sbMessage.ToString()
             };
 
@@ -116,13 +117,23 @@ namespace ScheduledPublish.Utils
                     }
                 }
 
-                handle = PublishManager.PublishItem(
-                    publishSchedule.ItemToPublish,
-                    publishSchedule.TargetDatabases.ToArray(),
-                    publishSchedule.TargetLanguages.ToArray(),
-                    publishSchedule.PublishChildren,
-                    publishSchedule.PublishMode == PublishMode.Smart,
-                    publishSchedule.PublishRelatedItems);
+                User user = null;
+
+                if (!string.IsNullOrWhiteSpace(publishSchedule.SchedulerUsername))
+                {
+                    user = User.FromName(publishSchedule.SchedulerUsername, false);
+                    if (user != null)
+                    {
+                        using (new UserSwitcher(user))
+                        {
+                            handle = PublishItem();
+                        }
+                    }
+                    else
+                    {
+                        handle = PublishItem();
+                    }
+                }
 
                 WaitPublish(handle);
 
@@ -147,6 +158,17 @@ namespace ScheduledPublish.Utils
             }
 
             return handle;
+
+            Handle PublishItem()
+            {
+                return PublishManager.PublishItem(
+                                                publishSchedule.ItemToPublish,
+                                                publishSchedule.TargetDatabases.ToArray(),
+                                                publishSchedule.TargetLanguages.ToArray(),
+                                                publishSchedule.PublishChildren,
+                                                publishSchedule.PublishMode == PublishMode.Smart,
+                                                publishSchedule.PublishRelatedItems);
+            }
         }
 
         /// <summary>
@@ -157,8 +179,39 @@ namespace ScheduledPublish.Utils
         private static Handle PublishWebsite(PublishSchedule publishSchedule)
         {
             Handle handle = null;
+            User user = null;
 
             try
+            {
+                if (!string.IsNullOrWhiteSpace(publishSchedule.SchedulerUsername))
+                {
+                    user = User.FromName(publishSchedule.SchedulerUsername, false);
+                    if (user != null && user.Profile != null)
+                    {
+                        using (new UserSwitcher(user))
+                        {
+                            handle = TriggerWebsitePublish();
+                        }
+                    }
+                    else
+                    {
+                        handle = TriggerWebsitePublish();
+                    }
+                }
+
+                WaitPublish(handle);
+            }
+            catch (Exception ex)
+            {
+                Log.Error(
+                    string.Format("Scheduled Publish: Scheduled Publish Task failed for Website Publish in {0} Mode {1}",
+                                   publishSchedule.PublishMode,
+                                   ex), new object());
+            }
+
+            return handle;
+
+            Handle TriggerWebsitePublish()
             {
                 switch (publishSchedule.PublishMode)
                 {
@@ -193,17 +246,8 @@ namespace ScheduledPublish.Utils
                         }
                 }
 
-                WaitPublish(handle);
+                return handle;
             }
-            catch (Exception ex)
-            {
-                Log.Error(
-                    string.Format("Scheduled Publish: Scheduled Publish Task failed for Website Publish in {0} Mode {1}",
-                                   publishSchedule.PublishMode,
-                                   ex), new object());
-            }
-
-            return handle;
         }
 
         /// <summary>
