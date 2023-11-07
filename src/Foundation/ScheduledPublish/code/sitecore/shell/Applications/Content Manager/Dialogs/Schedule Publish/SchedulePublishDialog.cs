@@ -238,6 +238,7 @@ namespace ScheduledPublish.sitecore.shell.Applications.Content_Manager.Dialogs.S
                 BuildExistingSchedules();
                 BuildPublishingTargets();
                 BuildLanguages();
+                PublishDateTimePicker.Value = DateUtil.ToIsoDate(DateTime.Now.AddMinutes(2));
 
                 ServerTime.Text = Constants.CURREN_TIME_ON_SERVER_TEXT + DateTime.Now.ToString(_culture);
                 SmartPublish.Checked = true;
