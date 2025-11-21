@@ -8,7 +8,7 @@
 	<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup> 
   <ItemGroup>
-    <PackageReference Include="Sitecore.Kernel" Version="10.4.0" />
+    <PackageReference Include="Sitecore.Kernel" Version="10.4.1" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="sysglobl" />
