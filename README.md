@@ -1,6 +1,8 @@
 <img src="https://www.hhog.com/-/media/PublicImages/Hedgehog/Hedgehog-logo-4color-275x46.jpg" alt="Hedgehog Development" border="0"> 
 
 
+> **Sitecore 10.x:** an actively maintained version of this module, with support for Sitecore XM/XP 10.2 – 10.5 (Items as Resources, works with Package Designer disabled), a NuGet package and Docker images, is available at **[nehemiahj/sitecore-scheduled-publish](https://github.com/nehemiahj/sitecore-scheduled-publish)** ([documentation](https://nehemiahj.github.io/sitecore-scheduled-publish/)).
+
 # Overview: #  
 
 The purpose of Scheduled Publish Module for Sitecore is to give the content editor the option to delay the publishing of an item for a future point in time. The full documentation is available in "Documentation" folder. 
